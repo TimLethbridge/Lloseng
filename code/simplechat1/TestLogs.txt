@@ -1,0 +1,86 @@
+Client 3
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>java ClientConsole
+Testcase 1007!
+> Testcase 1007!
+> Could not send message to server.  Terminating client.
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>
+
+Client 2
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>java ClientConsole
+Test> Testcase 1007!
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>
+
+Client 1
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>java ClientConsole
+Currently on Testcase 1004
+> Currently on Testcase 1004
+Testcase 1005
+> Could not send message to server.  Terminating client.
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>java ClientConsole
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>java ClientConsole
+This is Testcase 1006
+> This is Testcase 1006
+> Testcase 1007!
+> Could not send message to server.  Terminating client.
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>java ClientConsole
+'C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>Test> Testcase 1007!
+'Test' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>java ClientConsole
+FinFin
+
+
+FIniewfnoewf> FinFin
+>
+>
+Done
+> FIniewfnoewfDone
+d
+> d
+> Final FFFinTestcase 1013, final test
+e
+> Could not send message to server.  Terminating client.
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>
+
+Server:
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>java EchoServer
+Server listening for connections on port 5555
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>java ClientConsole
+Error: Can't setup connection! Terminating client.
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>java EchoServer
+Server listening for connections on port 5555
+Message received: Currently on Testcase 1004 from 127.0.0.1 (127.0.0.1)
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>java EchoServer
+Server listening for connections on port 5555
+Message received: null from 127.0.0.1 (127.0.0.1)
+Message received: This is Testcase 1006 from 127.0.0.1 (127.0.0.1)
+Message received: Testcase 1007! from 127.0.0.1 (127.0.0.1)
+Message received: null from 127.0.0.1 (127.0.0.1)
+Message received: This message is from my Desktop to my Laptop! from Nev-PC (192.168.2.29)
+Message received: null from Nev-PC (192.168.2.29)
+Message received: FinFin from 127.0.0.1 (127.0.0.1)
+Message received:  from 127.0.0.1 (127.0.0.1)
+Message received:  from 127.0.0.1 (127.0.0.1)
+Message received: FIniewfnoewfDone from 127.0.0.1 (127.0.0.1)
+Message received: d from 127.0.0.1 (127.0.0.1)
+Message received: Final FFFinTestcase 1013, final test from 127.0.0.1 (127.0.0.1)
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>

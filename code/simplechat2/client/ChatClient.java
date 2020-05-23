@@ -66,16 +66,104 @@ public class ChatClient extends AbstractClient
    */
   public void handleMessageFromClientUI(String message)
   {
-    try
-    {
-      sendToServer(message);
+    
+    char commandKey = "#".charAt(0);
+
+    if(message != null && message.charAt(0) == commandKey){
+
+      parseClientCommand(message);
+
     }
-    catch(IOException e)
-    {
-      clientUI.display
-        ("Could not send message to server.  Terminating client.");
-      quit();
+    else{
+
+      try
+      {
+        sendToServer(message);
+      }
+      catch(IOException e)
+      {
+        clientUI.display
+          ("Could not send message to server.  Terminating client.");
+        quit();
+      }
     }
+  }
+
+  private void parseClientCommand(String message){
+
+    String[] messageList = message.split(" ");
+
+   switch(messageList[0]){
+      case "#quit":
+        quit();
+        break;
+
+      case "#logoff":
+        if(!isConnected()){
+          System.out.println("Error: Client Not Connected to a Server");
+        }
+        else{
+          try{
+          closeConnection();
+          }
+          catch(IOException e){
+            System.out.println(e.toString());
+          }
+        }
+        break;
+
+      case "#sethost":
+        if(!isConnected()){
+          setHost(messageList[1]);
+        }
+        else{
+          System.out.println("Error: Cannot Change Host While Connected to a Server");
+        }
+        break;
+
+      case "#setport":
+
+        if(!isConnected()){
+          setPort(Integer.parseInt(messageList[1]));
+        }
+        else{
+          System.out.println("Error: Cannot Change Port While Connected to a Server");
+        }
+          
+        break;
+
+      case "#login":
+        
+        if(!isConnected()){
+          try{
+          openConnection();
+          }
+          catch(IOException e){
+            System.out.println(e.toString());
+          }
+        }
+        else{
+          System.out.println("Error: Cannot login with an open connection");
+        }
+        
+        break;
+
+      case "#gethost":
+        System.out.println("Host: " + this.getHost());
+        break;
+
+      case "#getport":
+        System.out.println("Port: " + this.getPort());
+        break;
+     
+      default:
+        System.out.println("Error: Command Not Recognized");
+
+   } 
+
+
+
+
   }
   
   /**
@@ -94,13 +182,14 @@ public class ChatClient extends AbstractClient
   //Terminates Client when server terminates
   public void connectionException(Exception Error){
 
+    System.out.println("The server has closed");
     quit();
 
   }
 
   //Displays Message upon client termination
   public void connectionClosed(){
-    System.out.println("The server has closed");
+    
   }
 
 }

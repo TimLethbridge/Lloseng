@@ -6,6 +6,8 @@ import java.io.*;
 import client.*;
 import common.*;
 
+//change to verify the operation E4 (1)
+
 /**
  * This class constructs the UI for a chat client.  It implements the
  * chat interface in order to activate the display() method.

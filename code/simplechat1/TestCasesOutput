@@ -1,0 +1,248 @@
+Phase 2:
+
+Test Case 1:
+
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ java EchoServer
+> Server listening for connections on port 5555
+^Cjack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$
+
+Test Case 2:
+
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ java ClientConsole
+ERROR - No login ID specified.  Connection aborted.
+
+Test Case 3:
+
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ java ClientConsole m9p909
+Cannot open connection.  Awaiting command.
+
+Test Case 4:
+Server:
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ java EchoServer
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login m9p909 from null
+m9p909 has logged on
+
+Client:
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ java ClientConsole  m9p909
+m9p909 has logged on
+
+Test Case 5;
+Server:
+
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ java EchoServer
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login m9p909 from null
+m9p909 has logged on
+Message received: cool from m9p909
+Message received: I like trains from m9p909
+
+Client:
+
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ java ClientConsole  m9p909
+m9p909 has logged on
+cool
+m9p909>cool
+I like trains
+m9p909>I like trains
+
+Test Case 6:
+
+Server:
+
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ java EchoServer
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login m9p909 from null
+m9p909 has logged on
+A new client is attempting to connect to the server.
+Message received: #login Spiderman from null
+Spiderman has logged on
+A new client is attempting to connect to the server.
+Message received: #login BatMan from null
+BatMan has logged on
+Message received: Hey Whats up? from m9p909
+Message received: Wow you guys are the best from Spiderman
+Message received: What do you think of pizza? from Spiderman
+Message received: I'm batman from BatMan
+Message received: Wow that's pretty cool but what about pizza? from Spiderman
+Message received: I'm batman from BatMan
+Message received: Batman you're being kinda a downer from m9p909
+Message received: I'm batman from BatMan
+guys I'm about to kick batman
+
+Client 1(m9p909):
+
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ java ClientConsole  m9p909
+m9p909 has logged on
+Spiderman has logged on
+BatMan has logged on
+Hey Whats up?
+m9p909>Hey Whats up?
+Spiderman>Wow you guys are the best
+Spiderman>What do you think of pizza?
+BatMan>I'm batman
+Spiderman>Wow that's pretty cool but what about pizza?
+BatMan>I'm batman
+Batman you're being kinda a downer
+m9p909>Batman you're being kinda a downer
+BatMan>I'm batman
+<SERVER MSG> guys I'm about to kick batman
+
+Client 2(Spiderman):
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ java ClientConsole Spiderman
+Spiderman has logged on
+BatMan has logged on
+m9p909>Hey Whats up?
+Wow you guys are the best
+Spiderman>Wow you guys are the best
+What do you think of pizza?
+Spiderman>What do you think of pizza?
+BatMan>I'm batman
+Wow that's pretty cool but what about pizza?
+Spiderman>Wow that's pretty cool but what about pizza?
+BatMan>I'm batman
+m9p909>Batman you're being kinda a downer
+BatMan>I'm batman
+<SERVER MSG> guys I'm about to kick batman
+
+Client 4: Batman
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ java ClientConsole BatMan
+BatMan has logged on
+m9p909>Hey Whats up?
+Spiderman>Wow you guys are the best
+Spiderman>What do you think of pizza?
+I'm batman
+BatMan>I'm batman
+Spiderman>Wow that's pretty cool but what about pizza?
+I'm batman
+BatMan>I'm batman
+m9p909>Batman you're being kinda a downer
+I'm batman
+BatMan>I'm batman
+<SERVER MSG> guys I'm about to kick batman
+
+
+
+Test 7: 
+
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ java EchoServer 
+Server listening for connections on port 5555
+#quit
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ 
+
+Test 8:
+
+Server:
+
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ java EchoServer 
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login potato from null
+potato has logged on
+#stop
+Server has stopped listening for connections.
+#start
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login Spiderman from null
+Spiderman has logged on
+
+Client 1:
+
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ java ClientConsole  potato
+potato has logged on
+WARNING - Server has stopped listening for connections.
+Spiderman has logged on
+
+Client 2:
+
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ java ClientConsole Spiderman
+Spiderman has logged on
+
+Testcase 009:
+
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ java ClientConsole  potato
+potato has logged on
+WARNING - Server has stopped listening for connections.
+SERVER SHUTTING DOWN! DISCONNECTING!
+Abnormal termination of connection
+
+Testcase 008:
+Server:
+
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ java EchoServer 
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login potato from null
+potato has logged on
+#stop
+Server has stopped listening for connections.
+#close
+potato has disconnected
+
+Client:
+
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ java ClientConsole  potato
+potato has logged on
+WARNING - Server has stopped listening for connections.
+SERVER SHUTTING DOWN! DISCONNECTING!
+Abnormal termination of connection.
+
+Test Case 009:
+
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ java EchoServer 
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login potato from null
+potato has logged on
+#stop 
+Server has stopped listening for connections.
+#close
+potato has disconnected
+
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ java ClientConsole  potato
+potato has logged on
+WARNING - Server has stopped listening for connections.
+SERVER SHUTTING DOWN! DISCONNECTING!
+Abnormal termination of connection.
+
+Test Case 009.2
+
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ java EchoServer 
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login potato from null
+potato has logged on
+#stop 
+Server has stopped listening for connections.
+#close
+potato has disconnected
+#start
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login potato from null
+potato has logged on
+
+
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ java ClientConsole  potato
+potato has logged on
+WARNING - Server has stopped listening for connections.
+SERVER SHUTTING DOWN! DISCONNECTING!
+Abnormal termination of connection.
+ok
+Could not send message to server.  Terminating client.
+Abnormal termination of connection.
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ java ClientConsole  potato
+potato has logged on
+
+
+Test Case 010
+
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ java ClientConsole  potato
+potato has logged on
+#quit
+Connection Closed.
+

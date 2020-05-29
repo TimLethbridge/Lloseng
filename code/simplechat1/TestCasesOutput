@@ -344,3 +344,62 @@ potato has logged on
 potato has logged on
 SERVER SHUTTING DOWN! DISCONNECTING!
 Abnormal termination of connectionn
+
+Test Case 2016:
+
+jack@jack-desktop:~/Documents/SEG2105/Assignment1/Lloseng/code/simplechat1$ java EchoServer
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login Spiderman from null
+Spiderman has logged on
+Spiderman has disconnected
+A new client is attempting to connect to the server.
+Message received: #login geogre from null
+geogre has logged on
+Message received: hey from geogre
+Message received: its working from geogre
+geogre has disconnected
+
+Test Case 2017:
+
+Server 1:
+
+jack@jack-desktop:~/Documents/SEG2105/Assignment1/Lloseng/code/simplechat1$ java EchoServer
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login geogre from null
+geogre has logged on
+A new client is attempting to connect to the server.
+Message received: #login Batman from null
+Batman has logged on
+A new client is attempting to connect to the server.
+Message received: #login potatoman from null
+potatoman has logged on
+geogre has disconnected
+Batman has disconnected
+
+Client 1:
+
+jack@jack-desktop:~/Documents/SEG2105/Assignment1/Lloseng/code/simplechat1$ java ClientConsole  geogre
+geogre has logged on
+Batman has logged on
+potatoman has logged on
+#quit
+Connection Closed.
+
+Client 2:
+
+jack@jack-desktop:~/Documents/SEG2105/Assignment1/Lloseng/code/simplechat1$ java ClientConsole Batman
+Batman has logged on
+potatoman has logged on
+geogre has disconnected
+#logoff
+Connection Closed.
+
+Client 3:
+
+jack@jack-desktop:~/Documents/SEG2105/Assignment1/Lloseng/code/simplechat1$ java ClientConsole potatoman
+potatoman has logged on
+geogre has disconnected
+Batman has disconnected
+

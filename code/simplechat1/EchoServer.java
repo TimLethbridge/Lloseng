@@ -121,6 +121,7 @@ public class EchoServer extends AbstractServer {
   synchronized protected void clientException(ConnectionToClient client,
   java.lang.Throwable exception) {
     serverUI.display(client.getInfo("login") + " has disconnected");
+    sendToAllClients(client.getInfo("login") + " has disconnected");
   }
 
   public void display(String msg) {
@@ -129,6 +130,7 @@ public class EchoServer extends AbstractServer {
 
   synchronized protected void clientDisconnected(ConnectionToClient client) {
     serverUI.display(client.getInfo("login") + " has disconnected");
+    sendToAllClients(client.getInfo("login") + " has disconnected");
 
   }
 

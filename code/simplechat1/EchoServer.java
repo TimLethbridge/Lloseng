@@ -85,13 +85,11 @@ public class EchoServer extends AbstractServer
       ("Server has stopped listening for connections.");
   }
 
-  @Override
   public void clientConnected(){
     System.out.println
             (client + " has connected to the chat.");
   }
 
-  @Override
   public void clientDisconnected(){
     System.out.println
             (client + " has disconnected from the chat.");
@@ -131,8 +129,8 @@ public class EchoServer extends AbstractServer
           break;
         case "setport":
           if (!this.isListening()) {
-            super.setPort(Integer.parseInt(parameters[1]));
-            System.out.println("New port: " + Integer.parseInt(parameters[1]));
+            super.setPort(Integer.parseInt(splitMessage[1]));
+            System.out.println("New port: " + Integer.parseInt(splitMessage[1]));
           } else {
             System.out.println("An error occurred when changing the port.");
           }

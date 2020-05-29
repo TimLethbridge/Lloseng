@@ -360,6 +360,18 @@ Message received: hey from geogre
 Message received: its working from geogre
 geogre has disconnected
 
+Server 2:
+
+(base) jack@jack-UX305CA:~/Documents/SEG2105/Lloseng/code/simplechat1$ java EchoServer
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login geogre from null
+geogre has logged on
+Message received: ayy server two is up! from geogre
+Message received: cool col cool from geogre
+geogre has disconnected
+
+
 Test Case 2017:
 
 Server 1:
@@ -403,3 +415,7 @@ potatoman has logged on
 geogre has disconnected
 Batman has disconnected
 
+
+2018 and 2019:
+
+Some Testcases were done across across UNIX and Windows NT platforms. Client and server work well on both.

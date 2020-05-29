@@ -40,7 +40,6 @@ public class ChatClient extends AbstractClient {
   public ChatClient(String host, int port, ChatIF clientUI) throws IOException {
     super(host, port); // Call the superclass constructor
     this.clientUI = clientUI;
-    //openConnection();
   }
 
   // Instance methods ************************************************
@@ -52,9 +51,6 @@ public class ChatClient extends AbstractClient {
    */
   public void handleMessageFromServer(Object msg) {
     clientUI.display(msg.toString());
-    if(msg.toString().equals("SERVER SHUTTING DOWN! DISCONNECTING!")){
-      //connectionClosed();
-    }
   }
 
   // Add by me
@@ -73,10 +69,10 @@ public class ChatClient extends AbstractClient {
    * @throws IOException
    */
   public void handleMessageFromClientUI(String message) {
-    //System.out.println(message.getClass());
+ 
     String[] messages = message.split(" ");
     if (message.charAt(0) == '#') {
-      //System.out.println(messages.getClass());
+
       switch (messages[0]) {
         case ("#logoff"):
           try {
@@ -114,8 +110,6 @@ public class ChatClient extends AbstractClient {
       }
     } else if(isConnected()) {
       try {
-        //System.out.println("sending " + message);
-        //System.out.println(messages.getClass());
         sendToServer(message);
       } catch (IOException e) {
         clientUI.display("Could not send message to server.  Terminating client.");

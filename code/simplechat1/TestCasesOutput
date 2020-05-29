@@ -246,3 +246,101 @@ potato has logged on
 #quit
 Connection Closed.
 
+Test Case 011
+
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ java ClientConsole  potato
+potato has logged on
+#logoff
+Connection Closed.
+
+Test Case 012
+
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ java ClientConsole  potato
+Cannot open connection.  Awaiting command.
+sethost Iliektrain
+#sethost Iliketrains
+Host set to: Iliketrains
+#setport 1234
+Port set to: 1234
+
+Test Case 013
+
+jack@jack-desktop:~/Documents/ITI1121/ITI1121ALLASSIGNMENTS/SEG2105/Assignment 1/code/simplechat1$ java ServerConsole 1234
+Server listening for connections on port 1234
+
+Test Case 2014
+
+Difficult to show but it did work
+
+jack@jack-desktop:~/Documents/SEG2105/Assignment1/Lloseng/code/simplechat1$ java ServerConsole 
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login potato from null
+potato has logged on
+A new client is attempting to connect to the server.
+Message received: #login mrG from null
+mrG has logged on
+A new client is attempting to connect to the server.
+Message received: #login spoderman from null
+spoderman has logged on
+A new client is attempting to connect to the server.
+Message received: #login pizzaguy from null
+pizzaguy has logged on
+Message received: fdjhakghkjsa from pizzaguy
+Message received: I like trains from pizzaguy
+Message received: what do you think of the pizza? from pizzaguy
+Message received: I think it is quite good from mrG
+Message received: Me too from potato
+Message received: I'm like spiderman from spoderman
+#close
+Server has stopped listening for connections.
+potato has disconnected
+mrG has disconnected
+spoderman has disconnected
+pizzaguy has disconnected
+#setport 1234
+Port set to:1234
+#start
+Server listening for connections on port 1234
+A new client is attempting to connect to the server.
+Message received: #login pizzaguy from null
+pizzaguy has logged on
+A new client is attempting to connect to the server.
+Message received: #login Spiderman from null
+Spiderman has logged on
+A new client is attempting to connect to the server.
+Message received: #login potato from null
+potato has logged on
+A new client is attempting to connect to the server.
+Message received: #login potato from null
+potato has logged on
+#quit
+pizzaguy has disconnected
+Server has stopped listening for connections.
+Spiderman has disconnected
+potato has disconnected
+potato has disconnected
+
+test case 2015;
+
+jack@jack-desktop:~/Documents/SEG2105/Assignment1/Lloseng/code/simplechat1$ java ClientConsole potato
+potato has logged on
+mrG has logged on
+spoderman has logged on
+pizzaguy has logged on
+pizzaguy>fdjhakghkjsa
+pizzaguy>I like trains
+pizzaguy>what do you think of the pizza?
+mrG>I think it is quite good
+Me too
+potato>Me too
+spoderman>I'm like spiderman
+SERVER SHUTTING DOWN! DISCONNECTING!
+Abnormal termination of connection
+#setport 1234
+Port set to: 1234
+#login potato
+potato has logged on
+potato has logged on
+SERVER SHUTTING DOWN! DISCONNECTING!
+Abnormal termination of connectionn

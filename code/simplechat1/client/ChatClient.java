@@ -98,8 +98,7 @@ public class ChatClient extends AbstractClient
 	 * attempting to reconnect.
 	 */
 	protected void connectionClosed() {
-		System.out.print("The server has shutdown ::: Shutting down client");
-		System.exit(0);
+		System.out.print("Shutting down client");		
 	}
 
 	/**
@@ -111,8 +110,8 @@ public class ChatClient extends AbstractClient
 	 *            the exception raised.
 	 */
 	protected void connectionException(Exception exception) {
-		System.out.print("The server has shutdown ::: Shutting down client");
-		System.exit(0);
+		System.out.println("ERROR: Server Shutdown ");
+		quit();
 	}
   
   

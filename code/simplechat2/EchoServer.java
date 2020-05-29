@@ -3,6 +3,8 @@
 // license found at www.lloseng.com 
 
 import java.io.*;
+import java.sql.Connection;
+
 import common.*;
 import ocsf.server.*;
 
@@ -54,7 +56,47 @@ public class EchoServer extends AbstractServer
     (Object msg, ConnectionToClient client)
   {
     System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
+
+    char commandKey = "#".charAt(0);
+    String msgString = msg.toString();
+
+    if(msg!= null && msgString.charAt(0) == commandKey){
+      handleClientLogin(msgString, client);
+    }
+    else{
+      msg = client.getInfo("loginID") + ": " + msg;
+      this.sendToAllClients(msg);
+    }
+  }
+
+  private void handleClientLogin(String msg, ConnectionToClient client){
+
+    String[] loginList = msg.split(" ");
+
+    switch(loginList[0]){
+      case "#login":
+        if(client.getInfo("loginID") == null){
+          client.setInfo("loginID", loginList[1]);
+        }
+        else{
+          System.out.println("Error: Client Already Logged In");
+
+          try{
+          client.sendToClient("Error: Client Already Logged In");
+          client.close();
+          }
+          catch(IOException e){
+            System.out.println("Error: IOException Thrown on Client Invalid Login");
+          }
+          
+        }
+      break;
+
+      default:
+        System.out.println("Error: Unknown Client-Sent Command");
+    }
+
+
   }
     
   /**

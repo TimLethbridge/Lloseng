@@ -2,7 +2,7 @@
 import java.io.*;
 import client.*;
 import common.*;
-import server.*
+import server.*;
 
 /**
  * This class constructs the UI for a chat client.  It implements the

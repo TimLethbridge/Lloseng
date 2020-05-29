@@ -142,7 +142,7 @@ public class EchoServer extends AbstractServer
             this.startListening();
           }
           else{
-            System.out.print("The server has already started.")
+            System.out.print("The server has already started.");
           }
           break;
         case "#getport":

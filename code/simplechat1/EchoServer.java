@@ -115,9 +115,6 @@ public class EchoServer extends AbstractServer {
     }
   }
   public void start() throws IOException {
-    stopTheServer();
-    sendToAllClients("SERVER SHUTTING DOWN! DISCONNECTING!");
-    close();
     listen();
   }
 
@@ -145,13 +142,9 @@ public class EchoServer extends AbstractServer {
   }
 
   public void quit() throws IOException {
-    sendToAllClients("#Closing"); // means closed
+    sendToAllClients("SERVER SHUTTING DOWN! DISCONNECTING!"); // means closed
     close();
     System.exit(0);
-  }
-
-  public void startTheServer() {
-    sendToAllClients("#listening");
   }
 
   /**

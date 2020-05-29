@@ -1,0 +1,428 @@
+Name: Jacob Kszan
+Student Number: 300132837
+Email: jksza042@uottawa.ca
+
+PHASE 1 TESTING (Sorry if it's a bit unorganized, phase 2 is better)
+
+Client 3
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>java ClientConsole
+Testcase 1007!
+> Testcase 1007!
+> Could not send message to server.  Terminating client.
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>
+
+Client 2
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>java ClientConsole
+Test> Testcase 1007!
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>
+
+Client 1
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>java ClientConsole
+Currently on Testcase 1004
+> Currently on Testcase 1004
+Testcase 1005
+> Could not send message to server.  Terminating client.
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>java ClientConsole
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>java ClientConsole
+This is Testcase 1006
+> This is Testcase 1006
+> Testcase 1007!
+> Could not send message to server.  Terminating client.
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>java ClientConsole
+'C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>Test> Testcase 1007!
+'Test' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>java ClientConsole
+FinFin
+
+
+FIniewfnoewf> FinFin
+>
+>
+Done
+> FIniewfnoewfDone
+d
+> d
+> Final FFFinTestcase 1013, final test
+e
+> Could not send message to server.  Terminating client.
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>
+
+Server:
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>java EchoServer
+Server listening for connections on port 5555
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>java ClientConsole
+Error: Can't setup connection! Terminating client.
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>java EchoServer
+Server listening for connections on port 5555
+Message received: Currently on Testcase 1004 from 127.0.0.1 (127.0.0.1)
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>java EchoServer
+Server listening for connections on port 5555
+Message received: null from 127.0.0.1 (127.0.0.1)
+Message received: This is Testcase 1006 from 127.0.0.1 (127.0.0.1)
+Message received: Testcase 1007! from 127.0.0.1 (127.0.0.1)
+Message received: null from 127.0.0.1 (127.0.0.1)
+Message received: This message is from my Desktop to my Laptop! from Nev-PC (192.168.2.29)
+Message received: null from Nev-PC (192.168.2.29)
+Message received: FinFin from 127.0.0.1 (127.0.0.1)
+Message received:  from 127.0.0.1 (127.0.0.1)
+Message received:  from 127.0.0.1 (127.0.0.1)
+Message received: FIniewfnoewfDone from 127.0.0.1 (127.0.0.1)
+Message received: d from 127.0.0.1 (127.0.0.1)
+Message received: Final FFFinTestcase 1013, final test from 127.0.0.1 (127.0.0.1)
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat1>
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+PHASE 2 TESTING
+
+Testcase 2001:
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java EchoServer
+Server listening for connections on port 5555
+
+Testcase 2002:
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java ClientConsole
+ERROR - No login ID specified.  Connection aborted.
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>
+
+Testcase 2003:
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java ClientConsole Testcase2003
+Cannot open connection.  Awaiting command.
+
+Testcase 2004:
+
+Client -
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java ClientConsole Testcase2004
+> Testcase2004 has logged on.
+
+Server -
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java EchoServer
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login Testcase2004 from null
+Testcase2004 has logged on.
+
+Testcase 2005:
+
+Client -
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java ClientConsole Testcase2004
+> Testcase2004 has logged on.
+This is Testcase 2005!
+> Testcase2004> This is Testcase 2005!
+
+Server -
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java EchoServer
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login Testcase2004 from null
+Testcase2004 has logged on.
+Message received: This is Testcase 2005! from Testcase2004
+
+Testcase 2006:
+
+Server -
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java EchoServer
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login YipOne from null
+YipOne has logged on.
+A new client is attempting to connect to the server.
+Message received: #login YipTwo from null
+YipTwo has logged on.
+Message received: YipTwo here! from YipTwo
+Message received: YipOne Here! from YipOne
+YipServer also present
+SERVER MSG> YipServer also present
+
+Client 1 -
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java ClientConsole YipOne
+> YipOne has logged on.
+> YipTwo has logged on.
+> YipTwo> YipTwo here!
+YipOne Here!
+> YipOne> YipOne Here!
+> SERVER MSG> YipServer also present
+
+Client 2 - 
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java ClientConsole YipTwo
+> YipTwo has logged on.
+YipTwo here!
+> YipTwo> YipTwo here!
+> YipOne> YipOne Here!
+> SERVER MSG> YipServer also present
+
+Testcase 2007:
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java EchoServer
+Server listening for connections on port 5555
+#quit
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>
+
+Testcase 2008:
+
+Server -
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java EchoServer
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login First from null
+First has logged on.
+#stop
+Server has stopped listening for connections.
+Message received: Still here from First
+#start
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login Second from null
+Second has logged on.
+
+Client 1 -
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java ClientConsole First
+> First has logged on.
+> WARNING - The server has stopped listening for connections
+Still here
+> First> Still here
+> Second has logged on.
+
+Client 2 -
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java ClientConsole Second
+> Second has logged on.
+
+Testcase 2009:
+
+Server -
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java EchoServer
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login Connector from null
+Connector has logged on.
+#stop
+Server has stopped listening for connections.
+#close
+Connector has disconnected
+
+Client - 
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java ClientConsole Connector
+> Connector has logged on.
+> WARNING - The server has stopped listening for connections
+> SERVER SHUTTING DOWN! DISCONNECTING!
+Abnormal termination of connection.
+
+
+
+Testcase 2009 (There are two Testcase 2009):
+
+Server -
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java EchoServer
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login One from null
+One has logged on.
+#close
+Server has stopped listening for connections.
+One has disconnected
+#start
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login Two from null
+Two has logged on.
+
+Client - 
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java ClientConsole One
+> One has logged on.
+> SERVER SHUTTING DOWN! DISCONNECTING!
+Abnormal termination of connection.
+#quit
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java ClientConsole Two
+> Two has logged on.
+
+
+
+Testcase 2010:
+
+Client -
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java ClientConsole Test
+Cannot open connection.  Awaiting command.
+#quit
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>
+
+
+
+Testcase 2011:
+
+Client - 
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java ClientConsole Yipper
+> Yipper has logged on.
+#logoff
+Connection Closed.
+
+Testcase 2012:
+
+Client -
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java ClientConsole Testcase
+Cannot open connection.  Awaiting command.
+#sethost newhost
+Host set to: newhost.
+#setport 1234
+Port set to: 1234.
+
+Testcase 2013:
+
+Server -
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java ServerConsole 1234
+Server listening for connections on port 1234
+
+Testcase 2014:
+
+Server -
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java ServerConsole 1234
+Server listening for connections on port 1234
+A new client is attempting to connect to the server.
+Message received: #login Tester from null
+Tester has logged on.
+
+Client - 
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java ClientConsole Tester localhost 1234
+> Tester has logged on.
+
+Testcase 2015:
+
+Server -
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java EchoServer
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login Desktop from null
+Desktop has logged on.
+A new client is attempting to connect to the server.
+Message received: #login Laptop from null
+Laptop has logged on.
+Message received: Laptop here! from Laptop
+Message received: Desktop here! from Desktop
+#close
+Server has stopped listening for connections.
+Laptop has disconnected
+Desktop has disconnected
+#setport 1234
+Port Set to: 1234
+#start
+Server listening for connections on port 1234
+A new client is attempting to connect to the server.
+Message received: #login Desktop from null
+Desktop has logged on.
+Message received: Desktop Back! from Desktop
+A new client is attempting to connect to the server.
+Message received: #login Laptop from null
+Laptop has logged on.
+Message received: Laptop back! from Laptop
+
+Client 1 - 
+
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java ClientConsole Laptop
+> Laptop has logged on.
+Laptop here!
+> Laptop> Laptop here!
+> Desktop> Desktop here!
+> SERVER SHUTTING DOWN! DISCONNECTING!
+Abnormal termination of connection.
+#setport 1234
+Port set to: 1234.
+#login Laptop
+> Laptop has logged on.
+Laptop back!
+> Laptop> Laptop back!
+
+Client 2 - 
+
+C:\Users\Nev\Documents\GitHub\Lloseng\code\simplechat2>java ClientConsole Deskto
+p JKTOP
+> Desktop has logged on.
+> Laptop has logged on.
+> Laptop> Laptop here!
+Desktop here!
+> Desktop> Desktop here!
+> SERVER SHUTTING DOWN! DISCONNECTING!
+> Laptop has disconnected
+Abnormal termination of connection.
+#setport 1234
+Port set to: 1234.
+#login Desktop
+> Desktop has logged on.
+Desktop Back!
+> Desktop> Desktop Back!
+> Laptop has logged on.
+> Laptop> Laptop back!
+
+Testcase 2016:
+
+Server -
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java EchoServer
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login UserOne from null
+UserOne has logged on.
+A new client is attempting to connect to the server.
+Message received: #login UserTwo from null
+UserTwo has logged on.
+A new client is attempting to connect to the server.
+Message received: #login UserThree from null
+UserThree has logged on.
+UserOne has disconnected
+UserTwo has disconnected
+
+Client 1 -
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java ClientConsole UserOne
+> UserOne has logged on.
+> UserTwo has logged on.
+> UserThree has logged on.
+#quit
+Connection Closed.
+
+Client 2 -
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java ClientConsole UserTwo
+> UserTwo has logged on.
+> UserThree has logged on.
+> UserOne has disconnected
+#logoff
+Connection Closed.
+
+
+Client 3 - 
+C:\Users\Nevada\Documents\GitHub\Lloseng\code\simplechat2>java ClientConsole UserThree
+> UserThree has logged on.
+> UserOne has disconnected
+> UserTwo has disconnected
+
+
+
+I do not have the computers and operating systems to do some of the tests, so some are omitted
+
+
+
+

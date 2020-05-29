@@ -25,6 +25,7 @@ public class EchoServer extends AbstractServer
    */
   final public static int DEFAULT_PORT = 5555;
   ChatIF serverChat;
+  boolean isClosed;
   
   //Constructors ****************************************************
   
@@ -37,6 +38,7 @@ public class EchoServer extends AbstractServer
   {
     super(port);
     this.serverChat = serverChat;
+    isClosed = false;
   }
 
   
@@ -63,6 +65,7 @@ public class EchoServer extends AbstractServer
   {
     System.out.println
       ("Server listening for connections on port " + getPort());
+    isClosed = false;
   }
   
   /**
@@ -85,6 +88,90 @@ public class EchoServer extends AbstractServer
   public void clientDisconnected(ConnectionToClient client){
     String message = client + "has disconnected";
     sendToAllClients(message);
+  }
+
+  public void handleMessageFromServerUI(String message){
+    
+    char commandKey = "#".charAt(0);
+
+    if(message != null && message.charAt(0) == commandKey){
+
+      parseServerCommand(message);
+
+    }
+    else{
+    message = "SERVER MSG> " + message;
+    System.out.println(message);
+    sendToAllClients(message);
+    }
+  }
+
+  private void parseServerCommand(String command){
+
+    String[] commandList = command.split(" ");
+
+    switch(commandList[0]){
+
+      case "#quit":
+        System.exit(0);
+      break;
+
+      case "#close":
+      try{
+        close();
+      }
+      catch(IOException e){
+        System.out.println("Error: Unknown IOException");
+      }
+      break;
+
+      case "#setport":
+
+        if(isClosed){
+
+          try{
+            setPort(Integer.parseInt(commandList[1]));
+          }
+          catch(IndexOutOfBoundsException e){
+            System.out.println("Error: Port Not Specified");
+          }
+          catch(NumberFormatException ex){
+            System.out.println("Error: Port Must be a Number");
+          }
+
+        }
+        else{
+          System.out.println("Error: Server Not Closed");
+        }
+      
+      break;
+
+      case "#getport":
+        System.out.println("Port: " + getPort());
+      break;
+
+      case "#start":
+        try{
+          listen();
+        }
+        catch(IOException e){
+          System.out.println("Error: Unknown IOException");
+        }
+      break;
+
+      case "#stop":
+        stopListening();
+      break;
+
+      default:
+        System.out.println("Error: Command not Recognized");
+      
+    }
+
+  }
+
+  public void serverClosed(){
+    isClosed = true;
   }
   
   //Class methods ***************************************************

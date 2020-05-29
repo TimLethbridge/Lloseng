@@ -40,11 +40,9 @@ public class ServerConsole implements ChatIF {
         String message;
   
         while (true) 
-        {
+        {          
           message = fromServer.readLine();
-          message = "SERVER MSG> " + message;
-          display(message);
-          server.sendToAllClients(message);
+          server.handleMessageFromServerUI(message);
         }
       } 
       catch (Exception ex) 

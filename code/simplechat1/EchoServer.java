@@ -48,18 +48,28 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
-    String[] splitMessage = msg.split(" ");
+    String[] splitMessage = ((String) msg).split(" ");
     if(splitMessage[0]=="#login"){
       if(client.getInfo("loginid") == null){
-        client.setInfo(splitMessage[1]);
+        client.setInfo("loginid", splitMessage[1]);
       }
       else{
-        client.sendToClient("Your login ID has already been set.");
+        try{
+          client.sendToClient("Your login ID has already been set.");
+        }
+        catch(IOException exception){
+          System.out.print("An unexpected error occurred.");
+        }
       }
     }
     else if(client.getInfo("loginid")==null){
-      client.sendToClient("ERROR: You must set a login ID first.");
+      try{client.sendToClient("ERROR: You must set a login ID first.");
       close();
+    }
+      catch(IOException exception){
+        System.out.print("An unexpected error occurred.");
+      }
+      
     }
     System.out.println("Message received: " + msg + " from " + client.getInfo("loginid"));
     this.sendToAllClients(msg);
@@ -85,35 +95,29 @@ public class EchoServer extends AbstractServer
       ("Server has stopped listening for connections.");
   }
 
-  public void clientConnected(){
+  public void clientConnected(ConnectionToClient client){
     System.out.println
-            (client + " has connected to the chat.");
+            (client.getInfo("loginid") + " has connected to the chat.");
   }
 
-  public void clientDisconnected(){
+  public void clientDisconnected(ConnectionToClient client){
     System.out.println
-            (client + " has disconnected from the chat.");
+            (client.getInfo("loginid") + " has disconnected from the chat.");
   }
 
   public void handleMessageFromServer(String message)
   {
-    try
-    {
-      sendToServer(message);
-    }
-    catch(IOException e)
-    {
-      clientUI.display
-              ("Could not send message to server.  Terminating client.");
-      quit();
-    }
-
-    String firstChar = message[0];
+    String firstChar = message.substring(0, 1);
     if(firstChar == "#"){
       String[] splitMessage = message.split(" ");
       switch (splitMessage[0]){
         case "#quit":
-          this.stop();
+        try {
+          this.close();
+        }
+        catch(IOException exception){
+          System.out.println("An error occurred when trying to close the server.");
+        }
           break;
         case "#stop":
           this.stopListening();
@@ -137,7 +141,10 @@ public class EchoServer extends AbstractServer
           break;
         case "#start":
           if (!this.isListening()) {
-            this.startListening();
+            try{this.listen();}
+            catch(IOException exception){
+              System.out.println("An unexpected error occurred.");
+            }
           }
           else{
             System.out.print("The server has already started.");

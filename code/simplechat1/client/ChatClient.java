@@ -80,7 +80,7 @@ public class ChatClient extends AbstractClient
       quit();
     }
 
-    String firstChar = message[0];
+    String firstChar = message.substring(0, 1);
     if(firstChar == "#"){
       String[] splitMessage = message.split(" ");
       switch (splitMessage[0]){
@@ -103,7 +103,7 @@ public class ChatClient extends AbstractClient
           break;
         case "#setport":
           if(!isConnected()){
-            this.setPort(splitMessage[1]);
+            this.setPort(Integer.parseInt(splitMessage[1]));
           }
           else{
             System.out.println("You cannot set port while connected.");

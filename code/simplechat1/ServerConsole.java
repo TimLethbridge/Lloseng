@@ -1,8 +1,6 @@
 
 import java.io.*;
-import client.*;
 import common.*;
-import server.*;
 
 /**
  * This class constructs the UI for a chat client.  It implements the
@@ -28,7 +26,7 @@ public class ServerConsole implements ChatIF
     /**
      * The instance of the client that created this ConsoleChat.
      */
-    ChatServer server;
+    EchoServer server;
 
 
     //Constructors ****************************************************

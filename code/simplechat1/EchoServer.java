@@ -118,8 +118,9 @@ public class EchoServer extends AbstractServer {
     listen();
   }
 
-  synchronized protected void clientException(ConnectionToClient client) {
-    serverUI.display(client + "has encountered a problem");
+  synchronized protected void clientException(ConnectionToClient client,
+  java.lang.Throwable exception) {
+    serverUI.display(client.getInfo("login") + " has disconnected");
   }
 
   public void display(String msg) {

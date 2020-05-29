@@ -130,7 +130,7 @@ public class EchoServer extends AbstractServer
   }
 
   //Displays a message to all clients when a client disconnects
-  public void clientDisconnected(ConnectionToClient client){
+  public void clientException(ConnectionToClient client, Throwable e){
     String message = client.getInfo("loginID") + " has disconnected";
     System.out.println(message);
     sendToAllClients(message);

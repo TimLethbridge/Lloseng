@@ -50,7 +50,7 @@ public class EchoServer extends AbstractServer {
       if (client.getInfo("Loggedin") == "Y") {
         try {
           client.sendToClient("You are already Logged  in");
-          // client.close();
+          client.close();
         } catch (IOException exc) {
         }
 

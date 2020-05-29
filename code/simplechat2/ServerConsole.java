@@ -59,11 +59,12 @@ public class ServerConsole implements ChatIF {
      *
      * @param args[0] The host to connect to.
      */
+
     public static void main(String[] args) 
     {
       int DEFAULT_PORT = 5555; //Default Port
       int port = 0; //Port to listen on
-
+  
       try
       {
         port = Integer.parseInt(args[0]); //Get port from command line
@@ -72,9 +73,12 @@ public class ServerConsole implements ChatIF {
       {
         port = DEFAULT_PORT; //Set port to 5555
       }
-
+  
       ServerConsole chat = new ServerConsole(port);
-      chat.accept();  //Wait for server data
+      chat.accept();  //Wait for client data
     }
+    
   }
+  
+
 

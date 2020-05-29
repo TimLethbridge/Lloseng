@@ -39,14 +39,19 @@ public class ChatClient extends AbstractClient
    * @param clientUI The interface type variable.
    */
   
-  public ChatClient(String loginID, String host, int port, ChatIF clientUI) 
-    throws IOException 
+  public ChatClient(String loginID, String host, int port, ChatIF clientUI)  
   {
     super(host, port); //Call the superclass constructor
     this.clientUI = clientUI;
     this.loginID = loginID;
+
+    try{
     openConnection();
     sendToServer("#login " + loginID);
+    }
+    catch(IOException e){
+      System.out.println("Cannot open connection.  Awaiting command.");
+    }
   }
 
   
@@ -118,6 +123,7 @@ public class ChatClient extends AbstractClient
       case "#sethost":
         if(!isConnected()){
           setHost(messageList[1]);
+          System.out.println("Host set to: " + getHost() + ".");
         }
         else{
           System.out.println("Error: Cannot Change Host While Connected to a Server");
@@ -128,6 +134,7 @@ public class ChatClient extends AbstractClient
 
         if(!isConnected()){
           setPort(Integer.parseInt(messageList[1]));
+          System.out.println("Port set to: " + getPort() + ".");
         }
         else{
           System.out.println("Error: Cannot Change Port While Connected to a Server");
@@ -186,14 +193,13 @@ public class ChatClient extends AbstractClient
   //Terminates Client when server terminates
   public void connectionException(Exception Error){
 
-    System.out.println("The server has closed");
-    quit();
+    System.out.println("Abnormal termination of connection.");
 
   }
 
   //Displays Message upon client termination
   public void connectionClosed(){
-    
+    System.out.println("Connection Closed.");
   }
 
 }

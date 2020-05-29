@@ -27,7 +27,11 @@ public class ChatClient extends AbstractClient
    */
   ChatIF clientUI; 
 
-  
+  /**
+   * The string that store the id of login client.
+   */
+  String loginID;
+
   //Constructors ****************************************************
   
   /**
@@ -38,12 +42,22 @@ public class ChatClient extends AbstractClient
    * @param clientUI The interface type variable.
    */
   
-  public ChatClient(String host, int port, ChatIF clientUI) 
+  public ChatClient(String host, int port, ChatIF clientUI, String loginID) 
     throws IOException 
   {
     super(host, port); //Call the superclass constructor
     this.clientUI = clientUI;
-    openConnection();
+    this.loginID = loginID;
+
+    //Allow commands to be typed in console without server connection, messages
+    //other than commands will terminate client.
+    try{
+      openConnection();
+      sendToServer("#login " + loginID);
+    }
+    catch(IOException ex){ 
+      clientUI.display("Cannot open connection.  Awaiting command.");
+    }
   }
 
   
@@ -68,13 +82,84 @@ public class ChatClient extends AbstractClient
   {
     try
     {
-      sendToServer(message);
+      try{ //Avoid blank space cause index out of bound
+        //Determine whether the message is command or not
+        if(String.valueOf(message.charAt(0)).equals("#")){
+          try{ //Avoid index out of bound
+            if(message.equals("#quit")){
+              clientUI.display("Client terminates.");
+              quit();
+            }
+            else if(message.equals("#logoff")){
+              try{
+                closeConnection();
+              }
+              catch(IOException e){}
+             }
+            else if(message.substring(0, 4).equals("#set")){
+              if(!isConnected()){  //Whether the client is log off or not
+                if(message.substring(4, 8).equals("host")){
+                  String newHost = message.substring(8, message.length()).replaceAll("\\s+","");
+                  setHost(newHost);
+
+                  clientUI.display("Host set to: " + newHost + ", successfully.");
+                }
+                else if(message.substring(4, 8).equals("port")){
+                  String newPort = message.substring(8, message.length()).replaceAll("\\s+","");
+                  setPort(Integer.parseInt(newPort));
+
+                  clientUI.display("Port set to: " + newPort + ", successfully.");
+                }
+              }
+              else{
+                clientUI.display("Error: client has not logged off yet.");
+              }
+            }        
+            else if(message.substring(0, 6).equals("#login")){
+              if(isConnected() && message.length() > 6){ //login command (follow with id) should sent to server
+                sendToServer(message);
+              }
+              else if(!isConnected() && message.length() > 6){//Situation where client has logged off and want to re-log in
+                clientUI.display("To login, please enter #login"); 
+              }
+              else if(!isConnected()){ //Whether the client is log off or not
+                openConnection();
+                sendToServer("#login " + loginID);
+                clientUI.display("You have login successfully.");
+              }
+              else{
+                clientUI.display("Error: client has already logged in.");
+              }
+            }
+            else if(message.equals("#gethost")){
+              clientUI.display("The host name is: " + getHost());
+            }
+            else if(message.equals("#getport")){
+              clientUI.display("The port number is: " + String.valueOf(getPort()));
+            }
+            else{
+              clientUI.display("Error: unkonwn command");
+            }  
+          }
+          catch(IndexOutOfBoundsException ex){
+            clientUI.display("Error: unkonwn command");
+          }    
+        }
+        else{ //Non command message
+            sendToServer(message);
+        }             
+      }
+      catch(IndexOutOfBoundsException ex){
+        sendToServer(message);
+      }
+         
     }
     catch(IOException e)
     {
       clientUI.display
-        ("Could not send message to server.  Terminating client.");
-      quit();
+        ("Cannot oppen connection/send message to server,  awaiting command.");
+      //No quit and terminate cliet here since we want client 
+      //console still wait for inputs after server shutted down.
     }
   }
   
@@ -85,10 +170,27 @@ public class ChatClient extends AbstractClient
   {
     try
     {
-      closeConnection();
+      closeConnection( );
     }
     catch(IOException e) {}
     System.exit(0);
   }
+
+  //Override methods ************************************************
+
+  @Override
+  public void connectionClosed(){
+    clientUI.display
+      ("Connection closed.");
+  }
+
+  @Override
+  public void connectionException(Exception exception){
+    clientUI.display
+      ("SERVER SHUTTING DOWN! DISCONNECTING!\n"+ "> Abnormal termination of connection.");
+    //No quit and terminate cliet here since we want client 
+    //console still wait for inputs after server shutted down.
+  }
+
 }
 //End of ChatClient class

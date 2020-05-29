@@ -111,11 +111,24 @@ public class ClientConsole implements ChatIF
     {
       host = args[0];
     }
-    catch(ArrayIndexOutOfBoundsException e)
+    catch(ArrayIndexOutOfBoundsException e1)
     {
       host = "localhost";
     }
-    ClientConsole chat= new ClientConsole(host, DEFAULT_PORT);
+	
+	//Q5b This try loop checks to see if there is a second argument 
+	//If that's the case, it will assign it as the port number 
+	try
+    {
+      port = Integer.valueOf(args[1]);
+    }
+	//If there's no 2nd argument, it will use the DEFAULT_PORT
+    catch(ArrayIndexOutOfBoundsException e2)
+    {
+      port = DEFAULT_PORT;
+    }
+	//will use the port variable defined above instead of DEFAULT_PORT
+    ClientConsole chat= new ClientConsole(host, port); 
     chat.accept();  //Wait for console data
   }
 }

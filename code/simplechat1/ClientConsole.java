@@ -91,7 +91,18 @@ public class ClientConsole implements ChatIF
    */
   public void display(String message) 
   {
-    System.out.println("> " + message);
+	  //For a message coming from the server to not have a > prepended
+	try{
+	if (message.charAt(10)=='>'){
+		System.out.println(message);
+	}
+	else{
+		System.out.println("> " + message);
+	}
+	}
+	catch(IndexOutOfBoundsException e){
+		System.out.println("> " + message);
+	}
   }
 
   

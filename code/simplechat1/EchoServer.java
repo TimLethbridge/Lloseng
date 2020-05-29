@@ -2,6 +2,7 @@
 // "Object Oriented Software Engineering" and is issued under the open-source
 // license found at www.lloseng.com 
 
+import common.*;
 import java.io.*;
 import ocsf.server.*;
 
@@ -24,6 +25,7 @@ public class EchoServer extends AbstractServer
    */
   final public static int DEFAULT_PORT = 5555;
   
+
   //Constructors ****************************************************
   
   /**
@@ -34,6 +36,7 @@ public class EchoServer extends AbstractServer
   public EchoServer(int port) 
   {
     super(port);
+	
   }
 
   
@@ -48,6 +51,8 @@ public class EchoServer extends AbstractServer
    * @param client the client that raised the exception.
    * @param Throwable the exception thrown.
    */
+   
+   //when an exception is thrown, it calls the clientDisconnected hook method to print the appropriate message.
   synchronized protected void clientException(
     ConnectionToClient client, Throwable exception) {
 		clientDisconnected(client);
@@ -58,6 +63,8 @@ public class EchoServer extends AbstractServer
    * accepted. The default implementation does nothing.
    * @param client the connection connected to the client.
    */
+   
+   //prints a message when the client logs on.
   protected void clientConnected(ConnectionToClient client) {
 	  System.out.println("Client has logged on");
   }
@@ -69,6 +76,8 @@ public class EchoServer extends AbstractServer
    *
    * @param client the connection with the client.
    */
+   
+   //prints a message when the client logs off 
   synchronized protected void clientDisconnected(ConnectionToClient client) {
 	  System.out.println("Client has logged off");
   }
@@ -104,7 +113,114 @@ public class EchoServer extends AbstractServer
   protected void serverStopped()
   {
     System.out.println
-      ("Server has stopped listening for connections.");
+      ("Server has stopped listening for new connections.");
+  }
+  
+    /**
+   * Hook method called when the server stops accepting
+   * connections because an exception has been raised.
+   * The default implementation does nothing.
+   * This method may be overriden by subclasses.
+   *
+   * @param exception the exception raised.
+   */
+  protected void listeningException(Throwable exception) {
+  }
+
+
+  /**
+   * Hook method called when the server is clased.
+   * The default implementation does nothing. This method may be
+   * overriden by subclasses. When the server is closed while still
+   * listening, serverStopped() will also be called.
+   */
+  protected void serverClosed(){
+  System.out.println
+      ("Server has closed all connections."); }
+  
+  public void commandHelperMethod(String message){
+		
+		//seperates the command from the arguments (if pertinent - for #sethost and #setport)
+		String[] argumentsArray = message.split(" ");
+		
+		switch(argumentsArray[0]){
+			
+			case "#quit": //calls the quit method to logoff without having to use ctrl+c 
+				try{
+				close();
+				}
+				catch(IOException e){
+				
+				}
+				System.out.print("Shutting down server");
+				System.exit(0);
+				break;
+	
+			case "#stop":
+				stopListening();
+				break;
+				
+			case "#close":
+				try{
+				close();
+				}
+				catch(IOException e){
+				
+				}
+				break;
+				
+			case "#setport": //allows the user to change the port (only available when not connected to a server)
+				if(!isListening()&&getNumberOfClients()==0){
+					try{
+						setPort(Integer.parseInt(argumentsArray[1]));
+					}
+					catch(ArrayIndexOutOfBoundsException e){
+						System.out.println("Port number not specified. Please use the following format: #setport <portnumber> ");
+					}
+				}
+				else{
+					System.out.println("The server is currently open. You must first close the server using #close");
+				}
+				break;
+							
+			case "#start":
+				try{
+				listen();
+				}
+				catch(IOException e){
+				
+				}
+				break;
+ 							
+			case "#getport": // prints the port number
+				System.out.println("The port number is: "+Integer.toString(getPort()));
+				break;			
+			
+			default: //if someone typed the wrong command they would get an error message and a list of accepted commands
+				System.out.println("This is not a recognised command");
+				System.out.println("Please use one of the following:");
+				System.out.println("#quit, #stop, #close, #setport, #start or #getport");
+				break;
+		}
+		
+	}
+  
+  /**
+   * This method handles all data coming from the UI            
+   *
+   * @param message The message from the UI.    
+   */
+  public void handleMessageFromServerUI(String message)
+  {
+	//Checks if the message is a command and redirects it to the helper method
+	if(message.charAt(0)=='#'){
+		commandHelperMethod(message); 
+	}
+	else{
+		sendToAllClients("SERVER MSG> "+message);
+		  //makes the messages comming from the server begin with 'SERVER MSG>'
+		System.out.println("SERVER MSG> " + message); 
+	}
   }
   
   //Class methods ***************************************************

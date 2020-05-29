@@ -83,7 +83,6 @@ public class EchoServer extends AbstractServer
           sendToAllClients(message);
         }
         else{
-          System.out.println("Error: Client Already Logged In");
 
           try{
           client.sendToClient("Error: Client Already Logged In");
@@ -137,6 +136,7 @@ public class EchoServer extends AbstractServer
     sendToAllClients(message);
   }
 
+
   public void handleMessageFromServerUI(String message){
     
     char commandKey = "#".charAt(0);
@@ -179,6 +179,7 @@ public class EchoServer extends AbstractServer
 
           try{
             setPort(Integer.parseInt(commandList[1]));
+            System.out.println("Port Set to: " + getPort());
           }
           catch(IndexOutOfBoundsException e){
             System.out.println("Error: Port Not Specified");

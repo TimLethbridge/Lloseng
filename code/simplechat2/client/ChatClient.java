@@ -171,10 +171,6 @@ public class ChatClient extends AbstractClient
         System.out.println("Error: Command Not Recognized");
 
    } 
-
-
-
-
   }
   
   /**

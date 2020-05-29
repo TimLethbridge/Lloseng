@@ -57,6 +57,8 @@ class AdaptableClient extends AbstractClient
    *
    * @param exception the exception raised.
    */
+
+
   final protected void connectionException(Exception exception)
   {
     client.connectionException(exception);

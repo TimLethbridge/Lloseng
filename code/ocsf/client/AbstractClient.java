@@ -278,6 +278,7 @@ public abstract class AbstractClient implements Runnable {
 	 * @param exception
 	 *            the exception raised.
 	 */
+
 	protected void connectionException(Exception exception) {
 	}
 
@@ -286,6 +287,7 @@ public abstract class AbstractClient implements Runnable {
 	 * implementation does nothing. It may be overridden by subclasses to do
 	 * anything they wish.
 	 */
+
 	protected void connectionEstablished() {
 	}
 

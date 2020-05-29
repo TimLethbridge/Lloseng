@@ -15,7 +15,7 @@ import ocsf.server.*;
  * @author Paul Holden
  * @version July 2000
  */
-public class EchoServer extends AbstractServer 
+public class EchoServer extends AbstractServer
 {
   //Class variables *************************************************
   
@@ -48,7 +48,20 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
-    System.out.println("Message received: " + msg + " from " + client);
+    String[] splitMessage = msg.split(" ");
+    if(splitMessage[0]=="#login"){
+      if(client.getInfo("loginid") == null){
+        client.setInfo(splitMessage[1]);
+      }
+      else{
+        client.sendToClient("Your login ID has already been set.");
+      }
+    }
+    else if(client.getInfo("loginid")==null){
+      client.sendToClient("ERROR: You must set a login ID first.");
+      close();
+    }
+    System.out.println("Message received: " + msg + " from " + client.getInfo("loginid"));
     this.sendToAllClients(msg);
   }
     
@@ -70,6 +83,77 @@ public class EchoServer extends AbstractServer
   {
     System.out.println
       ("Server has stopped listening for connections.");
+  }
+
+  @Override
+  public void clientConnected(){
+    System.out.println
+            (client + " has connected to the chat.");
+  }
+
+  @Override
+  public void clientDisconnected(){
+    System.out.println
+            (client + " has disconnected from the chat.");
+  }
+
+  public void handleMessageFromServer(String message)
+  {
+    try
+    {
+      sendToServer(message);
+    }
+    catch(IOException e)
+    {
+      clientUI.display
+              ("Could not send message to server.  Terminating client.");
+      quit();
+    }
+
+    String firstChar = message[0];
+    if(firstChar == "#"){
+      String[] splitMessage = message.split(" ");
+      switch (splitMessage[0]){
+        case "#quit":
+          this.stop();
+          break;
+        case "#stop":
+          this.stopListening();
+          break;
+        case "#close":
+          this.stopListening();
+          try {
+            this.close();
+          }
+          catch(IOException exception){
+            System.out.println("An error occurred when trying to close the server.");
+          }
+          break;
+        case "setport":
+          if (!this.isListening()) {
+            super.setPort(Integer.parseInt(parameters[1]));
+            System.out.println("New port: " + Integer.parseInt(parameters[1]));
+          } else {
+            System.out.println("An error occurred when changing the port.");
+          }
+          break;
+        case "#start":
+          if (!this.isListening()) {
+            this.startListening();
+          }
+          else{
+            System.out.print("The server has already started.")
+          }
+          break;
+        case "#getport":
+          System.out.print("Current port: " + this.getPort());
+          break;
+        default:
+          System.out.println("Invalid command.");
+          break;
+      }
+    }
+
   }
   
   //Class methods ***************************************************

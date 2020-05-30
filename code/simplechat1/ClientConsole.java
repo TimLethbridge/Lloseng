@@ -50,6 +50,7 @@ public class ClientConsole implements ChatIF
     catch(IOException exception) 
     {
       System.out.println("Cannot open connection. Awaiting command.");
+      System.exit(1); // Added because commands don't work..
     }
   }
 

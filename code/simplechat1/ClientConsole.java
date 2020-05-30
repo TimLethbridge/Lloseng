@@ -5,7 +5,6 @@
 import java.io.*;
 import client.*;
 import common.*;
-import java.util.Random;
 
 /**
  * This class constructs the UI for a chat client.  It implements the

@@ -64,6 +64,7 @@ public class ClientConsole implements ChatIF
    */
   public void accept()
   {
+
     try
     {
       BufferedReader fromConsole =
@@ -73,7 +74,86 @@ public class ClientConsole implements ChatIF
       while (true)
       {
         message = fromConsole.readLine();
-        client.handleMessageFromClientUI(message);
+
+        switch (message)
+        {
+
+          case "#quit":
+            client.quit();
+            break;
+
+
+          case "#logoff" :
+            try
+            {
+              client.closeConnection();
+            }
+
+            catch (IOException e)
+            {
+
+            }
+          break;
+
+
+          case ("#sethost"):
+
+            String newHost = message.substring(9, message.length()-1);
+            System.out.println(newHost);
+
+            if (client.isConnected())
+            {
+              System.out.println("The client must be disconnected before" +
+              "changing the host");
+            }
+
+            else
+            {
+              try
+              {
+                client.setHost(newHost);
+              }
+
+              catch(ArrayIndexOutOfBoundsException e)
+              {
+
+              }
+            }
+            break;
+
+          case ("#login") :
+
+          if (!client.isConnected())
+          {
+            try
+            {
+              client.openConnection();
+            }
+
+            catch (IOException e)
+            {
+
+            }
+          }
+
+          else
+          {
+            System.out.println("The client is already connected to the server");
+          }
+            break;
+
+          case "#gethost":
+            System.out.println(client.getHost());
+
+          case "#getport":
+            System.out.println(client.getPort());
+
+          default:
+            client.handleMessageFromClientUI(message);
+            break;
+        }
+
+
       }
     }
     catch (Exception ex)
@@ -101,6 +181,7 @@ public class ClientConsole implements ChatIF
    * This method is responsible for the creation of the Client UI.
    *
    * @param args[0] The host to connect to.
+   * @param args[1] The port to connect to.
    */
   public static void main(String[] args)
   {
@@ -122,14 +203,14 @@ public class ClientConsole implements ChatIF
     try
     {
       port = Integer.parseInt(args[1]);
-
+      chat = new ClientConsole(host, port);
     }
     catch ( ArrayIndexOutOfBoundsException e)
     {
       chat = new ClientConsole(host, DEFAULT_PORT);
     }
 
-    chat = new ClientConsole(host, port);
+
     chat.accept();  //Wait for console data
   }
 }

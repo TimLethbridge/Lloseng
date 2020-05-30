@@ -83,11 +83,17 @@ public class ChatClient extends AbstractClient
    */
   public void quit()
   {
-    try
-    {
-      closeConnection();
-    }
-    catch(IOException e) {}
+    if (isConnected())
+      {
+        try
+        {
+          closeConnection();
+        }
+
+        catch(IOException e) {}
+      }
+
+    
     System.exit(0);
   }
 
@@ -101,13 +107,15 @@ public class ChatClient extends AbstractClient
   */
   protected void connectionException(Exception e)
   {
-    System.out.println("Server was disconnected.  The client has been terminated");
-    quit();
+
+      System.out.println("Server has been terminated.  The client is now termainated");
+      quit();
+
   }
 
   protected void connectionClosed()
   {
-    
+    System.out.println("This client has been disconnected from the server");
   }
 }
 //End of ChatClient class

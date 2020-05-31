@@ -41,11 +41,11 @@ public class ClientConsole implements ChatIF
    * @param host The host to connect to.
    * @param port The port to connect on.
    */
-  public ClientConsole(String host, int port) 
+  public ClientConsole(String clientId, String host, int port) 
   {
     try 
     {
-      client= new ChatClient(host, port, this);
+      client= new ChatClient(clientId, host, port, this);
     } 
     catch(IOException exception) 
     {
@@ -117,21 +117,39 @@ public class ClientConsole implements ChatIF
   {
     String host = "";
     int port = 0;  //The port number
-
+	String clientId = ""; //The user's loginId 
+	
+	
+	//Question 7a
+	//Assigns the first argument as the loginId
+	try {
+		clientId=args[0];
+	}
+	//If no loginId is provided an error message is printed and the user is disconnected
+	catch(ArrayIndexOutOfBoundsException e0){
+		System.out.println("Cannot connect to server without login Id.");
+		System.exit(0);
+	}
+	
     try
     {
-      host = args[0];
+		//Question 7 a
+		//changed to second arg since adding clientId
+      host = args[1]; 
     }
     catch(ArrayIndexOutOfBoundsException e1)
     {
       host = "localhost";
     }
 	
-	//Q5b This try loop checks to see if there is a second argument 
+	//Question 5b 
+	//This try loop checks to see if there is a second argument 
 	//If that's the case, it will assign it as the port number 
 	try
     {
-      port = Integer.valueOf(args[1]);
+		//Question 7 a
+		//changed to third arg since adding clientId
+      port = Integer.valueOf(args[2]); 
     }
 	//If there's no 2nd argument, it will use the DEFAULT_PORT
     catch(ArrayIndexOutOfBoundsException e2)
@@ -139,7 +157,8 @@ public class ClientConsole implements ChatIF
       port = DEFAULT_PORT;
     }
 	//will use the port variable defined above instead of DEFAULT_PORT
-    ClientConsole chat= new ClientConsole(host, port); 
+	//added the loginId to the constructor (Question 7a)
+    ClientConsole chat= new ClientConsole(clientId, host, port); 
     chat.accept();  //Wait for console data
   }
 }

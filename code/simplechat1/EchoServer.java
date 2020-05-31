@@ -25,6 +25,7 @@ public class EchoServer extends AbstractServer
    */
   final public static int DEFAULT_PORT = 5555;
   
+  
 
   //Constructors ****************************************************
   
@@ -52,6 +53,7 @@ public class EchoServer extends AbstractServer
    * @param Throwable the exception thrown.
    */
    
+   //Question 5c
    //when an exception is thrown, it calls the clientDisconnected hook method to print the appropriate message.
   synchronized protected void clientException(
     ConnectionToClient client, Throwable exception) {
@@ -64,9 +66,11 @@ public class EchoServer extends AbstractServer
    * @param client the connection connected to the client.
    */
    
+   //Question 5c
    //prints a message when the client logs on.
   protected void clientConnected(ConnectionToClient client) {
 	  System.out.println("Client has logged on");
+
   }
 
   /**
@@ -77,9 +81,11 @@ public class EchoServer extends AbstractServer
    * @param client the connection with the client.
    */
    
+   //Question 5c
    //prints a message when the client logs off 
   synchronized protected void clientDisconnected(ConnectionToClient client) {
 	  System.out.println("Client has logged off");
+	  
   }
 
   
@@ -92,8 +98,59 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
-    System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
+	//converts the message Object into a string
+	String message = msg.toString(); 
+	//splits the string into words
+	String[] idArray = message.split(" ");
+	
+	//Question 7 c i
+	//This if statement recognizes the #login command
+	if(idArray[0].equals("#login")){
+		try{
+			//Question 7 iv
+			//Tries to get loginId, if there is none, then (#login <loginId>) is the first message
+			// it would then jump to the catch Exception e
+			String test = client.getInfo("loginId").toString(); 
+			try{
+				//An error message would be printed if the loginId already exists
+				client.sendToClient("Error: you have already given us a login Id");
+				}
+			catch(IOException e){}	
+		}
+		catch(Exception f){
+			//Question 7ii
+			//identifies the client by adding the loginId to the user info hashmap.
+				client.setInfo("loginId", idArray[1]);
+			
+		}
+	}
+	else{
+		try{
+			//Tries to get loginId, if there is none, then the first message (#login <loginId>) was not recieved 
+			// it would then jump to the catch Exception g
+			String test = client.getInfo("loginId").toString();
+			//Question 7 c iii
+			//Prints message in server and sends the message out to all users with the loginId prepended. 
+			System.out.println("Message received: " + msg + " from " + client);
+			this.sendToAllClients(client.getInfo("loginId").toString() + " " + msg);
+		}
+		catch(Exception g){
+			//Question 7 c v
+			//If the loginId has not already been recieved as 1st message it prints and error message
+			//and closes the connection to that client.
+			try{
+				client.sendToClient("Error: no login Id provided by the system");
+			}
+			catch(IOException h){}
+			finally{
+				try{
+					client.close();
+				}
+				catch(IOException i){}
+			}
+		}
+	}
+  
   }
     
   /**
@@ -115,17 +172,6 @@ public class EchoServer extends AbstractServer
     System.out.println
       ("Server has stopped listening for new connections.");
   }
-  
-    /**
-   * Hook method called when the server stops accepting
-   * connections because an exception has been raised.
-   * The default implementation does nothing.
-   * This method may be overriden by subclasses.
-   *
-   * @param exception the exception raised.
-   */
-  protected void listeningException(Throwable exception) {
-  }
 
 
   /**
@@ -138,14 +184,26 @@ public class EchoServer extends AbstractServer
   System.out.println
       ("Server has closed all connections."); }
   
+  
+  	/**
+	*
+	*This method handles the case when a user enters a string starting with a #
+	*It parses the message to see what command it was then it executes said command
+	*
+	* @param message The message from the UI.
+	*/
+	
+  	//Question 6 c 
+	//Method that recieves a message that begins with # (a command)
+	//and parses which command was issued and what to do
   public void commandHelperMethod(String message){
 		
-		//seperates the command from the arguments (if pertinent - for #sethost and #setport)
+		//seperates the command from the arguments (if pertinent - for #setport)
 		String[] argumentsArray = message.split(" ");
 		
 		switch(argumentsArray[0]){
-			
-			case "#quit": //calls the quit method to logoff without having to use ctrl+c 
+			//Question 6 c i
+			case "#quit": //closes the server then quits the system
 				try{
 				close();
 				}
@@ -155,12 +213,12 @@ public class EchoServer extends AbstractServer
 				System.out.print("Shutting down server");
 				System.exit(0);
 				break;
-	
-			case "#stop":
+			//Question 6 c ii
+			case "#stop": //stops listening for new clients
 				stopListening();
 				break;
-				
-			case "#close":
+			//Question 6 c iii
+			case "#close": //closes the server (stops listening + kicks the current users off)
 				try{
 				close();
 				}
@@ -168,7 +226,7 @@ public class EchoServer extends AbstractServer
 				
 				}
 				break;
-				
+			//Question 6 c iv
 			case "#setport": //allows the user to change the port (only available when not connected to a server)
 				if(!isListening()&&getNumberOfClients()==0){
 					try{
@@ -182,8 +240,8 @@ public class EchoServer extends AbstractServer
 					System.out.println("The server is currently open. You must first close the server using #close");
 				}
 				break;
-							
-			case "#start":
+			//Question 6 c v				
+			case "#start": //opens the server
 				try{
 				listen();
 				}
@@ -191,7 +249,7 @@ public class EchoServer extends AbstractServer
 				
 				}
 				break;
- 							
+ 			//Question 6 c vi				
 			case "#getport": // prints the port number
 				System.out.println("The port number is: "+Integer.toString(getPort()));
 				break;			
@@ -210,6 +268,8 @@ public class EchoServer extends AbstractServer
    *
    * @param message The message from the UI.    
    */
+   
+   
   public void handleMessageFromServerUI(String message)
   {
 	//Checks if the message is a command and redirects it to the helper method
@@ -217,8 +277,11 @@ public class EchoServer extends AbstractServer
 		commandHelperMethod(message); 
 	}
 	else{
+		//Question 6b ii
+		//makes the messages comming from the server begin with 'SERVER MSG>'
+
 		sendToAllClients("SERVER MSG> "+message);
-		  //makes the messages comming from the server begin with 'SERVER MSG>'
+		  
 		System.out.println("SERVER MSG> " + message); 
 	}
   }

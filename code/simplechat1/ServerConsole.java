@@ -1,3 +1,8 @@
+//Code written for Question 6b. Creates a ServerConsole which implements EchoServer
+//And allows it to communicate with the other users
+
+
+
 import java.io.*;
 import common.*;
 
@@ -81,7 +86,8 @@ public class ServerConsole implements ChatIF
    */
   public void display(String message) 
   {
-	  //makes the messages comming from the server begin with 'SERVER MSG>'
+	//I don't actually need to call this method in EchoServer but it is implemented for future use
+	//makes the messages comming from the server begin with 'SERVER MSG>'
     System.out.println("SERVER MSG> " + message); 
   }
 

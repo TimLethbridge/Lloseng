@@ -25,7 +25,8 @@ public class ChatClient extends AbstractClient
    * The interface type variable.  It allows the implementation of 
    * the display method in the client.
    */
-  ChatIF clientUI; 
+  ChatIF clientUI;
+  private String loginId;
 
   
   //Constructors ****************************************************
@@ -38,12 +39,17 @@ public class ChatClient extends AbstractClient
    * @param clientUI The interface type variable.
    */
   
-  public ChatClient(String host, int port, ChatIF clientUI) 
-    throws IOException 
+  public ChatClient(String host, int port, ChatIF clientUI,String loginId)
   {
     super(host, port); //Call the superclass constructor
     this.clientUI = clientUI;
-    openConnection();
+    try {
+      openConnection();
+      this.loginId = loginId;
+      sendToServer("#login " + loginId);
+    } catch (IOException e) {
+      System.out.println("Cannot open connection.  Awaiting command.");
+    }
   }
 
   
@@ -56,7 +62,7 @@ public class ChatClient extends AbstractClient
    */
   public void handleMessageFromServer(Object msg) 
   {
-    clientUI.display(msg.toString());
+    System.out.println(msg.toString());
   }
 
   /**
@@ -66,15 +72,61 @@ public class ChatClient extends AbstractClient
    */
   public void handleMessageFromClientUI(String message)
   {
-    try
-    {
-      sendToServer(message);
-    }
-    catch(IOException e)
-    {
-      clientUI.display
-        ("Could not send message to server.  Terminating client.");
+    if(message.equals("#quit")) {
       quit();
+    } else if(message.equals("#logoff")) {
+      try {
+        closeConnection();
+      } catch (IOException ignored) { }
+    } else if(message.startsWith("#sethost ")) {
+      if(isConnected()) {
+        clientUI.display("Only allowed if the client is logged off");
+        return;
+      }
+      try {
+        String host = message.split("\\s+")[1];
+        setHost(host);
+        System.out.println("Host set to: " + host);
+      } catch (Exception e) {
+        clientUI.display("Invalid host.");
+      }
+    } else if(message.startsWith("#setport ")) {
+      if(isConnected()) {
+        clientUI.display("Only allowed if the client is logged off");
+        return;
+      }
+      try {
+        int port = Integer.parseInt(message.split("\\s+")[1]);
+        setPort(port);
+        System.out.printf("port set to: %d.\n",port);
+      } catch (Exception e) {
+        clientUI.display("Invalid port.");
+      }
+    } else if(message.equals("#login")) {
+      if(isConnected()) {
+        clientUI.display("Only allowed if the client is not already connected.");
+        return;
+      }
+      try {
+        openConnection();
+        sendToServer("#login " + loginId);
+      } catch (IOException e) {
+        clientUI.display("login error");
+      }
+    } else if(message.equals("#gethost")) {
+      clientUI.display("current host: " + getHost());
+    } else if(message.equals("#getport")) {
+      clientUI.display("current port: " + getPort());
+    } else if(message.startsWith("#")) {
+      clientUI.display("Unknown command.");
+    } else {
+      try {
+        sendToServer(message);
+      } catch (IOException e) {
+        clientUI.display
+                ("Could not send message to server.  Terminating client.");
+        quit();
+      }
     }
   }
   
@@ -83,25 +135,26 @@ public class ChatClient extends AbstractClient
    */
   public void quit()
   {
-    try
-    {
-      closeConnection();
+    if(isConnected()) {
+      try {
+        closeConnection();
+      } catch (IOException e) {
+      }
     }
-    catch(IOException e) {}
+    System.out.println("Client terminates.");
     System.exit(0);
   }
 
   @Override
   protected void connectionClosed() {
-    System.out.println("the server has shut down, and quitting.");
-    System.exit(0);
+    System.out.println("Abnormal termination of connection.");
   }
 
 
   @Override
   protected void connectionException(Exception exception) {
-    System.out.println("the server has shut down, and quitting.");
-    System.exit(0);
+    System.out.println("Abnormal termination of connection.");
   }
+
 }
 //End of ChatClient class

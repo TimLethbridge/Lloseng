@@ -69,33 +69,26 @@ public class ChatClient extends AbstractClient
    */
   public void handleMessageFromClientUI(String message)
   {
-    try
-    {
-      sendToServer(message);
-    }
-    catch(IOException e)
-    {
-      clientUI.display
-        ("Could not send message to server.  Terminating client.");
-      quit();
-    }
-
-    String firstChar = message.substring(0, 1);
-    if(firstChar == "#"){
+    if(message.startsWith("#")){
       String[] splitMessage = message.split(" ");
       switch (splitMessage[0]){
         case "#quit":
+          System.out.println("Quitting server...");
           quit();
           break;
         case "#logoff":
           try
-          { closeConnection();}
+          { 
+            System.out.println("Logging off..."); 
+            closeConnection();
+            System.out.println("Connection closed.");}
           catch (IOException e)
           { System.out.println("There was an error trying to close connection."); }
           break;
         case "#sethost":
           if(!isConnected()){
             this.setHost(splitMessage[1]);
+            System.out.println("New host has been set.");
           }
           else{
             System.out.println("You cannot set host while connected.");
@@ -104,6 +97,7 @@ public class ChatClient extends AbstractClient
         case "#setport":
           if(!isConnected()){
             this.setPort(Integer.parseInt(splitMessage[1]));
+            System.out.println("New port has been set.");
           }
           else{
             System.out.println("You cannot set port while connected.");
@@ -111,7 +105,8 @@ public class ChatClient extends AbstractClient
           break;
         case "#login":
           try
-          { openConnection();}
+          { openConnection();
+            System.out.println("The connection has been opened.");}
           catch (IOException e)
           { System.out.println("There was an error trying to open connection."); }
           break;
@@ -119,20 +114,32 @@ public class ChatClient extends AbstractClient
           System.out.println("Currrent host: " + getHost());
           break;
         case "#getport":
-          System.out.println("Currrent host: " + getPort());
+          System.out.println("Currrent port: " + getPort());
           break;
         default:
           System.out.println("Invalid command.");
           break;
       }
     }
-
-  }
+    else{
+      try
+      {
+        sendToServer(message);
+      }
+      catch(IOException e)
+      {
+        clientUI.display
+          ("Could not send message to server.  Terminating client.");
+        quit();
+      }
+  
+    }
+    }
+   
 
   // quit if the connection is closed
   public void ConnectionClosed(){
     System.out.println("The server has shut down.");
-    quit();
   }
 
   // quit if there is a connection exception

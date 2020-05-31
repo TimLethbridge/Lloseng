@@ -34,18 +34,18 @@ public class ServerConsole implements ChatIF
     /**
      * Constructs an instance of the ClientConsole UI.
      *
-     * @param host The host to connect to.
      * @param port The port to connect on.
      */
-    public ServerConsole(String host, int port)
+    public ServerConsole(int port)
     {
+        server = new EchoServer(port);
         try
         {
             server.listen();
         }
         catch(IOException exception)
         {
-            System.out.println("Error: Can't setup connection!"
+            System.out.println("Error!!!!: Can't setup connection!"
                     + " Terminating server.");
             System.exit(1);
         }
@@ -70,6 +70,7 @@ public class ServerConsole implements ChatIF
             {
                 message = fromConsole.readLine();
                 server.handleMessageFromServer(message);
+                this.display(message);
             }
         }
         catch (Exception ex)
@@ -100,17 +101,8 @@ public class ServerConsole implements ChatIF
      */
     public static void main(String[] args)
     {
-        String host = "";
-        int port = 0;  //The port number
-        //set host
-        try
-        {
-            host = args[0];
-        }
-        catch(ArrayIndexOutOfBoundsException e)
-        {
-            host = "localhost";
-        }
+        int port;
+    
         // set port
         try
         {
@@ -121,7 +113,7 @@ public class ServerConsole implements ChatIF
             port = DEFAULT_PORT;
         }
 
-        ServerConsole chat= new ServerConsole(host, port);
+        ServerConsole chat= new ServerConsole(port);
         chat.accept();  //Wait for console data
     }
 }

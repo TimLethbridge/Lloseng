@@ -110,7 +110,7 @@ public class ClientConsole implements ChatIF
 
     try
     {
-      loginid = args[1];
+      loginid = args[0];
     }
     catch(ArrayIndexOutOfBoundsException e)
     {
@@ -123,7 +123,7 @@ public class ClientConsole implements ChatIF
     //set host
     try
     {
-      host = args[2];
+      host = args[1];
     }
     catch(ArrayIndexOutOfBoundsException e)
     {
@@ -132,7 +132,7 @@ public class ClientConsole implements ChatIF
     // set port
     try
     {
-      port = Integer.parseInt(args[3]);
+      port = Integer.parseInt(args[2]);
     }
     catch(ArrayIndexOutOfBoundsException e)
     {

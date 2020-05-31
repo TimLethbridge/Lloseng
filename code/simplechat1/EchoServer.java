@@ -2,7 +2,6 @@
 // "Object Oriented Software Engineering" and is issued under the open-source
 // license found at www.lloseng.com 
 
-import common.*;
 import java.io.*;
 import ocsf.server.*;
 
@@ -69,8 +68,7 @@ public class EchoServer extends AbstractServer
    //Question 5c
    //prints a message when the client logs on.
   protected void clientConnected(ConnectionToClient client) {
-	  System.out.println("Client has logged on");
-
+	  System.out.println("A new client is attempting to connect to the server.");
   }
 
   /**
@@ -83,8 +81,10 @@ public class EchoServer extends AbstractServer
    
    //Question 5c
    //prints a message when the client logs off 
+   //changed to comply with the testcases
   synchronized protected void clientDisconnected(ConnectionToClient client) {
-	  System.out.println("Client has logged off");
+	this.sendToAllClients(client.getInfo("loginId").toString() + " has logged off ");
+	System.out.println(client.getInfo("loginId").toString()+" has logged off");
 	  
   }
 
@@ -121,6 +121,10 @@ public class EchoServer extends AbstractServer
 			//Question 7ii
 			//identifies the client by adding the loginId to the user info hashmap.
 				client.setInfo("loginId", idArray[1]);
+				//Question 5c
+				//Message that tells all users when someone logs onto the server
+				this.sendToAllClients(client.getInfo("loginId").toString() + " has logged on ");
+				System.out.println(client.getInfo("loginId").toString()+" has logged on");
 			
 		}
 	}
@@ -131,7 +135,7 @@ public class EchoServer extends AbstractServer
 			String test = client.getInfo("loginId").toString();
 			//Question 7 c iii
 			//Prints message in server and sends the message out to all users with the loginId prepended. 
-			System.out.println("Message received: " + msg + " from " + client);
+			System.out.println("Message received: " + msg + " from " + client.getInfo("loginId").toString());
 			this.sendToAllClients(client.getInfo("loginId").toString() + " " + msg);
 		}
 		catch(Exception g){

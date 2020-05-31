@@ -38,12 +38,15 @@ public class ChatClient extends AbstractClient
    * @param clientUI The interface type variable.
    */
   
-  public ChatClient(String host, int port, ChatIF clientUI) 
+  public ChatClient(String loginid, String host, int port, ChatIF clientUI)
     throws IOException 
   {
     super(host, port); //Call the superclass constructor
     this.clientUI = clientUI;
     openConnection();
+
+    this.sendToServer("#login " + loginid);
+
   }
 
   
@@ -66,16 +69,83 @@ public class ChatClient extends AbstractClient
    */
   public void handleMessageFromClientUI(String message)
   {
-    try
-    {
-      sendToServer(message);
+    if(message.startsWith("#")){
+      String[] splitMessage = message.split(" ");
+      switch (splitMessage[0]){
+        case "#quit":
+          System.out.println("Quitting server...");
+          quit();
+          break;
+        case "#logoff":
+          try
+          { 
+            System.out.println("Logging off..."); 
+            closeConnection();
+            System.out.println("Connection closed.");}
+          catch (IOException e)
+          { System.out.println("There was an error trying to close connection."); }
+          break;
+        case "#sethost":
+          if(!isConnected()){
+            this.setHost(splitMessage[1]);
+            System.out.println("New host has been set.");
+          }
+          else{
+            System.out.println("You cannot set host while connected.");
+          }
+          break;
+        case "#setport":
+          if(!isConnected()){
+            this.setPort(Integer.parseInt(splitMessage[1]));
+            System.out.println("New port has been set.");
+          }
+          else{
+            System.out.println("You cannot set port while connected.");
+          }
+          break;
+        case "#login":
+          try
+          { openConnection();
+            System.out.println("The connection has been opened.");}
+          catch (IOException e)
+          { System.out.println("There was an error trying to open connection."); }
+          break;
+        case "#gethost":
+          System.out.println("Currrent host: " + getHost());
+          break;
+        case "#getport":
+          System.out.println("Currrent port: " + getPort());
+          break;
+        default:
+          System.out.println("Invalid command.");
+          break;
+      }
     }
-    catch(IOException e)
-    {
-      clientUI.display
-        ("Could not send message to server.  Terminating client.");
-      quit();
+    else{
+      try
+      {
+        sendToServer(message);
+      }
+      catch(IOException e)
+      {
+        clientUI.display
+          ("Could not send message to server.  Terminating client.");
+        quit();
+      }
+  
     }
+    }
+   
+
+  // quit if the connection is closed
+  public void ConnectionClosed(){
+    System.out.println("The server has shut down.");
+  }
+
+  // quit if there is a connection exception
+  public void connectionException(Exception exception) {
+    System.out.println("There has been a connection error. Shutting down...");
+    quit();
   }
   
   /**

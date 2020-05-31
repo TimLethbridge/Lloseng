@@ -15,7 +15,7 @@ import ocsf.server.*;
  * @author Paul Holden
  * @version July 2000
  */
-public class EchoServer extends AbstractServer 
+public class EchoServer extends AbstractServer
 {
   //Class variables *************************************************
   
@@ -48,8 +48,36 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
-    System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
+    String message = msg.toString();
+    if (message.startsWith("#")) {
+        String[] splitMessage = message.substring(1).split(" ");
+        if (splitMessage.length > 1 && splitMessage[0]==("login")) {
+            if (client.getInfo("loginid") == null) {
+                client.setInfo("loginid", splitMessage[1]);
+                System.out.println(client.getInfo("loginid")+" has logged on.");
+                this.sendToAllClients(client.getInfo("loginid") + " has logged on.");
+            } else {
+                try {
+                    client.sendToClient("ERROR: Your username has been set already.");
+                } catch (IOException e) {
+                  System.out.print("An error has occurred.");
+                }
+            }
+
+        }
+    } else {
+        if (client.getInfo("loginid") == null) {
+            try {
+                client.sendToClient("ERROR: You must set a username.");
+                client.close();
+            } catch (IOException e) {
+              System.out.print("An error has occurred.");
+            }
+        } else {
+            System.out.println("Message received: " + msg + " from " + client.getInfo("loginid"));
+            this.sendToAllClients(client.getInfo("loginid") + " > " + message);
+        }
+    }
   }
     
   /**
@@ -70,6 +98,87 @@ public class EchoServer extends AbstractServer
   {
     System.out.println
       ("Server has stopped listening for connections.");
+  }
+
+  public void clientConnected(ConnectionToClient client){
+    if(client.getInfo("loginid")!=null){
+    System.out.println
+            (client.getInfo("loginid") + " has connected to the chat.");
+    }
+    else{
+      System.out.println("A client has connected to the chat.");
+    }
+  }
+
+  @Override
+  public void clientDisconnected(ConnectionToClient client){
+    System.out.println
+            (client.getInfo("loginid") + " has disconnected from the chat.");
+            this.sendToAllClients(client.getInfo("loginid") + " has disconnected from the chat.");
+  }
+
+  public void handleMessageFromServer(String message)
+  {
+    if(message.startsWith("#")){
+      String[] splitMessage = message.split(" ");
+      switch (splitMessage[0]){
+        case "#quit":
+        try {
+          System.out.println("Quitting...");
+          this.close();
+          System.out.println("Server successfully quit.");
+        }
+        catch(IOException exception){
+          System.out.println("An error occurred when trying to close the server.");
+        }
+          break;
+        case "#stop":
+          this.sendToAllClients("WARNING: the server has stopped listening for connections.");
+          this.stopListening();
+          break;
+        case "#close":
+          this.stopListening();
+          try {
+            this.close();
+            System.out.println("The server is now closed.");
+          }
+          catch(IOException exception){
+            System.out.println("An error occurred when trying to close the server.");
+          }
+          break;
+        case "#setport":
+          if (!this.isListening()) {
+            super.setPort(Integer.parseInt(splitMessage[1]));
+            System.out.println("New port: " + Integer.parseInt(splitMessage[1]));
+          } else {
+            System.out.println("An error occurred when changing the port.");
+          }
+          break;
+        case "#start":
+          if (!this.isListening()) {
+            try{this.listen();
+              System.out.println("The server has begun listening for connections.");
+            }
+            catch(IOException exception){
+              System.out.println("An unexpected error occurred.");
+            }
+          }
+          else{
+            System.out.println("The server has already started.");
+          }
+          break;
+        case "#getport":
+          System.out.println("Current port: " + this.getPort());
+          break;
+        default:
+          System.out.println("Invalid command.");
+          break;
+      }
+    }
+    else{
+      sendToAllClients("SERVER MSG>" + message);
+    }
+
   }
   
   //Class methods ***************************************************
@@ -94,11 +203,11 @@ public class EchoServer extends AbstractServer
       port = DEFAULT_PORT; //Set port to 5555
     }
 	
-    EchoServer sv = new EchoServer(port);
+    ServerConsole sv = new ServerConsole(port);
     
     try 
     {
-      sv.listen(); //Start listening for connections
+      sv.accept(); //Start listening for connections
     } 
     catch (Exception ex) 
     {

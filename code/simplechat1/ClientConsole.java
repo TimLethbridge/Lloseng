@@ -2,9 +2,11 @@
 // "Object Oriented Software Engineering" and is issued under the open-source
 // license found at www.lloseng.com 
 
+package simplechat1;
+
 import java.io.*;
-import client.*;
-import common.*;
+import simplechat1.client.*;
+import simplechat1.common.*;
 
 /**
  * This class constructs the UI for a chat client.  It implements the

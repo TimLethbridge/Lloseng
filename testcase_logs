@@ -1,0 +1,308 @@
+/**
+* name: yanqi huang 
+* student number: 8288435 
+* email: yhuan126@uottawa.ca
+**/
+
+
+Testcase 2001:
+$ java EchoServer
+Server listening for connections on port 5555
+^C% 
+
+Testcase 2002:
+$ java ClientConsole
+ERROR - No login ID specified.  Connection aborted.
+
+Testcase 2003:
+$ java ClientConsole abc
+Cannot open connection.  Awaiting command.
+^C% 
+
+Testcase 2004:
+$ java EchoServer
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login abc from localhost (127.0.0.1)
+abc has logged on.
+
+
+$ java ClientConsole abc
+> abc has logged on.
+
+
+Testcase 2005:
+$ java EchoServer       
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login abc from null
+abc has logged on.
+Message received: hello from abc
+
+$ java ClientConsole abc
+abc has logged on.
+hello
+abc> hello
+
+
+Testcase 2006:
+$ java EchoServer       
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login abc from null
+abc has logged on.
+A new client is attempting to connect to the server.
+Message received: #login def from null
+def has logged on.
+Message received: I am def from def
+Message received: I am abc from abc
+I am admin
+SERVER MSG> I am admin
+
+$ java ClientConsole def
+def has logged on.
+I am def
+def> I am def
+abc> I am abc
+SERVER MSG> I am admin
+
+$ java ClientConsole abc
+abc has logged on.
+def> I am def
+I am abc
+abc> I am abc
+SERVER MSG> I am admin
+
+
+
+Testcase 2007:
+$ java EchoServer       
+Server listening for connections on port 5555
+#quit
+The server quits.
+Server has stopped listening for connections.
+
+
+Testcase 2008:
+$ java EchoServer
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login abc from null
+abc has logged on.
+#stop
+Server has stopped listening for connections.
+Message received: hello from abc
+#start
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login def from null
+def has logged on.
+#quit
+Server has stopped listening for connections.
+null disconnected.
+null disconnected.
+The server quits.
+
+
+$ java ClientConsole abc
+abc has logged on.
+WARNING - Server has stopped listening for connections.
+hello
+abc> hello
+> the server has shut down, and quitting.
+
+
+$ java ClientConsole def
+def has logged on.
+> the server has shut down, and quitting.
+
+
+Testcase 2009:
+$ java EchoServer       
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login abc from null
+abc has logged on.
+#stop
+Server has stopped listening for connections.
+#close
+abc has disconnected.
+^C% 
+
+$ java ClientConsole abc
+abc has logged on.
+WARNING - Server has stopped listening for connections.
+SERVER SHUTTING DOWN! DISCONNECTING!
+> Abnormal termination of connection.
+^C%  
+
+
+Testcase 2009:
+$ java EchoServer
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login abc from null
+abc has logged on.
+#close
+Server has stopped listening for connections.
+abc has disconnected.
+#start
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login abc from null
+abc has logged on.
+^C% 
+
+$ java ClientConsole abc
+abc has logged on.
+SERVER SHUTTING DOWN! DISCONNECTING!
+Abnormal termination of connection.
+#login
+abc has logged on.
+Abnormal termination of connection.
+^C% 
+
+
+Testcase 2010:
+$ java ClientConsole abc
+Cannot open connection.  Awaiting command.
+#quit
+Client terminates.
+
+Testcase 2011:
+$ java ClientConsole abc
+abc has logged on.
+#logoff
+Abnormal termination of connection.
+#quit
+Client terminates.
+
+Testcase 2012:
+$ java ClientConsole abc
+Cannot open connection.  Awaiting command.
+#sethost 192.168.1.13
+Host set to: 192.168.1.13
+#setport 1234
+port set to: 1234.
+#quit
+Client terminates.
+
+Testcase 2013:
+$ java EchoServer 1234
+Server listening for connections on port 1234
+#quit
+The server quits.
+Server has stopped listening for connections.
+
+
+Testcase 2014:
+$ java EchoServer 1234
+Server listening for connections on port 1234
+A new client is attempting to connect to the server.
+Message received: #login abc from null
+abc has logged on.
+a client disconnected.
+^C%
+
+
+$ java ClientConsole abc localhost 1234
+abc has logged on.
+^C%
+
+
+Testcase 2015:
+$ java EchoServer       
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login abc from null
+abc has logged on.
+Message received: hello from abc
+hello
+SERVER MSG> hello
+#close
+Server has stopped listening for connections.
+abc has disconnected.
+#setport 1234
+port set to: 1234.
+#start
+Server listening for connections on port 1234
+A new client is attempting to connect to the server.
+Message received: #login abc from null
+abc has logged on.
+a client disconnected.
+#quit
+The server quits.
+Server has stopped listening for connections.
+
+
+$ java ClientConsole abc
+abc has logged on.
+hello
+abc> hello
+SERVER MSG> hello
+SERVER SHUTTING DOWN! DISCONNECTING!
+Abnormal termination of connection.
+#setport 1234
+port set to: 1234.
+#login
+abc has logged on.
+#quit
+Abnormal termination of connection.
+Client terminates.
+
+
+Testcase 2016:
+$ java EchoServer
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login abc from null
+abc has logged on.
+a client disconnected.
+A new client is attempting to connect to the server.
+Message received: #login abc from null
+abc has logged on.
+a client disconnected.
+
+
+$ java ClientConsole abc
+abc has logged on.
+#logoff 
+Abnormal termination of connection.
+#sethost 127.0.0.1 
+Host set to: 127.0.0.1
+#login
+abc has logged on.
+#quit
+Abnormal termination of connection.
+Client terminates.
+
+
+Testcase 2017:
+$ java EchoServer
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login abc from null
+abc has logged on.
+A new client is attempting to connect to the server.
+Message received: #login abc from null
+abc has logged on.
+abc has disconnected.
+abc has disconnected.
+^C% 
+
+$ java ClientConsole abc
+abc has logged on.
+#quit
+Abnormal termination of connection.
+Client terminates.
+
+$ java ClientConsole abc
+abc has logged on.
+abc has disconnected.
+#logoff
+Abnormal termination of connection.
+^C% 
+
+
+Testcase 2018: omit
+Testcase 2019: omit

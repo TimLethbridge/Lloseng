@@ -51,6 +51,66 @@ public class EchoServer extends AbstractServer
     System.out.println("Message received: " + msg + " from " + client);
     this.sendToAllClients(msg);
   }
+  public void handleMessageFromServer(String messages){
+    if (messages.startsWith("#")) {
+      String[] parameters = messages.split(" ");
+
+
+      String consoleCommand = parameters[0];
+
+      //we go through all cases for potential commands if the console line starts with a #.
+      switch (consoleCommand) {
+        case "#quit":
+          //closes the server and then exits it
+          try {
+            this.close();
+          } catch (IOException e) {
+            System.exit(1);
+          }
+          System.exit(0);
+          break;
+        case "#close":
+          try {
+            this.close();
+          } catch (IOException e) {
+          }
+          break;
+        case "#stop":
+          this.stopListening();
+          break;
+        case "#start":
+          if (!this.isListening()) {
+            try {
+              this.listen();
+            } catch (IOException e) {
+              //error listening for clients
+            }
+          } else {
+            System.out.println("The Server is already listening for connections.");
+          }
+          break;
+        case "#setport":
+          if (!this.isListening() && this.getNumberOfClients() < 1) {
+            super.setPort(Integer.parseInt(parameters[1]));
+            System.out.println("Port is set to " + Integer.parseInt(parameters[1]));
+          } else {
+            System.out.println("The Server is already connected.");
+          }
+          break;
+        case "#getport":
+          System.out.println("Current open port is " + this.getPort());
+          break;
+
+        default:
+          System.out.println("Invalid command: '" + consoleCommand+ "' please try again.");
+          break;
+      }
+    } else {//if it isnt a command, we simply send it to the other clients as a server message.
+
+      messages = "SERVER MSG> " + messages;
+      this.sendToAllClients(messages);
+    }
+  }
     
   /**
    * This method overrides the one in the superclass.  Called
@@ -70,6 +130,24 @@ public class EchoServer extends AbstractServer
   {
     System.out.println
       ("Server has stopped listening for connections.");
+  }
+  public void clientConnected(ConnectionToClient client) {
+    System.out.println("New client connected to the Server!");
+  }
+
+  /**
+   * Hook method called each time a client disconnects.
+   * The method
+   * may be overridden by subclasses but should remains synchronized.
+   *
+   * @param client the connection with the client.
+   */
+  synchronized public void clientDisconnected(ConnectionToClient client) {
+    System.out.println("A client disconnected from the Server!");
+  }
+  synchronized public void clientException(
+          ConnectionToClient client, Throwable exception) {
+    System.out.println("Error in the client's connection to the Server!");
   }
   
   //Class methods ***************************************************

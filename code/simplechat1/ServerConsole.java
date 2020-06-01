@@ -75,7 +75,7 @@ public class ServerConsole implements ChatIF {
 
   /**
    * This method is responsible for the creation of
-   * the server instance (there is no UI in this phase).
+   * the server instance (there is a UI in this phase).
    *
    * @param args[0] The port number to listen on.  Defaults to 5555
    *          if no argument is entered.

@@ -48,8 +48,29 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
-    System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
+    String e = msg.toString();
+    String[] m = e.split(" ");
+    switch(m[0]) {
+      case "#login":
+        try {
+          client.setInfo("loginId", m[1]);
+          System.out.println(client.getInfo("loginId") + " has logged on.");
+          this.sendToAllClients(client.getInfo("loginId") + " has logged on.");
+          
+        } catch (Exception ex) {
+          try {
+            client.sendToClient("Client is already logged in.");
+          } catch (IOException w) {}
+        }
+        
+        break;
+      default:
+        System.out.println("Message received: " + msg + " from " + client.getInfo("loginId"));
+        this.sendToAllClients(client.getInfo("loginId") + "> " + msg);
+        break;
+    }
+    
+    
   }
     
   /**
@@ -70,6 +91,39 @@ public class EchoServer extends AbstractServer
   {
     System.out.println
       ("Server has stopped listening for connections.");
+  }
+
+   /**
+   * Hook method called each time a new client connection is
+   * accepted. The default implementation does nothing.
+   * @param client the connection connected to the client.
+   */
+  protected void clientConnected(ConnectionToClient client) {
+    System.out.println("A client is attempting to connect to the server.");
+  }
+
+  /**
+   * Hook method called each time a client disconnects.
+   * The default implementation does nothing. The method
+   * may be overridden by subclasses but should remains synchronized.
+   *
+   * @param client the connection with the client.
+   */
+  synchronized protected void clientDisconnected(ConnectionToClient client) {
+    System.out.println(client.getInfo("loginId") + " has disconnected!");
+  }
+
+  /**
+   * Hook method called each time an exception is thrown in a
+   * ConnectionToClient thread.
+   * The method may be overridden by subclasses but should remains
+   * synchronized.
+   *
+   * @param client the client that raised the exception.
+   * @param Throwable the exception thrown.
+   */
+  synchronized protected void clientException(ConnectionToClient client, Throwable exception) {
+    System.out.println(client.getInfo("loginId") + " has disconnected!");
   }
   
   //Class methods ***************************************************

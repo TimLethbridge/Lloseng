@@ -68,8 +68,77 @@ public class ChatClient extends AbstractClient
   {
     try
     {
-      sendToServer(message);
+      String[] command = message.split(" ");
+
+      if (message.charAt(0)=='#') {
+        
+        if (command[0].equals("#quit")) {
+          quit();
+        }
+
+        else if (command[0].equals("#logoff")) {
+          try{
+            closeConnection();
+          } catch(Exception exception){
+            clientUI.display("Error : Could not logoff");
+          }
+        }
+
+        else if (command[0].equals("#sethost")) {
+          
+          if(!isConnected()) {
+            setHost(command[1]);
+
+          } else {
+            clientUI.display("Cannot set host! Client is logged off");
+          }
+        }
+
+        else if (command[0].equals("#setport")) {
+
+          if(!isConnected()) {
+            int customPort = Integer.parseInt(command[1]); 
+            setPort(customPort);
+
+          } else {
+            clientUI.display("Cannot set port! Client is logged off");
+          }
+        }
+
+        else if (command[0].equals("#login")) {
+          try{
+            if (!isConnected()){
+              openConnection();
+
+            } else {
+              System.out.println("Cannot login. Client is already logged in");
+            }
+
+          } catch(Exception exception){
+            System.out.println("Error : could not login!");
+          }
+        }
+
+        else if (command[0].equals("#gethost")) { 
+          String hostAddress = getHost(); 
+          clientUI.display("Host : "+hostAddress);
+        }
+
+        else if (command[0].equals("#getport")) {
+          int portAddress = getPort(); 
+          clientUI.display("Port : "+portAddress);
+        }
+
+        else {
+          clientUI.display("No such command exists");
+        }
     }
+
+    else {
+        sendToServer(message);
+      }
+    }
+
     catch(IOException e)
     {
       clientUI.display

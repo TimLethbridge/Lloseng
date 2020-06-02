@@ -59,7 +59,7 @@ public class EchoServer extends AbstractServer
           
         } catch (Exception ex) {
           try {
-            client.sendToClient("Client is already logged in.");
+            client.sendToClient("ERROR -  No login ID specified. (server)");
           } catch (IOException w) {}
         }
         

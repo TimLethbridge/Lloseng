@@ -7,6 +7,7 @@ package client;
 import ocsf.client.*;
 import common.*;
 import java.io.*;
+import java.net.ConnectException;
 
 /**
  * This class overrides some of the methods defined in the abstract
@@ -101,12 +102,16 @@ public class ChatClient extends AbstractClient
           break;
         case "#login":
           try {
+            try {
               clientUI.display("Logging in.");
-              openConnection();
-              sendToServer(message);
-          } catch (Exception exc) {
+            } catch (Exception ex) {
+              clientUI.display("ERROR -  No login ID specified.");
+            }
+            openConnection();
+            sendToServer(msg[0] + " " + msg[1]);
+          } catch (Exception e) {
             clientUI.display("ERROR -  No login ID specified.");
-          }      
+          }
           break;
         case "#gethost":
           clientUI.display(getHost());

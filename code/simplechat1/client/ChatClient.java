@@ -160,7 +160,7 @@ public class ChatClient extends AbstractClient
 	 *            the exception raised.
 	 */
 	protected void connectionException(Exception exception) {
-    clientUI.display("Connection error, Terminating.");
+    clientUI.display("Abnormal termination of connection.");
     System.exit(0);
 	}
 

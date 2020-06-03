@@ -5,6 +5,7 @@
 import java.io.*;
 import client.*;
 import common.*;
+import java.util.Scanner;
 
 /**
  * This class constructs the UI for a chat client.  It implements the
@@ -115,8 +116,19 @@ public class ClientConsole implements ChatIF
     {
       host = "localhost";
     }
-    ClientConsole chat= new ClientConsole(host, DEFAULT_PORT);
-    chat.accept();  //Wait for console data
+	Scanner scanner = new Scanner(System.in);
+	System.out.print("Enter port number: ");
+	String user_port_string = scanner.nextLine();
+	try{
+		int user_port = Integer.parseInt(user_port_string);
+		ClientConsole chat = new ClientConsole(host, user_port);
+		chat.accept();
+	}
+	finally{
+		System.out.println("Your port was invalid. Now using default port.");
+		ClientConsole chat = new ClientConsole(host, DEFAULT_PORT);
+		chat.accept();  //Wait for console data
+	}
   }
 }
 //End of ConsoleChat class

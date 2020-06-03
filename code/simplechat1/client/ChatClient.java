@@ -7,6 +7,7 @@ package client;
 import ocsf.client.*;
 import common.*;
 import java.io.*;
+import java.net.ConnectException;
 
 /**
  * This class overrides some of the methods defined in the abstract
@@ -26,6 +27,7 @@ public class ChatClient extends AbstractClient
    * the display method in the client.
    */
   ChatIF clientUI; 
+  String loginId;
 
   
   //Constructors ****************************************************
@@ -38,11 +40,12 @@ public class ChatClient extends AbstractClient
    * @param clientUI The interface type variable.
    */
   
-  public ChatClient(String host, int port, ChatIF clientUI) 
+  public ChatClient(String loginId, String host, int port, ChatIF clientUI) 
     throws IOException 
   {
     super(host, port); //Call the superclass constructor
     this.clientUI = clientUI;
+    this.loginId = loginId;
     openConnection();
   }
 
@@ -68,7 +71,59 @@ public class ChatClient extends AbstractClient
   {
     try
     {
-      sendToServer(message);
+      String[] msg = message.split(" ");
+      switch(msg[0]) {
+        case "#quit":
+          quit();
+          break;
+        case "#logoff":
+          clientUI.display("Logging off.");
+          closeConnection();
+          break;
+        case "#sethost":
+          if (isConnected() == false) {
+            try {
+              setHost(msg[1]);
+              clientUI.display("Host set to " + msg[1]);
+            } catch (NumberFormatException e) {
+              clientUI.display("Could not set host.");
+            }
+          }
+          break;
+        case "#setport":
+          if (isConnected() == false) {
+            try {
+              setPort(Integer.parseInt(msg[1]));
+              clientUI.display("Port set to " + msg[1]);
+            } catch (NumberFormatException e) {
+              clientUI.display("Could not set port.");
+            }
+          }
+          break;
+        case "#login":
+          try {
+            try {
+              clientUI.display("Logging in.");
+            } catch (Exception ex) {
+              clientUI.display("ERROR -  No login ID specified.");
+            }
+            openConnection();
+            sendToServer(msg[0] + " " + msg[1]);
+          } catch (Exception e) {
+            clientUI.display("ERROR -  No login ID specified.");
+          }
+          break;
+        case "#gethost":
+          clientUI.display(getHost());
+          break;
+        case "#getport":
+          clientUI.display(Integer.toString(getPort()));
+          break;
+        default:
+          sendToServer(message);
+          break;
+      }
+      
     }
     catch(IOException e)
     {
@@ -89,6 +144,38 @@ public class ChatClient extends AbstractClient
     }
     catch(IOException e) {}
     System.exit(0);
+  }
+
+  /**
+	 * Hook method called after the connection has been closed. The default
+	 * implementation does nothing. The method may be overriden by subclasses to
+	 * perform special processing such as cleaning up and terminating, or
+	 * attempting to reconnect.
+	 */
+	protected void connectionClosed() {
+    clientUI.display("Connection closed!");
+	}
+
+	/**
+	 * Hook method called each time an exception is thrown by the client's
+	 * thread that is waiting for messages from the server. The method may be
+	 * overridden by subclasses.
+	 * 
+	 * @param exception
+	 *            the exception raised.
+	 */
+	protected void connectionException(Exception exception) {
+    clientUI.display("Abnormal termination of connection.");
+    System.exit(0);
+	}
+
+	/**
+	 * Hook method called after a connection has been established. The default
+	 * implementation does nothing. It may be overridden by subclasses to do
+	 * anything they wish.
+	 */
+	protected void connectionEstablished() {
+    clientUI.display("Connection established!");
   }
 }
 //End of ChatClient class

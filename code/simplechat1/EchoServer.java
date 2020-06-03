@@ -59,8 +59,35 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
-    System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
+    String message = (String) msg;
+    String[] loginid = message.split(" ");
+    
+    if (loginid[0].equals("#login"))
+    {
+      client.setInfo("loginid", loginid[1]);
+      System.out.println("Message received: " + msg + " from " + client.getInfo("loginid"));
+      System.out.println(client.getInfo("loginid") + " has logged on.");
+      sendToAllClients(client.getInfo("loginid") + " has logged on.");
+    }
+
+    else if (loginid[0].equals("abort")) // if #login <loginid> is not first command
+    {
+      try {
+        client.sendToClient("Login command must be called first");
+        client.close();
+      } catch (IOException exception) {
+        System.out.println("An error occured while attempting to terminate client");
+      }
+
+    }
+    
+    else 
+    {
+      System.out.println("Message received: " + msg + " from " + client.getInfo("loginid"));
+      msg = client.getInfo("loginid") + "> " + msg;
+      sendToAllClients(msg);
+    }
+
   }
     
   /**
@@ -93,7 +120,8 @@ public class EchoServer extends AbstractServer
   synchronized protected void clientDisconnected(
     ConnectionToClient client) 
     {
-      System.out.println("One client has disconnected");
+      System.out.println(client.getInfo("loginid") + " has disconnected");
+      sendToAllClients(client.getInfo("loginid") + " has disconnected");
     }
 
   /**
@@ -108,7 +136,8 @@ public class EchoServer extends AbstractServer
   synchronized protected void clientException(
     ConnectionToClient client, Throwable exception) 
     {
-      System.out.println("One client has disconnected");
+      System.out.println(client.getInfo("loginid") + " has disconnected");
+      sendToAllClients(client.getInfo("loginid") + " has disconnected");
     }
 
 
@@ -149,6 +178,7 @@ public class EchoServer extends AbstractServer
 
       else if (command[0].equals("#close")) {
         try {
+          stopListening();
           close();
         } catch (IOException exception){
           System.out.println("Error occured while attempting to close");
@@ -156,40 +186,41 @@ public class EchoServer extends AbstractServer
       }
 
       else if (command[0].equals("#setport")) {
-        if (!isListening()) {
-          serverUI.display("Cannot change port because server is listening for connections");
+        if (isListening()) {
+          System.out.println("Cannot change port because server is listening for connections");
         } else {
           try{
             setPort(Integer.parseInt(command[1]));
+            System.out.println("Port set to: " + command[1]);
           } catch (IndexOutOfBoundsException exception) {
-            serverUI.display("Please choose a valid port!");
+            System.out.println("Please choose a valid port!");
           }
         }
       }
 
       else if (command[0].equals("#start")) {
         if (isListening()) {
-          serverUI.display("Server must be stopped to start listening for connections");
+          System.out.println("Server must be stopped to start listening for connections");
         } else {
           try {
             listen();
           } catch (IOException exception){
-            serverUI.display("The server ran into an error while attempting to reconnect");
+            System.out.println("The server ran into an error while attempting to reconnect");
           }
         }
       }
 
       else if (command[0].equals("#getport")) {
-        serverUI.display("Port : "+getPort());
+        System.out.println("Port : "+getPort());
       }
 
       else {
-        serverUI.display("Not a valid command");
+        System.out.println("Not a valid command");
       }
 
     } else {
       sendToAllClients("SERVER MSG> " + message);
-      serverUI.display(message);
+      System.out.println(message);
     }
     
   }

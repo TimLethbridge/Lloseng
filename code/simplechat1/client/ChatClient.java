@@ -97,6 +97,7 @@ public class ChatClient extends AbstractClient
           
           if(!isConnected()) {
             setHost(command[1]);
+            clientUI.display("Host set to: " + command[1]);
 
           } else {
             clientUI.display("Cannot set host! Client is logged off");
@@ -108,6 +109,7 @@ public class ChatClient extends AbstractClient
           if(!isConnected()) {
             int customPort = Integer.parseInt(command[1]); 
             setPort(customPort);
+            clientUI.display("Port set to: " + command[1]);
 
           } else {
             clientUI.display("Cannot set port! Client is logged off");
@@ -116,11 +118,17 @@ public class ChatClient extends AbstractClient
 
         else if (command[0].equals("#login")) {
           try{
-            if (!isConnected()){
+            if (!isConnected() && command.length == 2){
+              loginid = command[1];
               openConnection();
+              sendToServer(message);
 
-            } else {
-              System.out.println("Cannot login. Client is already logged in");
+            } else if (!isConnected() && command.length < 2){
+              clientUI.display("ERROR - No login ID specified.");
+            } 
+            
+            else if (isConnected() && command.length == 2) {
+              sendToServer("abort");
             }
 
           } catch(Exception exception){

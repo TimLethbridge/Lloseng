@@ -154,7 +154,7 @@ public class ChatClient extends AbstractClient
 	 * attempting to reconnect.
 	 */
 	protected void connectionClosed() {
-    clientUI.display("Connection has closed");
+    clientUI.display("Abnormal termination of connection.");
   }
   
   /**
@@ -166,7 +166,7 @@ public class ChatClient extends AbstractClient
 	 *            the exception raised.
 	 */
 	protected void connectionException(Exception exception) {
-    clientUI.display("An error occured while trying to connect to the server");
+    clientUI.display("SERVER SHUTTING DOWN! DISCONNECTING!");
     connectionClosed();
 	}
   /**

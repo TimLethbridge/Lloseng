@@ -129,7 +129,69 @@ public class EchoServer extends AbstractServer
    */
   public void handleMessageFromServerUI(String message)
   {
-    sendToAllClients("SERVER MSG> " + message);
+    String[] command = message.split(" ");
+
+    if (message.charAt(0) == '#'){
+
+      if (command[0].equals("#quit")) {
+        try {
+          close();
+          System.exit(0);
+        } catch (IOException exception){
+          System.out.println("Error occured while attempting to close");
+        }
+      }
+
+      else if (command[0].equals("#stop")) {
+        sendToAllClients("WARNING - Server has stopped listening for new connections");
+        stopListening();
+      }
+
+      else if (command[0].equals("#close")) {
+        try {
+          close();
+        } catch (IOException exception){
+          System.out.println("Error occured while attempting to close");
+        }
+      }
+
+      else if (command[0].equals("#setport")) {
+        if (!isListening()) {
+          serverUI.display("Cannot change port because server is listening for connections");
+        } else {
+          try{
+            setPort(Integer.parseInt(command[1]));
+          } catch (IndexOutOfBoundsException exception) {
+            serverUI.display("Please choose a valid port!");
+          }
+        }
+      }
+
+      else if (command[0].equals("#start")) {
+        if (isListening()) {
+          serverUI.display("Server must be stopped to start listening for connections");
+        } else {
+          try {
+            listen();
+          } catch (IOException exception){
+            serverUI.display("The server ran into an error while attempting to reconnect");
+          }
+        }
+      }
+
+      else if (command[0].equals("#getport")) {
+        serverUI.display("Port : "+getPort());
+      }
+
+      else {
+        serverUI.display("Not a valid command");
+      }
+
+    } else {
+      sendToAllClients("SERVER MSG> " + message);
+      serverUI.display(message);
+    }
+    
   }
   
   //Class methods ***************************************************

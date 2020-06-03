@@ -65,21 +65,80 @@ public class ChatClient extends AbstractClient
    * @param message The message from the UI.    
    */
   public void handleMessageFromClientUI(String message)
-  {
-    try
-    {
-      sendToServer(message);
-    }
-    catch(IOException e)
-    {
-      clientUI.display
-        ("Could not send message to server.  Terminating client.");
-      quit();
-    }
+  {	
+	char sharp = '#';
+	if(message.charAt(0) == sharp && message != null){
+		clientCommands(message);
+	}
+	else{
+		try
+		{
+			sendToServer(message);	
+		}
+		catch(IOException e)
+		{
+		  clientUI.display
+			("Could not send message to server.  Terminating client.");
+		  quit();
+		}
+	}
+  }
+  
+  public void clientCommands(String command){
+	  if (command.equals("#quit")){
+		  System.out.println("Quitting...");
+		  quit();
+	  }
+	  else if (command.equals("#logoff")){
+		  try{
+			  closeConnection();
+		  }
+		  catch(Exception e){
+			  System.out.println(e);
+		  }
+	  }
+	  else if(command.split(" ")[0].equals("#sethost")) {
+		if(isConnected()){
+			System.out.println("Please disconnected from current host before attempting to set a new host");
+		}
+		else{
+
+			setHost(command.split(" ")[1]);
+
+		}
+	  }
+	  
+	  else if(command.split(" ")[0].equals("#setport")) {
+		if(isConnected()){
+			System.out.println("Please disconnected from current port before attempting to set a new port");
+		}
+		else{
+			int port = Integer.parseInt(command.split(" ")[1]);
+			setPort(port);
+		}
+	  }
+	  else if(command.equals("#login")){
+		  try{
+			openConnection();
+		  }
+		  catch(IOException e){
+			  System.out.println(e);
+		  }
+	  }
+	  else if(command.equals("#gethost")){
+		  System.out.println(getHost());
+	  }
+	  else if(command.equals("#getport")){
+		  System.out.println(getPort());
+	  }
+	  else{
+		  System.out.println("Command not recognized");
+	  }
+		  
   }
   
   public void connectionClosed() {
-	  clientUI.display("Connection to server has been lost. Client will now close.");
+	  clientUI.display("Connection to server has been lost.");
 	}
 	
 	public void connectionException(Exception exception) {

@@ -78,6 +78,18 @@ public class ChatClient extends AbstractClient
     }
   }
   
+  public void connectionClosed() {
+	  clientUI.display("Connection to server has been lost. Client will now close.");
+	}
+	
+	public void connectionException(Exception exception) {
+		System.out.println(exception);
+		quit();
+	}
+
+	
+
+  
   /**
    * This method terminates the client.
    */

@@ -111,7 +111,7 @@ public class ServerConsole implements ChatIF {
   
       try
       {
-        port = Integer.parseInt(args[1]);
+        port = Integer.parseInt(args[0]);
       }
       catch(Throwable t)
       {

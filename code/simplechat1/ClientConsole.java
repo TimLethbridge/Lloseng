@@ -6,6 +6,7 @@ import java.io.*;
 import client.*;
 import common.*;
 
+
 /**
  * This class constructs the UI for a chat client.  It implements the
  * chat interface in order to activate the display() method.
@@ -41,20 +42,28 @@ public class ClientConsole implements ChatIF
    * @param host The host to connect to.
    * @param port The port to connect on.
    */
-  public ClientConsole(String host, int port) 
+  public ClientConsole(String host, int port, String id) 
   {
+    boolean flag = true;
     try 
-    {
-      client= new ChatClient(host, port, this);
+    { 
+
+      client= new ChatClient(host, port, this, id);
+
     } 
     catch(IOException exception) 
     {
-      System.out.println("Error: Can't setup connection!"
-                + " Terminating client.");
-      System.exit(1);
+      System.out.println("Error: Can't setup connection! Awaiting command");
+      client = new ChatClient(host,port,this, id, true);
+      
     }
+        
+    
   }
 
+
+
+  
   
   //Instance methods ************************************************
   
@@ -102,21 +111,52 @@ public class ClientConsole implements ChatIF
    *
    * @param args[0] The host to connect to.
    */
+ 
   public static void main(String[] args) 
   {
     String host = "";
     int port = 0;  //The port number
+    String id = "";
+    boolean flag = true;
+
+    try{
+      id = args[0];
+    }
+    catch(ArrayIndexOutOfBoundsException h){
+      System.out.println("You must provide an id, please try again.");
+      System.exit(0);
+
+      }
+
+    
 
     try
     {
-      host = args[0];
+      host = args[1];
     }
     catch(ArrayIndexOutOfBoundsException e)
     {
       host = "localhost";
     }
-    ClientConsole chat= new ClientConsole(host, DEFAULT_PORT);
+
+    try{
+
+      port = Integer.parseInt(args[2]);
+
+    }
+    catch(ArrayIndexOutOfBoundsException e2){
+
+      port = DEFAULT_PORT;
+
+    }
+
+
+    ClientConsole chat= new ClientConsole(host, port,id);
+
     chat.accept();  //Wait for console data
+
+
   }
 }
+
 //End of ConsoleChat class

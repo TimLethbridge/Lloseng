@@ -43,6 +43,40 @@ public class ServerConsole implements ChatIF{
   	}
   	
   }
+
+  /**
+  * This method retrive the port from the string that came from a UI.
+  *
+  **/
+  private int retrivePort(String str){
+
+    String port= "";
+    int start =10; // #setport <port>
+    int end = str.length();
+
+    int portDigits=0;
+    try{
+
+      for(int i =start ; i < end-1 ; i++){
+
+        port += str.charAt(i);
+
+      }
+
+    }catch(Exception e){
+
+      System.out.println("Unexcpected #port.");
+
+    }
+    try{
+      portDigits = Integer.parseInt(port);
+    }catch(Exception e){
+      System.out.println("Not an acceptable port value. Please enter a number from 1 to 65535.");
+    }
+
+    return portDigits;
+
+  }
   /**
   *This method handles commands form Server Concole.
   *
@@ -50,6 +84,13 @@ public class ServerConsole implements ChatIF{
 
   private void handleCommandFromServer(String message){
   	 try{
+
+      int port = 0;
+
+      if( message.startsWith("#setport <")){
+        port = retrivePort(message);
+        message = "#setport <";
+      }
 
       switch(message){
 
@@ -82,11 +123,11 @@ public class ServerConsole implements ChatIF{
           
           break;
 
-        case "#setport <port>": //Calls the setPort method in the server. Only allowed if the server is closed.
+        case "#setport <": //Calls the setPort method in the server. Only allowed if the server is closed.
 
           if(server.isListening()== false){
-            System.out.println("Setting port to 5555.");
-            server.setPort(5555);
+            System.out.println("Setting port to "+port);
+            server.setPort(port);
           }else{
             System.out.println("Setting port error : You need to close all existing clients first.");
           }

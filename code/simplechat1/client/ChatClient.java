@@ -132,7 +132,12 @@ public class ChatClient extends AbstractClient
 	  }
 	  else if(command.equals("#login")){
 		  try{
-			openConnection();
+			if(isConnected()){
+				System.out.println("Already connected");
+			}
+			else{
+				openConnection();
+			}
 		  }
 		  catch(IOException e){
 			  System.out.println(e);
@@ -144,7 +149,7 @@ public class ChatClient extends AbstractClient
 	  else if(command.equals("#getport")){
 		  System.out.println(getPort());
 	  }
-	  else{
+	  else if(!command.split(" ")[0].equals("#login")){
 		  System.out.println("Command not recognized");
 	  }
 		  

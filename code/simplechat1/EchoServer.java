@@ -48,10 +48,17 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
-    System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
+	char sharp = '#';
+	if(msg.toString().charAt(0) == sharp && msg != null){
+		serverCommands(msg.toString());
+	}
+	else{
+		System.out.println("Message received: " + msg + " from " + client);
+		this.sendToAllClients(msg);
+	}
   }
-    
+  
+
   /**
    * This method overrides the one in the superclass.  Called
    * when the server starts listening for connections.
@@ -60,6 +67,29 @@ public class EchoServer extends AbstractServer
   {
     System.out.println
       ("Server listening for connections on port " + getPort());
+  }
+  
+  public void handleMessageFromServerUI(String message)
+  {	
+	char sharp = '#';
+	if(message.charAt(0) == sharp && message != null){
+		serverCommands(message);
+	}
+	else{
+		try
+		{
+			sendToAllClients("SERVER MESSAGE> " + message);
+		}
+		catch(Exception e)
+		{
+		  System.out.println(e);
+		}
+	}
+  }
+  
+  public void serverCommands(String commands){
+	  System.out.println("TEST");
+	  return;
   }
   
   /**
@@ -106,6 +136,8 @@ public class EchoServer extends AbstractServer
       port = DEFAULT_PORT; //Set port to 5555
     }
 	
+	ServerConsole chat = new ServerConsole(DEFAULT_PORT);
+	chat.accept();
     EchoServer sv = new EchoServer(port);
     
     try 

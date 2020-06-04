@@ -45,11 +45,45 @@ public class EchoServer extends AbstractServer
    * @param msg The message received from the client.
    * @param client The connection from which the message originated.
    */
-  public void handleMessageFromClient
-    (Object msg, ConnectionToClient client)
+  public void handleMessageFromClient(Object msg, ConnectionToClient client)
   {
-    System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
+
+      try
+      {
+
+        String message = msg.toString();
+        int index = message.indexOf(' ');
+        String command = message.substring(0, index);
+        String loginId = null;
+
+        switch (command) {
+          case "#login":
+
+            loginId = message.substring(index+1, message.length());
+
+            client.setInfo("Login ID", loginId);
+            this.sendToAllClients("Login ID: "+ client.getInfo("Login ID"));
+        }
+      }
+
+      catch (Exception e)
+      {
+
+      }
+
+      System.out.println("Message received: " + msg + " from " + client);
+
+
+  }
+  /*
+   * This method handles messages from the ServerConsole
+
+  */
+
+  public void handleMessageFromServerUI(Object msg) {
+
+      System.out.println("SERVER MSG> "+msg);
+      this.sendToAllClients("SERVER MSG> "+msg);
   }
 
   /**
@@ -70,6 +104,19 @@ public class EchoServer extends AbstractServer
   {
     System.out.println
       ("Server has stopped listening for connections.");
+  }
+
+  synchronized protected void clientDisconnected(
+    ConnectionToClient client)
+    {
+
+      System.out.println(client.toString() + " has disconnected");
+
+    }
+
+  protected void clientConnected(ConnectionToClient client)
+  {
+    System.out.println(client.toString() + " has connected to the server");
   }
 
   //Class methods ***************************************************
@@ -95,10 +142,12 @@ public class EchoServer extends AbstractServer
     }
 
     EchoServer sv = new EchoServer(port);
+    ServerConsole sc = new ServerConsole(sv);
 
     try
     {
       sv.listen(); //Start listening for connections
+      sc.accept();//Waits for input from the server console
     }
     catch (Exception ex)
     {

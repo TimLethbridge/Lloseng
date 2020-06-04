@@ -41,11 +41,12 @@ public class ClientConsole implements ChatIF
    * @param host The host to connect to.
    * @param port The port to connect on.
    */
-  public ClientConsole(String host, int port)
+  public ClientConsole(String loginId, String host, int port)
   {
     try
     {
-      client= new ChatClient(host, port, this);
+      client= new ChatClient(loginId, host, port, this);
+      client.sendToServer("#login "+loginId);
     }
     catch(IOException exception)
     {
@@ -53,6 +54,7 @@ public class ClientConsole implements ChatIF
                 + " Terminating client.");
       System.exit(1);
     }
+
   }
 
 
@@ -70,92 +72,123 @@ public class ClientConsole implements ChatIF
       BufferedReader fromConsole =
         new BufferedReader(new InputStreamReader(System.in));
       String message;
+      String command;
+      int index;
 
       while (true)
       {
         message = fromConsole.readLine();
 
-        switch (message)
+        //Processes commands from the user
+        try
         {
 
-          case "#quit":
-            client.quit();
-            break;
+          index = message.indexOf(' ');
+          command = message.substring(0, index);
+
+          switch (command)
+          {
+            case ("#sethost"):
+
+              String newHost = message.substring(index+1, message.length());
+
+              if (client.isConnected())
+              {
+                System.out.println("The client must be disconnected before" +
+                " changing the host");
+              }
+
+              else
+              {
+                client.setHost(newHost);
+                System.out.println("The host has been changed to "+newHost);
+
+              }
+              break;
+
+            case "#setport":
+
+              String newPort = message.substring(index+1, message.length());
+
+              if (client.isConnected())
+              {
+                System.out.println("The client must be disconnected before" +
+                " changing the port");
+              }
+
+              else
+              {
+                client.setPort(Integer.parseInt(newPort));
+                System.out.println("The port has been changed to "+newPort);
+              }
+              break;
+
+          }
 
 
-          case "#logoff" :
-            try
+        }
+
+        catch(Exception e)
+        {
+          switch (message)
+          {
+
+            case "#quit":
+              client.quit();
+              break;
+
+            case "#logoff" :
+              if (client.isConnected())
+              {
+                try
+                {
+                  client.closeConnection();
+                }
+
+                catch (IOException ex)
+                {
+
+                }
+              }
+              break;
+
+            case "#login" :
+
+            if (!client.isConnected())
             {
-              client.closeConnection();
-            }
+              try
+              {
+                client.openConnection();
+              }
 
-            catch (IOException e)
-            {
+              catch (IOException ex)
+              {
 
-            }
-          break;
-
-
-          case ("#sethost"):
-
-            String newHost = message.substring(9, message.length()-1);
-            System.out.println(newHost);
-
-            if (client.isConnected())
-            {
-              System.out.println("The client must be disconnected before" +
-              "changing the host");
+              }
             }
 
             else
             {
-              try
-              {
-                client.setHost(newHost);
-              }
-
-              catch(ArrayIndexOutOfBoundsException e)
-              {
-
-              }
+              System.out.println("The client is already connected to the server");
             }
-            break;
+              break;
 
-          case ("#login") :
+            case "#gethost":
+              System.out.println(client.getHost());
 
-          if (!client.isConnected())
-          {
-            try
-            {
-              client.openConnection();
-            }
-
-            catch (IOException e)
-            {
-
-            }
+            case "#getport":
+              System.out.println(client.getPort());
+            default:
+                client.handleMessageFromClientUI(message);
+                break;
           }
-
-          else
-          {
-            System.out.println("The client is already connected to the server");
-          }
-            break;
-
-          case "#gethost":
-            System.out.println(client.getHost());
-
-          case "#getport":
-            System.out.println(client.getPort());
-
-          default:
-            client.handleMessageFromClientUI(message);
-            break;
         }
 
 
       }
     }
+
+
     catch (Exception ex)
     {
       System.out.println
@@ -189,12 +222,24 @@ public class ClientConsole implements ChatIF
     ClientConsole chat = null;
     String host = "";
     int port = 0;  //The port number
+    String loginId = "";
 
     try
     {
-      host = args[0];
+      loginId = args[0];
     }
-    catch(ArrayIndexOutOfBoundsException e)
+
+    catch (ArrayIndexOutOfBoundsException e)
+    {
+      System.out.println("Must enter a loginId");
+      System.exit(0);
+    }
+
+    try
+    {
+      host = args[1];
+    }
+    catch(Exception e)
     {
       host = "localhost";
 
@@ -202,14 +247,13 @@ public class ClientConsole implements ChatIF
 
     try
     {
-      port = Integer.parseInt(args[1]);
-      chat = new ClientConsole(host, port);
+      port = Integer.parseInt(args[2]);
+      chat = new ClientConsole(loginId, host, port);
     }
-    catch ( ArrayIndexOutOfBoundsException e)
+    catch (Exception e)
     {
-      chat = new ClientConsole(host, DEFAULT_PORT);
+      chat = new ClientConsole(loginId, host, DEFAULT_PORT);
     }
-
 
     chat.accept();  //Wait for console data
   }

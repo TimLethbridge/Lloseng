@@ -1,0 +1,160 @@
+Feng Du 
+8689699
+fdu104@uottawa.ca
+
+PS D:\university\seg2105\lloseng\code\simplechat1> java EchoServer
+Server listening for connections on port 5555
+A new client has connected to the server
+#loginfENG
+Message received: Hello from validation.sls.microsoft.com (127.0.0.1)
+
+PS D:\university\seg2105\lloseng\code\simplechat1> java ClientConsole
+Enter login ID: fENG
+Enter port number:
+Your port was invalid. Now using default port.
+Hello
+> fENG: Hello
+
+
+
+PS D:\university\seg2105\lloseng\code\simplechat1> java EchoServer
+Server listening for connections on port 5555
+A new client has connected to the server
+#loginFeng
+A new client has connected to the server
+#loginDu
+Message received: Hello from validation.sls.microsoft.com (127.0.0.1)
+Message received: Hi from validation.sls.microsoft.com (127.0.0.1)
+Unexpected error while reading from console!
+PS D:\university\seg2105\lloseng\code\simplechat1>
+
+PS D:\university\seg2105\lloseng\code\simplechat1> java ClientConsole
+Enter login ID: Feng
+Enter port number:
+Your port was invalid. Now using default port.
+Hello
+> Feng: Hello
+> Du: Hi
+java.net.SocketException: Connection reset
+> Connection to server has been lost.
+
+PS D:\university\seg2105\lloseng\code\simplechat1> java ClientConsole
+Enter login ID: Du
+Enter port number:
+Your port was invalid. Now using default port.
+> Feng: Hello
+Hi
+> Du: Hi
+java.net.SocketException: Connection reset
+> Connection to server has been lost.
+PS D:\university\seg2105\lloseng\code\simplechat1>
+
+
+PS D:\university\seg2105\lloseng\code\simplechat1> java EchoServer
+Server listening for connections on port 5555
+
+
+
+Client will always send login information. If client sends null then the server will client will abort.
+
+PS D:\university\seg2105\lloseng\code\simplechat1> java ClientConsole
+Enter login ID:
+Invalid login ID. System exiting
+
+
+PS D:\university\seg2105\lloseng\code\simplechat1> java EchoServer
+Server listening for connections on port 5555
+A new client has connected to the server
+#loginFeng
+
+PS D:\university\seg2105\lloseng\code\simplechat1> java ClientConsole
+Enter login ID: Feng
+Enter port number:
+Your port was invalid. Now using default port.
+
+
+
+PS D:\university\seg2105\lloseng\code\simplechat1> java EchoServer
+Server listening for connections on port 5555
+A new client has connected to the server
+#loginFeng
+Message received: Test from validation.sls.microsoft.com (127.0.0.1)PS D:\university\seg2105\lloseng\code\simplechat1> java ClientConsole
+Enter login ID: Feng
+Enter port number:
+Your port was invalid. Now using default port.
+Test
+> Feng: Test
+
+
+
+PS D:\university\seg2105\lloseng\code\simplechat1> java EchoServer
+Server listening for connections on port 5555
+A new client has connected to the server
+#loginFeng
+Message received: Test from validation.sls.microsoft.com (127.0.0.1)
+A new client has connected to the server
+#loginDu
+Message received: Hello from validation.sls.microsoft.com (127.0.0.1)
+Message received: Hello from validation.sls.microsoft.com (127.0.0.1)
+
+PS D:\university\seg2105\lloseng\code\simplechat1> java ClientConsole
+Enter login ID: Du
+Enter port number: Test
+Your port was invalid. Now using default port.
+Hello
+> Du: Hello
+> Feng: Hello
+
+PS D:\university\seg2105\lloseng\code\simplechat1> java ClientConsole
+Enter login ID: Feng
+Enter port number:
+Your port was invalid. Now using default port.
+Test
+> Feng: Test
+> Du: Hello
+Hello
+> Feng: Hello
+
+
+
+PS D:\university\seg2105\lloseng\code\simplechat1> java ClientConsole
+Enter login ID: Feng
+Enter port number: #quit
+Your port was invalid. Now using default port.
+#quit
+Quitting...
+> Connection to server has been lost.
+PS D:\university\seg2105\lloseng\code\simplechat1>
+
+
+
+PS D:\university\seg2105\lloseng\code\simplechat1> java EchoServer
+Server listening for connections on port 5555
+A new client has connected to the server
+#loginFeng
+#close
+Server has stopped listening for connections.
+A client has disconnected
+
+PS D:\university\seg2105\lloseng\code\simplechat1> java ClientConsole
+Enter login ID: Feng
+Enter port number:
+Your port was invalid. Now using default port.
+java.io.EOFException
+> Connection to server has been l
+
+
+
+PS D:\university\seg2105\lloseng\code\simplechat1> java EchoServer
+Server listening for connections on port 5555
+A new client has connected to the server
+#loginFeng
+Client has disconnected
+
+PS D:\university\seg2105\lloseng\code\simplechat1> java ClientConsole
+Enter login ID: Feng
+Enter port number:
+Your port was invalid. Now using default port.
+#logoff
+> Connection to server has been lost.
+

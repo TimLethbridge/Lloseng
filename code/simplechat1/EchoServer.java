@@ -48,10 +48,29 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
-    System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
+	char sharp = '#';
+	String message = msg.toString();
+	if(message.charAt(0) == sharp && message.split(" ")[0].equals("#login") && message.length() > 6){
+		if(client.getInfo("loginID") == null){
+		System.out.println(message.split(" ")[0] + message.split(" ")[1]);
+		client.setInfo("loginID", message.split(" ")[1]);
+		}
+		else{
+			try{
+			client.sendToClient("You already have a login ID");
+			}
+			catch(IOException e){
+				System.out.println(e);
+			}
+		}
+	}
+	else{
+		System.out.println("Message received: " + msg + " from " + client);
+		this.sendToAllClients(client.getInfo("loginID") + ": " + msg);
+	}
   }
-    
+
+
   /**
    * This method overrides the one in the superclass.  Called
    * when the server starts listening for connections.
@@ -60,6 +79,69 @@ public class EchoServer extends AbstractServer
   {
     System.out.println
       ("Server listening for connections on port " + getPort());
+  }
+  
+  public void handleMessageFromServerUI(String message)
+  {	
+	char sharp = '#';
+
+	if(message.charAt(0) == sharp){
+		serverCommands(message);
+	}
+	else{
+		try
+		{
+			sendToAllClients("SERVER MESSAGE> " + message);
+		}
+		catch(Exception e)
+		{
+		  System.out.println(e);
+		}
+	}
+  }
+  
+  public void serverCommands(String command){
+	 if (command.equals("#quit")){
+		  System.out.println("Quitting...");
+		  System.exit(0);
+	  }
+	  else if(command.equals("#stop")){
+		  stopListening();
+	  }
+	  else if(command.equals("#close")){
+		  try{
+			close();
+		  }
+		  catch(IOException e){
+			  System.out.println(e);
+		  }
+	  }
+	  else if(command.split(" ")[0].equals("#setport")){
+		int setport = Integer.parseInt(command.split(" ")[1]);
+		setPort(setport);
+	  }
+	  else if(command.equals("#start")){
+		  if(!isListening()){
+			  try{
+				listen();
+				System.out.println("Now listening");
+			  }
+			  catch(IOException e){
+				 System.out.println(e);
+			  }			
+	  }
+		  else{
+			  System.out.println("Already listening");
+		}
+	  }
+	  else if(command.equals("#getport")){
+		  System.out.println(getPort());
+	  }
+	  else{
+		  System.out.println("Command not recognized");
+	  }
+	  
+		  
   }
   
   /**
@@ -71,6 +153,18 @@ public class EchoServer extends AbstractServer
     System.out.println
       ("Server has stopped listening for connections.");
   }
+  
+  protected void clientConnected(ConnectionToClient client){
+	  System.out.println("A new client has connected to the server");
+  }
+  
+  protected void clientDisconnected(ConnectionToClient client){
+	  System.out.println("A client has disconnected");
+  }
+  synchronized protected void clientException(
+    ConnectionToClient client, Throwable exception) {
+		System.out.println("Client has disconnected");
+	}
   
   //Class methods ***************************************************
   
@@ -94,6 +188,8 @@ public class EchoServer extends AbstractServer
       port = DEFAULT_PORT; //Set port to 5555
     }
 	
+	ServerConsole chat = new ServerConsole(DEFAULT_PORT);
+	chat.accept();
     EchoServer sv = new EchoServer(port);
     
     try 

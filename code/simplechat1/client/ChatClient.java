@@ -56,7 +56,14 @@ public class ChatClient extends AbstractClient
    */
   public void handleMessageFromServer(Object msg) 
   {
-    clientUI.display(msg.toString());
+	String message = msg.toString();
+	if (message.contains("#server")) {
+		int ind = message.indexOf('#');
+		String mes = message.substring(0, ind);
+		clientUI.display("SERVER MSG> " + mes);
+	} 
+	else
+    		clientUI.display("> " + message);
   }
 
   /**
@@ -68,7 +75,63 @@ public class ChatClient extends AbstractClient
   {
     try
     {
-      sendToServer(message);
+	// Check if message is a command
+	if (message.charAt(0) == '#') {
+		// Split the message into two
+		String[] mes = message.split(" ", 3);
+		if (mes[0].equals("#login") || mes.length == 2) {
+			sendToServer(message);
+		}
+		else {
+			// Select appropriate function
+			switch(mes[0]) {
+				case "#quit":
+					// Break the connection and close the client 
+					closeConnection();
+					System.exit(0); // Indicate succesful exit
+					break;
+				case "#logoff": 
+					// Break the connection
+					closeConnection();
+					break;
+				case "#sethost": 
+					// Send the argument of the command to the function
+					if (mes[1].equals(""))
+						setHost("localhost");
+					else
+						setHost(mes[1]);
+					break;
+				case "#setport": 
+					// Convert argument of the command to int and pass it
+					try {
+						setPort(Integer.parseInt(mes[1]));
+					}
+					catch (Exception e) {
+						System.out.println("No port supplied. Using default....");
+						setPort(5555);
+					}
+					break;
+				case "#login": 
+					// Open connection only if connection is closed
+					if (!(isConnected()))
+						openConnection();
+					else 
+						System.out.println("You must logoff first before login");
+					break;
+				case "#gethost": 
+					System.out.println(getHost());
+					break;
+				case "#getport": 
+					System.out.println(getPort());
+					break;
+				default:
+					System.out.println("Command not valid!");
+					break;
+			}
+		}
+	}
+	else
+      		sendToServer(message); 
     }
     catch(IOException e)
     {
@@ -76,8 +139,8 @@ public class ChatClient extends AbstractClient
         ("Could not send message to server.  Terminating client.");
       quit();
     }
-  }
-  
+  }	
+
   /**
    * This method terminates the client.
    */

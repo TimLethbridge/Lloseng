@@ -62,13 +62,15 @@ public class ClientConsole implements ChatIF
    * This method waits for input from the console.  Once it is 
    * received, it sends it to the client's message handler.
    */
-  public void accept() 
+  public void accept(String login) 
   {
     try
     {
       BufferedReader fromConsole = 
         new BufferedReader(new InputStreamReader(System.in));
       String message;
+	String cmd = ("#login " + login);
+	client.handleMessageFromClientUI(cmd);
 
       while (true) 
       {
@@ -105,23 +107,25 @@ public class ClientConsole implements ChatIF
   /**
    * This method is responsible for the creation of the Client UI.
    *
-   * @param args[0] The host to connect to.
+   * @param args[0] Login-id of the user to connect to a server.
    */
   public static void main(String[] args) 
   {
-    String host = "";
+	String clientID = "";
+    String host = "localhost";
     int port = 0;  //The port number
 
     try
     {
-      host = args[0];
+      clientID = args[0];
     }
     catch(ArrayIndexOutOfBoundsException e)
     {
-      host = "localhost";
+      System.out.println("ERROR - No login ID specified.  Connection aborted.");
+	System.exit(1);
     }
     ClientConsole chat= new ClientConsole(host, DEFAULT_PORT);
-    chat.accept();  //Wait for console data
+    chat.accept(clientID);  //Wait for console data
   }
 }
 //End of ConsoleChat class

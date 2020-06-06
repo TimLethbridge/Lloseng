@@ -72,14 +72,19 @@ public class ClientConsole implements ChatIF
 
       while (true) 
       {
-        message = fromConsole.readLine();
-        client.handleMessageFromClientUI(message);
+	message = fromConsole.readLine();
+	if (message.equals("#sethost")) {
+		// User didn't enter full command for changing host
+		System.out.println("No host specified. Using default host...");
+		client.handleMessageFromClientUI("#sethost localhost");
+	}
+	else 
+        	client.handleMessageFromClientUI(message);
       }
     } 
     catch (Exception ex) 
     {
-      System.out.println
-        ("Unexpected error while reading from console!");
+	System.out.println("Could not read from console!");
     }
   }
 
@@ -87,7 +92,7 @@ public class ClientConsole implements ChatIF
    * This method overrides the method in the ChatIF interface.  It
    * displays a message onto the screen.
    *
-   * @param message The string to be displayed.
+   * @param message The string fto be displayed.
    */
   public void display(String message) 
   {

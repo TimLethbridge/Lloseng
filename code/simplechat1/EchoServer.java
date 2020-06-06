@@ -4,6 +4,7 @@
 
 import java.io.*;
 import ocsf.server.*;
+import common.*;
 
 /**
  * This class overrides some of the methods in the abstract 
@@ -17,13 +18,6 @@ import ocsf.server.*;
  */
 public class EchoServer extends AbstractServer 
 {
-  //Class variables *************************************************
-  
-  /**
-   * The default port to listen on.
-   */
-  final public static int DEFAULT_PORT = 5555;
-  
   //Constructors ****************************************************
   
   /**
@@ -35,6 +29,14 @@ public class EchoServer extends AbstractServer
   {
     super(port);
   }
+
+  //Instance variables **********************************************
+  
+  /**
+   * The interface type variable.  It allows the implementation of 
+   * the display method in the server.
+   */
+  ChatIF serverUI; 
 
   
   //Instance methods ************************************************
@@ -51,7 +53,68 @@ public class EchoServer extends AbstractServer
     System.out.println("Message received: " + msg + " from " + client);
     this.sendToAllClients(msg);
   }
-    
+
+  /** 
+   * This method reads user input's from the console
+   *
+   * @param in Input from the console
+   */
+   public void handleInputFromServerConsole(String input) 
+   {
+	// Check if message is a command
+	if (input.charAt(0) == '#') {
+	// Split the message into two
+	String[] mes = input.split(" ", 2);
+	// Select appropriate function
+	switch(mes[0]) {
+		case "#quit":
+			try {
+				close();
+			}
+			catch(IOException e) 
+			{
+				System.out.println(": " + e);
+			}
+			break;
+		case "#stop": 
+			stopListening();
+			break;
+		case "#close": 
+			System.out.println("Not implemented!");
+			break;
+		case "#setport": 
+			try {
+				setPort(Integer.parseInt(mes[1]));
+			}
+			catch (Exception e) {
+				System.out.println("No port specified. Using default port...");
+				setPort(5555);
+			}
+			break;
+		case "#start": 
+			try {
+				listen();
+			}
+			catch(IOException e) 
+			{
+				System.out.println(": " + e);
+			}
+			break;
+		case "#getport": 
+			System.out.println(getPort());
+			break;
+		default:
+			System.out.println("Command not valid!");
+			break;
+		}
+	}
+	else
+      	{
+		// Send everything to the clients
+		this.sendToAllClients(input);
+	}
+   }   
+ 
   /**
    * This method overrides the one in the superclass.  Called
    * when the server starts listening for connections.
@@ -71,39 +134,15 @@ public class EchoServer extends AbstractServer
     System.out.println
       ("Server has stopped listening for connections.");
   }
-  
-  //Class methods ***************************************************
-  
-  /**
-   * This method is responsible for the creation of 
-   * the server instance (there is no UI in this phase).
-   *
-   * @param args[0] The port number to listen on.  Defaults to 5555 
-   *          if no argument is entered.
-   */
-  public static void main(String[] args) 
-  {
-    int port = 0; //Port to listen on
 
-    try
-    {
-      port = Integer.parseInt(args[0]); //Get port from command line
-    }
-    catch(Throwable t)
-    {
-      port = DEFAULT_PORT; //Set port to 5555
-    }
-	
-    EchoServer sv = new EchoServer(port);
-    
-    try 
-    {
-      sv.listen(); //Start listening for connections
-    } 
-    catch (Exception ex) 
-    {
-      System.out.println("ERROR - Could not listen for clients!");
-    }
+  /**
+   * This method overrides the one in the superclass.  Called
+   * when the server closes.
+   */
+  protected void serverClosed()
+  {
+    System.out.println("Disconnecting all clients...");
+    System.exit(0);
   }
 }
 //End of EchoServer class

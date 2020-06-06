@@ -67,7 +67,7 @@ public class EchoServer extends AbstractServer
 	String[] mes = input.split(" ", 2);
 	// Select appropriate function
 	switch(mes[0]) {
-		case "#quit":
+		case "#close":
 			try {
 				close();
 			}
@@ -79,8 +79,15 @@ public class EchoServer extends AbstractServer
 		case "#stop": 
 			stopListening();
 			break;
-		case "#close": 
-			System.out.println("Not implemented!");
+		case "#quit": 
+			try {
+				close();
+				System.exit(0);
+			}
+			catch(IOException e) 
+			{
+				System.out.println(": " + e);
+			}
 			break;
 		case "#setport": 
 			try {
@@ -110,6 +117,7 @@ public class EchoServer extends AbstractServer
 	}
 	else
       	{
+		input += ("#server"); // Add identifier
 		// Send everything to the clients
 		this.sendToAllClients(input);
 	}
@@ -125,24 +133,5 @@ public class EchoServer extends AbstractServer
       ("Server listening for connections on port " + getPort());
   }
   
-  /**
-   * This method overrides the one in the superclass.  Called
-   * when the server stops listening for connections.
-   */
-  protected void serverStopped()
-  {
-    System.out.println
-      ("Server has stopped listening for connections.");
-  }
-
-  /**
-   * This method overrides the one in the superclass.  Called
-   * when the server closes.
-   */
-  protected void serverClosed()
-  {
-    System.out.println("Disconnecting all clients...");
-    System.exit(0);
-  }
 }
 //End of EchoServer class

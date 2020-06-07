@@ -36,6 +36,32 @@ public class EchoServer extends AbstractServer
     super(port);
   }
 
+  /**
+   * Implemented hook method called each time a new client connection is
+   * accepted. Behavior modified to announce each time a new client is connected.
+   * 
+   * ex. 
+   * 
+   * Client 127.0.0.1 (127.0.0.1) has Connected
+   * 
+   */
+  public void clientConnected(ConnectionToClient client) {
+    System.out.println("Client "+ client + " has Connected");
+  }
+
+
+  /**
+   * Implemented hook method called each time a client disconnects. 
+   * Behavior modified to announce each time a new client is disconnected.
+   * 
+   * ex. 
+   * 
+   * Client 127.0.0.1 (127.0.0.1) has disconnected
+   * 
+   */
+  public void clientDisconnected(ConnectionToClient client) {
+    System.out.println("Client "+ client + " has Disconnected");
+  }
   
   //Instance methods ************************************************
   
@@ -48,8 +74,14 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
-    System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
+    if(msg==null){
+      clientDisconnected(client);
+    }
+    else{
+      System.out.println("Message received: " + msg + " from " + client);
+      this.sendToAllClients(msg);
+    }
+
   }
     
   /**

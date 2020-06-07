@@ -28,7 +28,7 @@ public class ChatClient extends AbstractClient
   ChatIF clientUI;
 
 
-  String loginId;
+  private String loginId;
 
 
   //Constructors ****************************************************
@@ -47,7 +47,16 @@ public class ChatClient extends AbstractClient
     super(host, port); //Call the superclass constructor
     loginId = id;
     this.clientUI = clientUI;
-    openConnection();
+
+    try
+    {
+      openConnection();
+    }
+
+    catch (IOException e)
+    {
+
+    }
   }
 
 
@@ -111,15 +120,22 @@ public class ChatClient extends AbstractClient
   */
   protected void connectionException(Exception e)
   {
-
-      System.out.println("Server has been terminated.  The client is now termainated");
-      quit();
+      clientUI.display("SERVER SHUTTING DOWN! DISCONNECTING");
+      clientUI.display("Abnormal Termination of Connection");
+      //quit();
 
   }
 
   protected void connectionClosed()
   {
-    System.out.println("This client has been disconnected from the server");
+
+    clientUI.display("Connection closed");
+
+
+  }
+
+  public String getID() {
+    return loginId;
   }
 }
 //End of ChatClient class

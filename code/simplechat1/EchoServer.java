@@ -53,16 +53,31 @@ public class EchoServer extends AbstractServer
 
         String message = msg.toString();
         int index = message.indexOf(' ');
-        String command = message.substring(0, index);
+        String command = message.substring(0, index).toLowerCase();
         String loginId = null;
+        Boolean logged = false;
 
         switch (command) {
           case "#login":
 
-            loginId = message.substring(index+1, message.length());
+            if (!logged) {
+              loginId = message.substring(index+1, message.length());
 
-            client.setInfo("Login ID", loginId);
-            this.sendToAllClients("Login ID: "+ client.getInfo("Login ID"));
+              client.setInfo("Login ID", loginId);
+              this.sendToAllClients("Login ID: "+ client.getInfo("Login ID"));
+              System.out.println(client.getInfo("Login ID")+" has logged on");
+              logged = true;
+            }
+            else {
+            System.out.println("The client is already logged in");
+
+          }
+          break;
+
+          default:
+            this.sendToAllClients("Message received: " + msg + " from " + client.getInfo("Login ID"));
+            System.out.println("Message received: " + msg + " from " + client.getInfo("Login ID"));
+            break;
         }
       }
 
@@ -71,7 +86,7 @@ public class EchoServer extends AbstractServer
 
       }
 
-      System.out.println("Message received: " + msg + " from " + client);
+
 
 
   }
@@ -110,13 +125,13 @@ public class EchoServer extends AbstractServer
     ConnectionToClient client)
     {
 
-      System.out.println(client.toString() + " has disconnected");
+      System.out.println(client.getInfo("Login ID") + " has disconnected");
 
     }
 
   protected void clientConnected(ConnectionToClient client)
   {
-    System.out.println(client.toString() + " has connected to the server");
+    System.out.println("A new client is attempting to connect");
   }
 
   //Class methods ***************************************************

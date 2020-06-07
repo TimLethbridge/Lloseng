@@ -12,10 +12,17 @@ public class ServerConsole implements ChatIF {
   //Initializes value to hold the server
   private EchoServer server;
 
+  final public static int DEFAULT_PORT = 5555;
+
   public ServerConsole(EchoServer s) {
 
     server = s;
 
+  }
+
+  public ServerConsole(int port, EchoServer s) {
+    
+    server = new EchoServer(port);
   }
 
   public void accept()
@@ -66,6 +73,8 @@ public class ServerConsole implements ChatIF {
 
               case "#stop":
                 if (server.isListening()) {
+                  server.sendToAllClients("WARNING- Server has stopped listening"
+                  +" for connections");
                   server.stopListening();
                 }
 
@@ -108,6 +117,33 @@ public class ServerConsole implements ChatIF {
 
   public void display(String message) {
     System.out.println("SERVER MSG> "+message);
+  }
+
+  public static void main(String[] args) {
+
+    int port = 0; //Port to listen on
+
+    try
+    {
+      port = Integer.parseInt(args[0]); //Get port from command line
+    }
+    catch(Throwable t)
+    {
+      port = DEFAULT_PORT; //Set port to 5555
+    }
+
+    EchoServer sv = new EchoServer(port);
+    ServerConsole sc = new ServerConsole(port, sv);
+
+    try
+    {
+      sv.listen(); //Start listening for connections
+      sc.accept();//Waits for input from the server console
+    }
+    catch (Exception ex)
+    {
+      System.out.println("ERROR - Could not listen for clients!");
+    }
   }
 
 

@@ -43,16 +43,16 @@ public class ClientConsole implements ChatIF
    */
   public ClientConsole(String loginId, String host, int port)
   {
+
     try
     {
       client= new ChatClient(loginId, host, port, this);
-      client.sendToServer("#login "+loginId);
+      client.sendToServer("#Login "+loginId);
     }
     catch(IOException exception)
     {
-      System.out.println("Error: Can't setup connection!"
-                + " Terminating client.");
-      System.exit(1);
+      display("Cannot open connection.  Awaiting "
+      +"command.");
     }
 
   }
@@ -69,6 +69,7 @@ public class ClientConsole implements ChatIF
 
     try
     {
+
       BufferedReader fromConsole =
         new BufferedReader(new InputStreamReader(System.in));
       String message;
@@ -78,111 +79,115 @@ public class ClientConsole implements ChatIF
       while (true)
       {
         message = fromConsole.readLine();
-
         //Processes commands from the user
+
         try
         {
-
           index = message.indexOf(' ');
           command = message.substring(0, index);
+        }
+
+        catch (Exception e)
+        {
+          index = 0;
+          command = message;
+        }
 
           switch (command)
           {
+
             case ("#sethost"):
 
-              String newHost = message.substring(index+1, message.length());
-
-              if (client.isConnected())
+              try
               {
-                System.out.println("The client must be disconnected before" +
-                " changing the host");
+                String newHost = message.substring(index+1, message.length());
+
+                if (client.isConnected())
+                {
+                  display("The client must be disconnected before" +
+                  " changing the host");
+                }
+
+                else
+                {
+                  client.setHost(newHost);
+                  display("Host set to "+newHost);
+
+                }
               }
 
-              else
-              {
-                client.setHost(newHost);
-                System.out.println("The host has been changed to "+newHost);
+              catch (Exception e) {}
 
-              }
               break;
 
             case "#setport":
 
-              String newPort = message.substring(index+1, message.length());
-
-              if (client.isConnected())
+              try
               {
-                System.out.println("The client must be disconnected before" +
-                " changing the port");
+                String newPort = message.substring(index+1, message.length());
+
+                if (client.isConnected())
+                {
+                  display("The client must be disconnected before" +
+                  " changing the port");
+                }
+
+                else
+                {
+                  client.setPort(Integer.parseInt(newPort));
+                  display("Port set to "+newPort);
+                }
               }
 
-              else
-              {
-                client.setPort(Integer.parseInt(newPort));
-                System.out.println("The port has been changed to "+newPort);
-              }
+              catch(Exception e) {}
+
               break;
 
-          }
-
-
-        }
-
-        catch(Exception e)
-        {
-          switch (message)
-          {
-
             case "#quit":
+              client.display("The Client has been terminated");
               client.quit();
               break;
 
             case "#logoff" :
-              if (client.isConnected())
-              {
+
                 try
                 {
+                  client.sendToServer(client.getID()+ " has been disconnected from the server");
                   client.closeConnection();
                 }
 
                 catch (IOException ex)
                 {
-
+                  display(client.getID()+" is not connected to the server");
                 }
-              }
               break;
 
-            case "#login" :
-
-            if (!client.isConnected())
-            {
-              try
+            case "#login":
+              if (!client.isConnected())
               {
-                client.openConnection();
+                try
+                {
+                  client.openConnection();
+                  client.sendToServer("#login "+client.getID());
+                }
+
+                catch (Exception e) {display("Can't connect to the server");}
               }
-
-              catch (IOException ex)
-              {
-
-              }
-            }
-
-            else
-            {
-              System.out.println("The client is already connected to the server");
-            }
               break;
 
             case "#gethost":
-              System.out.println(client.getHost());
+              display(client.getHost());
+              break;
 
             case "#getport":
-              System.out.println(client.getPort());
+              int port = client.getPort();
+              display(Integer.toString(port));
+              break;
+
             default:
-                client.handleMessageFromClientUI(message);
-                break;
+              client.handleMessageFromClientUI(message);
+              break;
           }
-        }
 
 
       }
@@ -191,9 +196,9 @@ public class ClientConsole implements ChatIF
 
     catch (Exception ex)
     {
-      System.out.println
-        ("Unexpected error while reading from console!");
+      display("Unexpected error while reading from console!");
     }
+
   }
 
   /**
@@ -231,7 +236,7 @@ public class ClientConsole implements ChatIF
 
     catch (ArrayIndexOutOfBoundsException e)
     {
-      System.out.println("Must enter a loginId");
+      System.out.println("ERROR- No login ID specified.  Connection aborted");
       System.exit(0);
     }
 

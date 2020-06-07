@@ -111,9 +111,7 @@ public class ChatClient extends AbstractClient
   }
 
   /*
-  * Hook method called each time an exception is thrown by the client's
-  * thread that is waiting for messages from the server. The method may be
-  * overridden by subclasses.
+  * Handles the sudden discconection from a server
   *
   * @param exception
   *            the exception raised.
@@ -122,10 +120,12 @@ public class ChatClient extends AbstractClient
   {
       clientUI.display("SERVER SHUTTING DOWN! DISCONNECTING");
       clientUI.display("Abnormal Termination of Connection");
-      //quit();
 
   }
 
+  /*
+   * Final method called when the client closes its connection
+  */
   protected void connectionClosed()
   {
 

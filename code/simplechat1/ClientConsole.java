@@ -112,19 +112,42 @@ public class ClientConsole implements ChatIF
   public static void main(String[] args) 
   {
 	String clientID = "";
-    String host = "localhost";
+    String host = "";
     int port = 0;  //The port number
 
     try
     {
-      clientID = args[0];
+	// Given that only clientID argument is mandatory, check if user entered additional arguments
+	if (args.length == 3) {
+		clientID = args[0];
+		host = args[1];
+		port = Integer.parseInt(args[2]);
+
+	} 
+	else if (args.length == 2) {
+		// Determine the type of argument. Assume that second argument is port argument
+		clientID = args[0];
+		port = Integer.parseInt(args[1]);
+		host = "localhost";
+	}
+	else
+      		clientID = args[0];
+		host = "localhost";
+		port = DEFAULT_PORT;
     }
     catch(ArrayIndexOutOfBoundsException e)
     {
       System.out.println("ERROR - No login ID specified.  Connection aborted.");
 	System.exit(1);
     }
-    ClientConsole chat= new ClientConsole(host, DEFAULT_PORT);
+	// The assumption was wrong.
+    	catch (NumberFormatException e) 
+    	{
+		// Use the default port
+		port = DEFAULT_PORT;
+		host = args[1];
+	}
+    ClientConsole chat= new ClientConsole(host, port);
     chat.accept(clientID);  //Wait for console data
   }
 }

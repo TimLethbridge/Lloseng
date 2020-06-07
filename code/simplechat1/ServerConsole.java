@@ -13,18 +13,22 @@ public class ServerConsole implements ChatIF {
   private EchoServer server;
 
   final public static int DEFAULT_PORT = 5555;
+  /*Constructor for ServerConsole
 
+   * @param s   The port for the new server
+  */
   public ServerConsole(EchoServer s) {
 
     server = s;
 
   }
 
-  public ServerConsole(int port, EchoServer s) {
-    
-    server = new EchoServer(port);
-  }
 
+  /*
+   * Accepts input from the consoles command line
+   * Handles different commands
+   *
+  */
   public void accept()
   {
 
@@ -115,6 +119,8 @@ public class ServerConsole implements ChatIF {
     }
   }
 
+  //Displays server message
+
   public void display(String message) {
     System.out.println("SERVER MSG> "+message);
   }
@@ -133,7 +139,7 @@ public class ServerConsole implements ChatIF {
     }
 
     EchoServer sv = new EchoServer(port);
-    ServerConsole sc = new ServerConsole(port, sv);
+    ServerConsole sc = new ServerConsole(sv);
 
     try
     {

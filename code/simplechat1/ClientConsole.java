@@ -94,6 +94,10 @@ public class ClientConsole implements ChatIF
     System.out.println("> " + message);
   }
 
+  public void connectionException(Exception exception){
+    System.out.println("Server has shut down. Terminating session");
+  }
+
   
   //Class methods ***************************************************
   
@@ -102,21 +106,38 @@ public class ClientConsole implements ChatIF
    *
    * @param args[0] The host to connect to.
    */
-  public static void main(String[] args) 
-  {
+  public static void main(String[] args){
+    
     String host = "";
-    int port = 0;  //The port number
+    int port=5555;  //The port number
+    System.out.println("Please specify port number (If blank, default port 5555 will be used)");
+    try{
+      BufferedReader getPort = new BufferedReader(new InputStreamReader(System.in));
+      String input = getPort.readLine();
+      port = Integer.parseInt( input );
+    }
 
-    try
-    {
-      host = args[0];
+    catch (Exception ex){
+      System.out.println
+        ("Unexpected error while reading from console! Default port of 5555 will be used");
     }
-    catch(ArrayIndexOutOfBoundsException e)
-    {
-      host = "localhost";
+  
+    if(port > 65535 || port < 0){
+      System.out.println("Invalid Port Number");
     }
-    ClientConsole chat= new ClientConsole(host, DEFAULT_PORT);
-    chat.accept();  //Wait for console data
+    else{
+      try
+      {
+        System.out.println("Please enter host name:");
+        host = args[0];
+      }
+      catch(ArrayIndexOutOfBoundsException e)
+      {
+        host = "localhost";
+      }
+      ClientConsole chat= new ClientConsole(host, port);
+      chat.accept();  //Wait for console data
+    }
   }
 }
 //End of ConsoleChat class

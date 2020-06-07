@@ -144,7 +144,7 @@ public class ClientConsole implements ChatIF
               break;
 
             case "#quit":
-              client.display("The Client has been terminated");
+              display("The Client has been terminated");
               client.quit();
               break;
 

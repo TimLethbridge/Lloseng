@@ -64,7 +64,8 @@ public class EchoServer extends AbstractServer
               loginId = message.substring(index+1, message.length());
 
               client.setInfo("Login ID", loginId);
-              this.sendToAllClients("Login ID: "+ client.getInfo("Login ID"));
+              this.sendToAllClients(client.getInfo("Login ID")+ " has logged on");
+              //System.out.println("Message received: " + msg + " from " + client.getInfo("Login ID"));
               System.out.println(client.getInfo("Login ID")+" has logged on");
               logged = true;
             }
@@ -73,11 +74,6 @@ public class EchoServer extends AbstractServer
 
           }
           break;
-
-          default:
-            this.sendToAllClients("Message received: " + msg + " from " + client.getInfo("Login ID"));
-            System.out.println("Message received: " + msg + " from " + client.getInfo("Login ID"));
-            break;
         }
       }
 
@@ -85,6 +81,9 @@ public class EchoServer extends AbstractServer
       {
 
       }
+
+      this.sendToAllClients("Message received: " + msg + " from " + client.getInfo("Login ID"));
+      System.out.println("Message received: " + msg + " from " + client.getInfo("Login ID"));
 
 
 

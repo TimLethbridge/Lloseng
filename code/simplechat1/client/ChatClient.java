@@ -77,7 +77,30 @@ public class ChatClient extends AbstractClient
       quit();
     }
   }
-  
+
+  /**
+	 * Hook method called after the connection has been closed. The default
+	 * implementation does nothing. The method may be overriden by subclasses to
+	 * perform special processing such as cleaning up and terminating, or
+	 * attempting to reconnect.
+	 */
+	public void connectionClosed() {
+      System.out.println("The connection with the server has ended.");
+	}
+
+	/**
+	 * Hook method called each time an exception is thrown by the client's
+	 * thread that is waiting for messages from the server. The method may be
+	 * overridden by subclasses.
+	 * 
+	 * @param exception
+	 *            the exception raised.
+	 */
+	public void connectionException(Exception exception) {
+      System.out.println("There has been an error with the connection.");
+      quit();
+	}
+   
   /**
    * This method terminates the client.
    */

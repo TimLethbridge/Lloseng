@@ -4,6 +4,8 @@
 
 import java.io.*;
 import ocsf.server.*;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * This class overrides some of the methods in the abstract 
@@ -39,6 +41,17 @@ public class EchoServer extends AbstractServer
   
   //Instance methods ************************************************
   
+    /**
+   * This method handles all data coming from the ServerConsole            
+   *
+   * @param message The message from the ServerConsole.    
+   */
+  public void handleMessageFromServerConsole(String message)
+  {
+	this.sendToAllClients(message);
+	System.out.println(message);
+  }
+  
   /**
    * This method handles any messages received from the client.
    *
@@ -48,8 +61,49 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
-    System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
+	//modify so it does more than echo messages
+	String msgString = msg.toString();
+	String[] messageArray = msgString.split(" ");
+	
+	switch(msgString.charAt(0)) {
+		case '#':
+
+			switch(messageArray[0])	{
+				case "#login": //not done
+				
+					if (client.getInfo("firstContact")==null){
+						client.setInfo("firstContact",false);
+						client.setInfo("loginID",messageArray[1]);
+						this.sendToAllClients(messageArray[1] + " has logged on.");
+						System.out.println(messageArray[1] + " has logged on.");
+					}
+					
+					else {
+						try {
+							client.sendToClient("You already logged-in our ID.");
+						} 
+						catch (IOException w) {System.out.println("test");}
+						}
+					break;
+				
+				default:
+					if (client.getInfo("firstContact")==null){
+						try {
+							client.sendToClient("Your first command to the Server must be #login.");
+							client.close();
+						} 
+						catch (IOException w) {}
+						}
+					//Here you would add more server command accessible by client.
+				break;
+			}
+			break;
+			
+		default:
+			System.out.println("Message received: " + msg + " from " + client);
+			this.sendToAllClients(client.getInfo("loginID") + " > " + msg);
+			break;
+	}
   }
     
   /**
@@ -72,6 +126,124 @@ public class EchoServer extends AbstractServer
       ("Server has stopped listening for connections.");
   }
   
+    /**
+   * Hook method called each time a new client connection is
+   * accepted. The default implementation does nothing.
+   * @param client the connection connected to the client.
+   */
+  protected void clientConnected(ConnectionToClient client) 
+  {
+	  System.out.println("A new client is attempting to connect to the server.");	  
+  }
+
+  /**
+   * Hook method called each time a client disconnects.
+   * The default implementation does nothing. The method
+   * may be overridden by subclasses but should remains synchronized.
+   *
+   * @param client the connection with the client.
+   */
+  synchronized protected void clientDisconnected(ConnectionToClient client) 
+	{
+		System.out.println(client.getInfo("loginID") + " has disconnected.");
+		this.sendToAllClients(client.getInfo("loginID") + " has disconnected.");
+	}
+	
+	  /**
+   * Hook method called each time an exception is thrown in a
+   * ConnectionToClient thread.
+   * The method may be overridden by subclasses but should remains
+   * synchronized.
+   *
+   * @param client the client that raised the exception.
+   * @param Throwable the exception thrown.
+   */
+  synchronized protected void clientException(
+    ConnectionToClient client, Throwable exception) 
+	{
+		clientDisconnected(client);
+	}
+	
+  /**
+   * This method contains all the server commands.
+   * Every commands begin with '#'.
+   * 
+   * @param command word that needs to be actioned.
+   */
+  public void serverCommand(String message){
+	
+	//Make the message received into an array (necessary for setHost/setPort)
+	String[] messageArray = message.split(" ");
+	String[] commandArray = new String[]{"#quit","#start","#stop","#close","#getport","#setport"};
+	
+	//If the command isn't in the 'known' list, give error message and command list.
+	if (!Arrays.asList(commandArray).contains(messageArray[2])){
+		System.out.println("The command line you entered is 'INVALID', here is a list of all current commands.");
+		System.out.println("#quit // #start // #stop // #close // #getport // #setport");
+	}
+	
+	switch(messageArray[2])	{
+		case "#quit": //not done
+			try
+			{
+			  close();
+			}
+			catch(IOException e) {System.out.println("exception");}
+			System.exit(0);
+			break;
+			
+		case "#start"://finished
+			//what happens in #start
+			if (!isListening())
+			{
+				try
+				{
+					listen();
+				} 
+				catch (IOException e) {}
+			} break;
+			
+		case "#stop"://completed
+			this.stopListening();
+			this.sendToAllClients("WARNING - Server has stopped listening for connections.");
+			break;
+			
+		case "#close"://completed
+			try
+			{
+			  this.stopListening(); 
+			  this.close();
+			}
+			catch(IOException e) {}
+			break;
+			
+		case "#getport"://completed
+		
+			try
+			{
+				System.out.println("SYSTEM ::: The current Port is: " + getPort());
+			}
+			
+			catch (Exception a)
+			{
+				System.out.println("SYSTEM ::: There was an error in the getPort attempt");
+			}
+			break;
+			
+		case "#setport": //completed
+			
+			try {
+				int newPort = Integer.parseInt(messageArray[3]);
+				
+				setPort(newPort);
+				System.out.println("SYSTEM ::: The new Port has been set to: " + getPort());
+			} catch (Exception ex2) 
+			{
+				System.out.println("SYSTEM ::: Array Out-of-Bound or your Port was not a valid Integer between 1 and 65535.");
+			} break;
+	}
+  }
+  
   //Class methods ***************************************************
   
   /**
@@ -81,29 +253,29 @@ public class EchoServer extends AbstractServer
    * @param args[0] The port number to listen on.  Defaults to 5555 
    *          if no argument is entered.
    */
-  public static void main(String[] args) 
+  public static void main(int port) 
   {
-    int port = 0; //Port to listen on
+    //int port = 0; //Port to listen on
 
-    try
-    {
-      port = Integer.parseInt(args[0]); //Get port from command line
-    }
-    catch(Throwable t)
-    {
-      port = DEFAULT_PORT; //Set port to 5555
-    }
+    // try
+    // {
+      // port = Integer.parseInt(args[0]); //Get port from command line
+    // }
+    // catch(Throwable t)
+    // {
+      // port = DEFAULT_PORT; //Set port to 5555
+    // }
 	
-    EchoServer sv = new EchoServer(port);
+    //EchoServer sv = new EchoServer(port);
     
-    try 
-    {
-      sv.listen(); //Start listening for connections
-    } 
-    catch (Exception ex) 
-    {
-      System.out.println("ERROR - Could not listen for clients!");
-    }
+    // try 
+    // {
+      // sv.listen(); //Start listening for connections
+    // } 
+    // catch (Exception ex) 
+    // {
+      // System.out.println("ERROR - Could not listen for clients!");
+    // }
   }
 }
 //End of EchoServer class

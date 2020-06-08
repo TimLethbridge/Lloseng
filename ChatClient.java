@@ -4,10 +4,9 @@
 
 package client;
 
-import java.io.IOException;
-
-import common.ChatIF;
-import ocsf.client.AbstractClient;
+import ocsf.client.*;
+import common.*;
+import java.io.*;
 
 /**
  * This class overrides some of the methods defined in the abstract superclass
@@ -26,6 +25,7 @@ public class ChatClient extends AbstractClient {
 	 * method in the client.
 	 */
 	ChatIF clientUI;
+	String username;
 
 	// Constructors ****************************************************
 
@@ -40,9 +40,10 @@ public class ChatClient extends AbstractClient {
 	public ChatClient(String username, String host, int port, ChatIF clientUI) throws IOException {
 		super(host, port); // Call the superclass constructor
 		this.clientUI = clientUI;
+		this.username = username;
 		openConnection();
 
-		// Modified for E7-A: Automatically login
+		// Modified for E7a: Automatic login
 		this.sendToServer("#login " + username);
 
 	}
@@ -60,21 +61,12 @@ public class ChatClient extends AbstractClient {
 
 	/**
 	 * This method handles all data coming from the UI
-	 * 
-	 * Modified for E6-a Client is now able to type command starting with # for
-	 * special functions
 	 *
 	 * @param message The message from the UI.
 	 */
-	public void handleMessageFromClientUI(String message) {
-//		try {
-//			sendToServer(message);
-//		} catch (IOException e) {
-//			clientUI.display("Could not send message to server.  Terminating client.");
-//			quit();
-//		}
 
-		// Take
+	 // Modified for E6a: Client can type commands starting with # for special functions
+	public void handleMessageFromClientUI(String message) {
 		if (message.startsWith("#")) {
 			String[] splitMessage = message.split(" ");
 			String fstPart_Msg = splitMessage[0];
@@ -84,9 +76,10 @@ public class ChatClient extends AbstractClient {
 				break;
 			case "#logoff":
 				try {
+					System.out.println("Connection is closed.");
 					closeConnection();
 				} catch (IOException e) {
-					System.out.println("Error closing connection!!!");
+					System.out.println("Error closing connection.");
 				}
 				break;
 			case "#sethost":
@@ -140,16 +133,14 @@ public class ChatClient extends AbstractClient {
 	 */
 	public void quit() {
 		try {
+			clientUI.display("Terminating...");
 			closeConnection();
 		} catch (IOException e) {
 		}
 		System.exit(0);
 	}
 
-	/*
-	 * **** Changed for E5- A' Respond to shutdown of server by printing a message
-	 *
-	 */
+	// Modified for E5a: Respond to shutdown of server by printing a message and quitting
 	public void connectionClosed() {
 
 		try {
@@ -161,10 +152,9 @@ public class ChatClient extends AbstractClient {
 		}
 
 	}
-
-//**** Changed for E5-A:
+	// Modified for E5a: Respond to shutdown of server by printing a message and quitting
 	protected void connectionException(Exception exception) {
-		System.out.println("The server has shut down, quitting Now!");
+		System.out.println("The server has shut down, quitting now!");
 		System.exit(0);
 	}
 

@@ -3,13 +3,11 @@
 // "Object Oriented Software Engineering" and is issued under the open-source
 // license found at www.lloseng.com 
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Scanner;
 
-import client.ChatClient;
-import common.ChatIF;
+import java.util.Scanner;
+import java.io.*;
+import client.*;
+import common.*;
 
 /**
  * This class constructs the UI for a chat client. It implements the chat
@@ -45,9 +43,9 @@ public class ClientConsole implements ChatIF {
 	 * @param host The host to connect to.
 	 * @param port The port to connect on.
 	 * 
-	 *             takes a username string for E7-a to detect client username and
-	 *             loginId
 	 */
+
+	 // Modified for E7a: Take a username string to detect client username and loginId
 	public ClientConsole(String username, String host, int port) {
 		try {
 			client = new ChatClient(username, host, port, this);
@@ -97,18 +95,17 @@ public class ClientConsole implements ChatIF {
 	public static void main(String[] args) {
 		String host = "";
 
-		int port;
-		String username;
+		int port =0;
+		String username = "";
 
-		/*
-		 * Modified for E7-b Require a login ID
-		 */
+		// Modified for E7b: Require a login ID
 		try {
 			username = args[0];
 		} catch (ArrayIndexOutOfBoundsException e) {
-			System.err.println("ERROR - No login ID specified.  Connection aborted.");
-			System.exit(1);
-			return;
+            //System.err.println("ERROR - No login ID specified. Connection aborted.");
+            System.err.println("Cannot open connection. Awaiting command.");
+			//System.exit(0);
+			//return;
 		}
 
 		try {
@@ -117,27 +114,19 @@ public class ClientConsole implements ChatIF {
 			host = "localhost";
 		}
 
-		// **** Changed for E5 b to let users input the desired port number
-		Scanner scan = new Scanner(System.in);
-		System.out.println(
-				"Please Enter your  port number that SHOULD MATCH WITH THE SERVER PORT NUMBER U ALREADY INSERTED!!!!");
-		port = scan.nextInt(); // The port number
-		if (port < 4092) {
-			System.out.println("Port Number indicated is NOT Dynamic!!!");
-			System.exit(0);
+		// Modified for E5b: Let user input the desired port number
+		try
+		{
+		  port = Integer.parseInt(args[2]);
 		}
-
-		try {
-			host = args[0];
-		} catch (ArrayIndexOutOfBoundsException e) {
-			host = "localhost";
-
+		catch(ArrayIndexOutOfBoundsException e)
+		{
+		  port = DEFAULT_PORT;
 		}
-		ClientConsole chat = new ClientConsole(username, host, port);
-		System.out.println("Perfect! You can now input your text");
-		chat.accept(); // Wait for console data
-		if (!chat.client.isConnected())
-			scan.close();
+		
+		ClientConsole chat = new ClientConsole(username, host,port);
+		chat.accept();  //Wait for console data
+
 	}
 }
 //End of ConsoleChat class

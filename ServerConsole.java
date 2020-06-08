@@ -1,15 +1,14 @@
 
-/*Modified for E6-b Allowing user input
- * 
- * Similar to ClientConsole with minor changes to reflect how the server handle messages
--------------*/
+// Modified for E6b: Allowing user input 
+// Similar to ClientConsole with minor changes to reflect how the server handle messages
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 import common.ChatIF;
-import server.EchoServer;
+import ocsf.server.*;
 
 public class ServerConsole implements ChatIF {
 

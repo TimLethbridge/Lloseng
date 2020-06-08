@@ -32,6 +32,8 @@ public class ClientConsole implements ChatIF
    */
   ChatClient client;
 
+  private boolean run = true;
+
   
   //Constructors ****************************************************
 
@@ -64,24 +66,121 @@ public class ClientConsole implements ChatIF
    */
   public void accept() 
   {
-    try
-    {
+    try{
       BufferedReader fromConsole = 
         new BufferedReader(new InputStreamReader(System.in));
       String message;
 
-      while (true) 
-      {
+      while (run){
         message = fromConsole.readLine();
-        client.handleMessageFromClientUI(message);
+        if(message != null){
+          if(message.charAt(0)=='#'){
+            command(message.substring(1));
+          }
+          else{
+            client.handleMessageFromClientUI(message);
+          }
+        }
+        else{
+          client.handleMessageFromClientUI(message);
+          }
+        }
       }
-    } 
-    catch (Exception ex) 
-    {
-      System.out.println
-        ("Unexpected error while reading from console!");
+      catch (Exception ex) {
+        System.out.println("Unexpected error while reading from console!");
     }
   }
+  
+  public void command(String command){
+
+
+    System.out.println("Command: " + command);
+    System.out.println("Status: " + client.isConnected());
+
+    if(command.equals("quit")){
+      if(client.isConnected()){
+        try{
+          client.closeConnection();
+          run = false;
+        }
+        catch (Exception ex){
+          System.out.println
+            ("Unexpected error while terminating connection");
+        }
+      }
+      
+    }
+    else if(command.equals("logoff")){
+
+      if(!client.isConnected()){
+        System.out.println("Client already logged off");
+      }
+
+      else{
+        System.out.println("Attempting to logoff");
+        try{
+          client.closeConnection();
+        }
+        catch (Exception ex){
+          System.out.println
+            ("Unexpected error while terminating connection");
+        }
+      }
+    }
+
+    else if(command.equals("login")){
+      if(client.isConnected()){
+        System.out.println("Client already logged in");
+      }
+      else{
+        ClientConsole chat= new ClientConsole(client.getHost(), client.getPort());
+        chat.accept(); 
+      }
+    }
+
+    else if(command.substring(0,7).equals("sethost")){
+      if(client.isConnected()){
+        System.out.println("Client currently logged in. Please log off before changing host.");
+      }
+      else{
+        client.setHost(command.substring(8));
+        System.out.println("SetHost"+client.getHost());
+      }
+    }
+
+    else if((command.substring(0,7)).equals("setport")){
+      System.out.println("Attempting to changeport");
+      if(client.isConnected()){
+        System.out.println("Client currently logged in. Please log off before changing port.");
+      }
+      else{
+        try{
+          int changePort = Integer.parseInt(command.substring(8));
+          client.setPort(changePort);
+          System.out.println("SetPort"+client.getPort());
+        }
+        catch(Exception e){
+          System.out.println("Invalid port number");
+          
+        }
+      }
+    }
+
+    else if(command.substring(0,7).equals("gethost")){
+      System.out.println(client.getHost());
+    }
+
+    else if(command.substring(0,7).equals("getport")){
+      System.out.println(client.getPort());
+    }
+
+    else{
+      System.out.println("Command unknown, please try again");
+    }
+    
+
+  }
+
 
   /**
    * This method overrides the method in the ChatIF interface.  It
@@ -109,7 +208,7 @@ public class ClientConsole implements ChatIF
   public static void main(String[] args){
     
     String host = "";
-    int port=5555;  //The port number
+    int port=DEFAULT_PORT;  //The port number
     System.out.println("Please specify port number (If blank, default port 5555 will be used)");
     try{
       BufferedReader getPort = new BufferedReader(new InputStreamReader(System.in));
@@ -119,16 +218,16 @@ public class ClientConsole implements ChatIF
 
     catch (Exception ex){
       System.out.println
-        ("Unexpected error while reading from console! Default port of 5555 will be used");
+        ("Invalid port number. Default port of 5555 will be used");
     }
   
     if(port > 65535 || port < 0){
       System.out.println("Invalid Port Number");
     }
     else{
+      System.out.println("Connection to server at port "+port);
       try
       {
-        System.out.println("Please enter host name:");
         host = args[0];
       }
       catch(ArrayIndexOutOfBoundsException e)

@@ -2,9 +2,11 @@
 // "Object Oriented Software Engineering" and is issued under the open-source
 // license found at www.lloseng.com 
 
+package simplechat1;
+
 import java.io.*;
-import client.*;
-import common.*;
+import simplechat1.client.*;
+import simplechat1.common.*;
 
 /**
  * This class constructs the UI for a chat client.  It implements the
@@ -41,17 +43,17 @@ public class ClientConsole implements ChatIF
    * @param host The host to connect to.
    * @param port The port to connect on.
    */
-  public ClientConsole(String host, int port) 
+  public ClientConsole(String loginid, String host, int port)
   {
     try 
     {
-      client= new ChatClient(host, port, this);
+      //System.out.println(host+"  :"+ port);
+      client= new ChatClient(loginid, host, port, this);
     } 
     catch(IOException exception) 
     {
-      System.out.println("Error: Can't setup connection!"
-                + " Terminating client.");
-      System.exit(1);
+      System.out.println("Error: Can't setup connection! Terminating client.");
+      //System.exit(1);
     }
   }
 
@@ -91,32 +93,57 @@ public class ClientConsole implements ChatIF
    */
   public void display(String message) 
   {
-    System.out.println("> " + message);
+    //Objeect id=client.getInfo("loginId");
+    System.out.println( message);
   }
 
-  
   //Class methods ***************************************************
   
   /**
    * This method is responsible for the creation of the Client UI.
    *
-   * @param args[0] The host to connect to.
+   * @param args[0] login id
+   * @param args[1] host
+   * @param args[2] port
    */
   public static void main(String[] args) 
   {
+    String loginId ="";
+    int port = 0;
     String host = "";
-    int port = 0;  //The port number
+
+
+    try {
+      loginId = args[0];
+
+    } catch (Exception e) {
+      System.out.println("ERROR - No login ID specified.  Connection aborted.");
+      System.exit(0);
+    }
+
 
     try
     {
-      host = args[0];
+      host = args[1];
     }
     catch(ArrayIndexOutOfBoundsException e)
     {
       host = "localhost";
     }
-    ClientConsole chat= new ClientConsole(host, DEFAULT_PORT);
+    try{
+      port = Integer.valueOf(args[2]);
+    }
+    catch(ArrayIndexOutOfBoundsException e){
+      port = DEFAULT_PORT;
+    }
+    //System.out.println(loginId);
+   // System.out.println(host);
+    //System.out.println(port);
+    ClientConsole chat= new ClientConsole(loginId,host, port);
     chat.accept();  //Wait for console data
+
   }
+
 }
+
 //End of ConsoleChat class

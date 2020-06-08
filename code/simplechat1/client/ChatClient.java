@@ -99,6 +99,7 @@ public class ChatClient extends AbstractClient
 	public void connectionException(Exception exception) {
       System.out.println("There has been an error with the connection.");
       quit();
+      //
 	}
    
   /**

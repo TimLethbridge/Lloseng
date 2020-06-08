@@ -60,6 +60,7 @@ public class EchoServer extends AbstractServer
    * 
    */
   public void clientDisconnected(ConnectionToClient client) {
+    System.out.println("Disconnecting");
     System.out.println("Client "+ client + " has Disconnected");
   }
   
@@ -76,11 +77,13 @@ public class EchoServer extends AbstractServer
   {
     if(msg==null){
       clientDisconnected(client);
+      System.out.println("null disconnect");
     }
     else{
       System.out.println("Message received: " + msg + " from " + client);
       this.sendToAllClients(msg);
     }
+    //System.out.println(this.getNumberOfClients());
 
   }
     

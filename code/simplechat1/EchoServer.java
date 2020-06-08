@@ -77,7 +77,6 @@ public class EchoServer extends AbstractServer
   {
     if(msg==null){
       clientDisconnected(client);
-      System.out.println("null disconnect");
     }
     else{
       System.out.println("Message received: " + msg + " from " + client);
@@ -140,8 +139,9 @@ public class EchoServer extends AbstractServer
       System.out.println("ERROR - Could not listen for clients!");
     }
 
+    //Initiates and starts a serverConsole to allow for server communications.
     ServerConsole console = new ServerConsole(sv);
-    console.accept();
+    console.startConsole();
   }
 }
 //End of EchoServer class

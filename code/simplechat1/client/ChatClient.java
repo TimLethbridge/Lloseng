@@ -78,6 +78,19 @@ public class ChatClient extends AbstractClient
     }
   }
   
+  public void connectionClosed(){
+	clientUI.display("The server has shut down, quitting...");
+}
+
+	/* @param exception
+	 *            the exception raised.
+	 */
+  public void connectionException(Exception exception) {
+	
+	System.out.Println(exception);
+	quit();
+}
+
   /**
    * This method terminates the client.
    */
@@ -85,6 +98,7 @@ public class ChatClient extends AbstractClient
   {
     try
     {
+    {     
       closeConnection();
     }
     catch(IOException e) {}

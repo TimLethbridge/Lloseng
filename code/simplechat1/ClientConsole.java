@@ -121,13 +121,15 @@ public class ClientConsole implements ChatIF
       clientUI.display("Enter a port number");
       port = Integer.parseInt(args[0]); //Get port from command line
       ClientConsole chat= new ClientConsole(host, port);
+      chat.accept();
     }
     catch(Throwable t)
     {
      ClientConsole chat= new ClientConsole(host, DEFAULT_PORT); //Set port to 5555
+     chat.accept();
     }
     
-    chat.accept();  //Wait for console data
+    
   }
 }
 //End of ConsoleChat class

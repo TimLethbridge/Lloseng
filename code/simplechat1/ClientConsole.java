@@ -115,7 +115,18 @@ public class ClientConsole implements ChatIF
     {
       host = "localhost";
     }
-    ClientConsole chat= new ClientConsole(host, DEFAULT_PORT);
+
+    try
+    {
+      clientUI.display("Enter a port number");
+      port = Integer.parseInt(args[0]); //Get port from command line
+      ClientConsole chat= new ClientConsole(host, port);
+    }
+    catch(Throwable t)
+    {
+     ClientConsole chat= new ClientConsole(host, DEFAULT_PORT); //Set port to 5555
+    }
+    
     chat.accept();  //Wait for console data
   }
 }

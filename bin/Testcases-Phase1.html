@@ -1,0 +1,400 @@
+<html>
+<head>
+<title>Testcases - Phase 1</title>
+</head>
+<body bgcolor="#FFFFFF">
+<pre>
+GENERAL SETUP FOR TESTCASES
+System: Simple Chat/OCSF           Phase: 1
+
+Instructions:                    
+
+1. Install JAVA, minimum release 1.2.0, on Windows 95 or 98, if it is not
+already installed. 
+
+2. Install JAVA, minimum release 1.2.0, on Windows NT, if it is not
+already installed. 
+
+3. Install JAVA, minimum release 1.2.0, on a Solaris system, if it is not
+already installed. 
+
+4. Install the Simple Chat on Windows 95/98, NT and Solaris if it is not
+already installed. 
+
+<hr>
+Testcase 1001
+System: Simple Chat                Phase: 1
+Server startup check
+Severity: 1
+
+Instructions:
+1. At the console, enter: java EchoServer.
+
+Expected result:
+1.  The server reports that it is listening for clients by displaying the
+following message:  Server listening for clients on port 5555
+
+Cleanup:
+Hit CTRL+C to kill the server.
+
+<hr>
+Testcase 1002
+System: Simple Chat                Phase: 1
+Client startup check without a server
+Severity: 1
+
+Instructions:
+1. At the console, enter: java ClientConsole.
+
+Expected result:
+1. The client reports it cannot connect by displaying message:
+Error: Can't setup connection!  Terminating client.
+
+2. The client terminates.
+
+Cleanup: (if client is still active)
+Hit CTRL+C to kill the client.
+
+<hr>
+Testcase 1003
+System: Simple Chat                Phase: 1
+Client connection with default arguments
+Severity: 1
+
+Instructions:
+
+1. Start a server (Testcase 1001, instruction 1)
+
+2. On a different console on the same computer, start a client (Testcase
+1002, instruction 1) 
+
+Expected results:
+1. The client displays no message and waits for user input.
+
+2. The server displays no message.
+
+Cleanup: (unless proceeding to Testcase 1004)
+Hit CTRL+C to kill the client.
+Hit CTRL+C to kill the server.
+
+<hr>
+Testcase 1004
+System: Simple Chat                Phase: 1
+Data transfer and data echo
+Severity: 1
+
+Instructions:
+
+1. Start a client and a server on the same computer and connect using
+default arguments (Testcase 1003, instruction 1) 
+
+2. When the client is waiting type something into its console and press ENTER.
+
+Expected results:
+
+1. The message is echoed on the client side, but is preceded by a greater
+than symbol (">"). 
+
+2. The server displays a message similar to the following:
+Message received: &lt;user input&gt; from localhost(127.0.0.1)
+
+Cleanup: (unless proceeding to Testcase 1005)
+Hit CTRL+C to kill the client.
+Hit CTRL+C to kill the server.
+
+<hr>
+Testcase 1005
+System: Simple Chat                Phase: 1
+Server termination check
+Severity: 1
+
+Instructions:
+
+1. Start a server and a client on the same computer and connect using the
+default arguments (Testcase 1003, instruction 1). 
+
+2. Kill the server by pressing CTRL+C.
+
+Expected result:
+
+1. The client waits for input.  Upon receiving input, the client displays
+the message "> Could not send message to server. Terminating client."
+
+2. The clients exits.
+
+Cleanup:
+Hit CTRL+C to kill the client.
+
+<hr>
+Testcase 1006
+System: Simple Chat                Phase: 1
+Client termination check
+Severity: 1
+
+Instructions:
+
+1. Start a client and a server on the same computer and connect using the
+default arguments (Testcase 1003, instruction 1). 
+                              
+2. Kill the client by pressing CTRL+C.
+
+3. Start another client using the default arguments.
+
+Expected result:
+
+1. The server does not display any message regarding the disconnection,
+and then accepts the second connection. 
+
+Cleanup: (unless proceeding to Testcase 1008)
+Hit CTRL+C to kill the server.
+
+<hr>
+Testcase 1007
+System: Simple Chat                Phase: 1
+Multiple client connections and data transfer
+Severity: 1
+
+Instructions:
+1. Start a server (Testcase 1001, instruction 1).
+
+2. On a different console start a client and connect to the server using
+default arguments (Testcase 1003, instruction 1). 
+
+3. Repeat instruction 2 at least 2 more times.
+
+4. Type in data on any of the consoles and press ENTER.
+
+Expected results:
+1. Each client connects properly.
+
+2. Every message typed into any one of the consoles is echoed on all of
+the client consoles and the server console in the same way as in Testcase
+1004.
+
+Cleanup: (Unless proceeding to Testcase 1009)
+Hit CTRL+C to kill the server
+Hit CTRL+C to kill the clients
+
+<hr>
+Testcase 1008
+System: Simple Chat                Phase: 1
+Remote connection
+Severity: 1
+
+Instructions:
+1. Start a server (Testcase 1001, instruction 1).
+
+2. On a different computer's console type java ClientConsole <hostname>
+where hostname is the name by which the computer running the server is
+identified on the network.  The client and server computers should be
+running the same OS. 
+
+Expected result:
+1. Connection occurs as in Testcase 1003.
+
+Cleanup: (Unless proceeding to Testcase 1010)
+Hit CTRL+C to kill the client.
+Hit CTRL+C to kill the server.
+
+<hr>
+Testcase 1009
+System: Simple Chat                Phase: 1
+Data transfer to a remote connection
+Severity: 1
+
+Instructions:
+1. Start a server (Testcase 1001, instruction 1).
+
+2. Start a remote connection (Testcase 1009, instruction 2).
+
+3. Type data into the client console and press ENTER.
+
+Expected result:
+1. The connection occurs as in Testcase 1003.
+
+2. Any data typed is echoed as in Testcase 1004.
+
+Cleanup: (Unless proceeding to Testcase 1011)
+Hit CTRL+C to kill the client.
+Hit CTRL+C to kill the server.
+
+<hr>
+Testcase 1010
+System: Simple Chat                Phase: 1
+Multiple remote connections
+Severity: 1
+
+Instructions:
+1. Start a server (Testcase 1001, instruction 1).
+
+2. Start a remote connection (Testcase 1009, instruction 2).
+
+3. Repeat instruction 2 from different computers.
+
+Expected result:
+1. Connections occur as in Testcase 1003.
+
+Cleanup: (Unless proceeding to Testcase 1012)
+Hit CTRL+C to kill the clients.
+Hit CTRL+C to kill the server.
+
+<hr>
+Testcase 1011
+System: Simple Chat                Phase: 1
+Data transfer to multiple remote connections
+Severity: 1
+
+Instructions:
+1. Start a server (Testcase 1001, instruction 1).
+
+2. Start a remote connection (Testcase 1009, instruction 2).
+
+3. Repeat instruction 2 from different computers.
+
+4. Type data on different consoles and press ENTER.
+
+Expected results:
+1. Connections occur as in Testcase 1003.
+
+2. Any data typed in is echoed to all the clients as in Testcase 1004.
+
+3. The server displays messages similar to the ones in Testcase 1004.
+
+Cleanup: (Unless proceeding to Testcase 1013)
+Hit CTRL+C to kill the clients.
+Hit CTRL+C to kill the server.
+
+<hr>
+Testcase 1012
+System: Simple Chat                Phase: 1
+Server terminating with multiple remote clients
+Severity: 1
+
+Instructions:
+1. Start a server (Testcase 1001, instruction 1).
+
+2. Start a remote connection (Testcase 1009, instruction 2).
+
+3. Repeat instruction 2 from different computers.
+
+4. Once connections are established, kill the server by hitting CTRL+C.
+
+Expected result:
+1. All clients behave the same way as expected in Testcase 1005.
+
+Cleanup:
+Hit CTRL+C to kill each client.
+
+<hr>
+Testcase 1013
+System: Simple Chat                Phase: 1
+Server terminating with multiple local clients
+Severity: 1
+
+Instructions:
+1. Start a server (Testcase 1001, instruction 1).
+
+2. On a different console on the same computer start a Client and connect
+using default arguments (Testcase 1003, instruction 1). 
+
+3. Repeat instruction 2 a few times.
+
+4. Once connections are established, kill the server by hitting CTRL+C.
+
+Expected result:
+1. All clients behave the same way as expected in Testcase 1005.
+
+Cleanup:
+Hit CTRL+C to kill each client.
+
+<hr>
+Testcase 1014
+System: Simple Chat                Phase: 1
+Other platform checks
+Severity: 1
+
+Instructions:
+
+1. Repeat all the above testcases under other platforms.  Use only one
+platform for each test, e.g. do not use a unix machine for the client and
+an NT machine for the server.
+
+Expected Result:
+1. Same behaviour as all of the above testcases.
+
+<hr>
+Testcase 1015
+System: Simple Chat                Phase: 1
+Different platforms for the client and servers
+Severity: 1
+
+Instructions:
+1. Start a server (Testcase 1001, instruction 1).
+
+2. On a computer running a different OS, connect to that server (Testcase
+1009, instruction 2). 
+
+3. Exchange data.
+
+4. Repeat instructions 2 and 3, switching operating systems at random.
+
+5. Kill any client.
+
+6. Kill the server.
+
+Expected results:
+1. All connections occur the same way as in Testcase 1003.
+
+2. All messages are echoed the same way as expected in Testcase 1004.
+
+3. All messages are displayed on the server console using the same format
+as Testcase 1004. 
+
+4. Killing a client has the same effect on all clients and the server as
+in Testcase 1007. 
+
+5. Killing the server has the same effect on all clients as in Testcase
+1005. 
+
+Cleanup:
+1. Hit CTRL+C to kill any remaining clients.
+
+<hr>
+Testcase 1016
+System: Simple Chat                Phase: 1
+Severity: 1
+
+Instructions:
+1. Repeat Testcase 1015 altering the server OS.
+
+Expected results:
+1. Same as Testcase 1015.
+
+Cleanup:
+1. Hit CTRL+C to kill any remaining clients.
+</pre>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

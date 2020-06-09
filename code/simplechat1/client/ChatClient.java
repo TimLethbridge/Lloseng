@@ -97,9 +97,8 @@ public class ChatClient extends AbstractClient
 	 *            the exception raised.
 	 */
 	public void connectionException(Exception exception) {
-      System.out.println("There has been an error with the connection.");
+      System.out.println("Server has stopped communicating. Shutting down.");
       quit();
-      //
 	}
    
   /**

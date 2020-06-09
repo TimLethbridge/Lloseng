@@ -118,7 +118,7 @@ public class ClientConsole implements ChatIF
 
     try
     {
-      clientUI.display("Enter a port number");
+      System.out.writeln("Enter a port number");
       port = Integer.parseInt(args[0]); //Get port from command line
       ClientConsole chat= new ClientConsole(host, port);
       chat.accept();

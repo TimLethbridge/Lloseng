@@ -18,11 +18,15 @@ import ocsf.server.*;
 public class EchoServer extends AbstractServer
 {
   //Class variables *************************************************
-
   /**
    * The default port to listen on.
    */
   final public static int DEFAULT_PORT = 5555;
+  /**
+   * The default port to listen on.
+   */
+  public String currentClientInfo = "";
+
 
   //Constructors ****************************************************
 
@@ -48,10 +52,15 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
-    System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
+      System.out.println("Message received: " + msg + " from " + client);
+      this.sendToAllClients(msg);
+
   }
 
+
+  private static String charRemoveAt(String str, int p) {
+        return str.substring(0, p) + str.substring(p + 1);
+      }
   /**
    * This method overrides the one in the superclass.  Called
    * when the server starts listening for connections.
@@ -79,7 +88,8 @@ public class EchoServer extends AbstractServer
    * @param client the connection connected to the client.
    */
   protected void clientConnected(ConnectionToClient client) {
-    System.out.println(client.toString() + " has connected to the server");
+    currentClientInfo = client.toString();
+    System.out.println(currentClientInfo + " has connected to the server");
   }
   /**
    * This method is called each time a client disconnects.
@@ -88,7 +98,8 @@ public class EchoServer extends AbstractServer
    */
   synchronized protected void clientDisconnected(
     ConnectionToClient client) {
-      System.out.println(client.toString() + " has disconnected from the server");
+      System.out.println(currentClientInfo + " has disconnected from the server");
+      currentClientInfo = "";
     }
 
   /**
@@ -100,7 +111,8 @@ public class EchoServer extends AbstractServer
    */
   synchronized protected void clientException(
     ConnectionToClient client, Throwable exception) {
-      System.out.println("A client has disconnected from the server");
+      System.out.println(currentClientInfo + " has been disconnected from the server");
+      currentClientInfo = "";
     }
   /**
    * This method is responsible for the creation of

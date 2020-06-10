@@ -66,16 +66,96 @@ public class ChatClient extends AbstractClient
    */
   public void handleMessageFromClientUI(String message)
   {
-    try
-    {
-      sendToServer(message);
+    String temp = (String) message;
+    String changeValue = "";
+    char [] messg = temp.toCharArray();
+    if(messg[0] == '#'){
+      temp = temp.replace("#", "");
+      if(messg[1] == 's'){
+        String [] messageSplit = temp.split(" ");
+        temp = messageSplit[0];
+        changeValue = messageSplit[1];
+      }
+      handleCommandFromClientUI(temp, changeValue);
+    }else{
+      try
+      {
+        sendToServer(message);
+      }
+      catch(IOException e)
+      {
+        clientUI.display
+          ("Could not send message to server.  Terminating client.");
+        quit();
+      }
+
     }
-    catch(IOException e)
-    {
-      clientUI.display
-        ("Could not send message to server.  Terminating client.");
+
+  }
+
+  private void handleCommandFromClientUI(String cmd, String change){
+
+    switch(cmd){
+      case "quit":
+      clientUI.display("Terminating....");
       quit();
+        break;
+
+      case "logoff":
+      if(isConnected()){
+        try{
+          clientUI.display("Logging off...");
+          closeConnection();
+        }catch(IOException e){
+        }
+      }else{
+        clientUI.display("Already logged out");
+      }
+
+        break;
+
+      case "login":
+      if(!isConnected()){
+        try{
+          clientUI.display("Logging in...");
+          openConnection();
+        }catch (IOException e){
+        }
+      }else{
+        clientUI.display("Already logged in");
+      }
+
+        break;
+
+      case "gethost":
+      clientUI.display("Host: " + getHost());
+        break;
+
+      case "getport":
+      clientUI.display("Port: " + String.valueOf(getPort()));
+        break;
+
+      case "sethost":
+      if(!isConnected()){
+        setHost(change);
+        clientUI.display("New Host Name: " + change);
+      }else{
+        clientUI.display("Cannot change host while connected to server!");
+      }
+        break;
+
+      case "setport":
+      if(!isConnected()){
+        int newPort = Integer.valueOf(change);
+        setPort(newPort);
+        clientUI.display("New Port Number: " + newPort);
+      }else{
+        clientUI.display("Cannot change port while connected to server!");
+      }
+        break;
     }
+
+
   }
 
   /**
@@ -98,9 +178,11 @@ public class ChatClient extends AbstractClient
  */
 protected void connectionException(Exception exception) {
   clientUI.display
-    ("Connection Exception. Terminating client.");
+    ("Connection Closed.");
     quit();
 }
+
+
 }
 
 

@@ -93,6 +93,12 @@ public class ChatClient extends AbstractClient
 
   }
 
+  /**
+   * This method handles all commands coming from the UI
+   *
+   * @param cmd The cmd from the UI.
+   * @param change The value for "set" commands from the UI
+   */
   private void handleCommandFromClientUI(String cmd, String change){
 
     switch(cmd){

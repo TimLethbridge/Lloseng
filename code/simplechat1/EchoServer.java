@@ -4,6 +4,7 @@
 
 import java.io.*;
 import ocsf.server.*;
+import common.*;
 
 /**
  * This class overrides some of the methods in the abstract
@@ -27,6 +28,12 @@ public class EchoServer extends AbstractServer
    */
   public String currentClientInfo = "";
 
+  /**
+   * The interface type variable.  It allows the implementation of
+   * the display method in the serverUI.
+   */
+  ChatIF serverUI;
+
 
   //Constructors ****************************************************
 
@@ -35,9 +42,10 @@ public class EchoServer extends AbstractServer
    *
    * @param port The port number to connect on.
    */
-  public EchoServer(int port)
-  {
+  public EchoServer(int port, ChatIF serverUI)
+  throws IOException{
     super(port);
+    this.serverUI = serverUI;
   }
 
 
@@ -55,6 +63,112 @@ public class EchoServer extends AbstractServer
       System.out.println("Message received: " + msg + " from " + client);
       this.sendToAllClients(msg);
 
+  }
+
+  /**
+   * This method handles all data coming from the UI
+   *
+   * @param message The message from the UI.
+   */
+  public void handleMessageFromServerUI(String message)
+  {
+    String temp = (String) message;
+    String changeValue = "";
+    char [] messg = temp.toCharArray();
+    if(messg[0] == '#'){
+      temp = temp.replace("#", "");
+      String [] messageSplit = temp.split(" ");
+      if(messageSplit[0].equals("setport")){
+        handleCommandFromServerUI(messageSplit[0], messageSplit[1]);
+      }else{
+        handleCommandFromServerUI(temp);
+      }
+
+    }else{
+        if(getNumberOfClients() > 0){
+          sendToAllClients("SERVER MSG> "+ message);
+        }else{
+          serverUI.display
+            ("No Client connected!");
+        }
+
+      }
+
+    }
+
+  /**
+   * This method handles all commands coming from the UI
+   *
+   * @param cmd The cmd from the UI.
+   * @param change The value for "set" commands from the UI
+   */
+
+  private void handleCommandFromServerUI(String cmd){
+
+    switch(cmd){
+      case "quit":
+      serverUI.display("Terminating....");
+      try{
+        close();
+        System.exit(0);
+      }catch (IOException e){
+      }
+        break;
+
+      case "stop":
+      serverUI.display("Terminating listening program....");
+      stopListening();
+        break;
+
+      case "close":
+      serverUI.display("Closing....");
+      try{
+        close();
+      }catch (IOException e){
+      }
+        break;
+
+      case "getport":
+      serverUI.display("Port: " + String.valueOf(getPort()));
+        break;
+
+      case "start":
+      if(!isListening()){
+        try{
+        listen();
+      }catch (IOException e){
+        serverUI.display("ERROR: Cannnot start listening");
+      }
+
+      }else{
+        serverUI.display("Server is already listening!");
+      }
+        break;
+    }
+  }
+
+
+/**
+ * This method handles all commands coming from the UI
+ *
+ * @param cmd The cmd from the UI.
+ * @param change The value for "set" commands from the UI
+ */
+
+private void handleCommandFromServerUI(String cmd, String change){
+  switch(cmd){
+    case "setport":
+    if(!isListening() && getNumberOfClients() == 0){
+      int newPort = Integer.valueOf(change);
+      setPort(newPort);
+      serverUI.display("New Port Number: " + newPort);
+    }else if (isListening()){
+      serverUI.display("Server is still listening. Close the server to change ports");
+    }else{
+      serverUI.display("Clients are still connected. Close the server to change ports");
+    }
+      break;
+  }
   }
 
 
@@ -121,29 +235,6 @@ public class EchoServer extends AbstractServer
    * @param args[0] The port number to listen on.  Defaults to 5555
    *          if no argument is entered.
    */
-  public static void main(String[] args)
-  {
-    int port = 0; //Port to listen on
 
-    try
-    {
-      port = Integer.parseInt(args[0]); //Get port from command line
-    }
-    catch(Throwable t)
-    {
-      port = DEFAULT_PORT; //Set port to 5555
-    }
-
-    EchoServer sv = new EchoServer(port);
-
-    try
-    {
-      sv.listen(); //Start listening for connections
-    }
-    catch (Exception ex)
-    {
-      System.out.println("ERROR - Could not listen for clients!");
-    }
-  }
 }
 //End of EchoServer class

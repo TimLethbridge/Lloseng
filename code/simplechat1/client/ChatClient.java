@@ -27,6 +27,11 @@ public class ChatClient extends AbstractClient
    */
   ChatIF clientUI;
 
+  /**
+   * The class variable that stores the login ID of the client
+   */
+  String loginID = "";
+
 
   //Constructors ****************************************************
 
@@ -38,12 +43,18 @@ public class ChatClient extends AbstractClient
    * @param clientUI The interface type variable.
    */
 
-  public ChatClient(String host, int port, ChatIF clientUI)
+  public ChatClient(String loginID, String host, int port, ChatIF clientUI)
     throws IOException
   {
     super(host, port); //Call the superclass constructor
-    this.clientUI = clientUI;
-    openConnection();
+    if(loginID == "N/A"){
+      throw new IOException();
+    }else{
+      this.clientUI = clientUI;
+      this.loginID = loginID;
+      openConnection();
+      sendToServer("#login " + loginID);
+    }
   }
 
 
@@ -125,6 +136,7 @@ public class ChatClient extends AbstractClient
         try{
           clientUI.display("Logging in...");
           openConnection();
+          clientUI.display("You are now connected to port " + getPort());
         }catch (IOException e){
         }
       }else{
@@ -159,6 +171,14 @@ public class ChatClient extends AbstractClient
         clientUI.display("Cannot change port while connected to server!");
       }
         break;
+
+      default:
+      try{
+        sendToServer("#"+ cmd + " " + change);
+      }catch (IOException e){
+        
+      }
+
     }
 
 

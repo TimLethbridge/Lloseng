@@ -111,13 +111,9 @@ public class ChatClient extends AbstractClient
           case message.contains("getport"):
           clientUI.display(getPort().toString());;
           break;
-
- 
-}
-
       }else{
         sendToServer(message);
-      }
+      } 
       
     }
     catch(IOException e)

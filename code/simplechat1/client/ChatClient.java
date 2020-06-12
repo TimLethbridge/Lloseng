@@ -68,7 +68,57 @@ public class ChatClient extends AbstractClient
   {
     try
     {
-      sendToServer(message);
+      if(message.contains("#")){
+        switch(message) {
+          case message.contains("quit"):
+          quit();
+          break;
+
+          case message.contains("logoff"):
+          closeConnection();
+          break;
+
+          case message.contains("sethost"):
+          if(isConnected()){
+            clientUI.display("This operation is unavailable while logged on.");
+          }else{
+            setHost(message.replace("#sethost",""));
+          }
+          
+          break;
+
+          case message.contains("setport"):
+          if(isConnected()){
+            clientUI.display("This operation is unavailable while logged on.");
+          }else{
+            setPort(message.replace("#setport",""));
+          }
+          
+          break;
+
+          case message.contains("login"):
+          if(isConnected()){
+            clientUI.display("This operation is unavailable while logged on.");
+          }else{
+            openConnection();
+          }
+          break;
+
+          case message.contains("gethost"):
+          clientUI.display(getHost());;
+          break;
+
+          case message.contains("getport"):
+          clientUI.display(getPort().toString());;
+          break;
+
+ 
+}
+
+      }else{
+        sendToServer(message);
+      }
+      
     }
     catch(IOException e)
     {

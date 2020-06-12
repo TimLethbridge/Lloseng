@@ -66,9 +66,7 @@ public class ChatClient extends AbstractClient
    */
   public void handleMessageFromClientUI(String message)
   {
-    try
-    {
-      if(message.contains("#")){
+    if(message.contains("#")){
         switch(message) {
           case message.contains("quit"):
           quit();
@@ -111,17 +109,20 @@ public class ChatClient extends AbstractClient
           case message.contains("getport"):
           clientUI.display(getPort().toString());;
           break;
-      }else{
-        sendToServer(message);
-      } 
+    }else{
+      try
+      {
       
-    }
-    catch(IOException e)
-    {
-      clientUI.display
-        ("Could not send message to server.  Terminating client.");
-      quit();
-    }
+        sendToServer(message);
+    
+      
+      }
+      catch(IOException e)
+      {
+        clientUI.display
+          ("Could not send message to server.  Terminating client.");
+        quit();
+      }
   }
   
   /**

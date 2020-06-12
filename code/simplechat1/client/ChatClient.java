@@ -52,8 +52,13 @@ public class ChatClient extends AbstractClient
     }else{
       this.clientUI = clientUI;
       this.loginID = loginID;
-      openConnection();
-      sendToServer("#login " + loginID);
+      try{
+        openConnection();
+        sendToServer("#login " + loginID);
+      }catch (IOException e){
+        System.out.println("Cannot open connection. Awaiting command...");
+      }
+
     }
   }
 
@@ -82,8 +87,9 @@ public class ChatClient extends AbstractClient
     char [] messg = temp.toCharArray();
     if(messg[0] == '#'){
       temp = temp.replace("#", "");
-      if(messg[1] == 's'){
-        String [] messageSplit = temp.split(" ");
+      String [] messageSplit = temp.split(" ");
+      if(messageSplit[0].equals("login") || messageSplit[0].equals("sethost")
+      || messageSplit[0].equals("setport")){
         temp = messageSplit[0];
         changeValue = messageSplit[1];
       }
@@ -136,7 +142,7 @@ public class ChatClient extends AbstractClient
         try{
           clientUI.display("Logging in...");
           openConnection();
-          clientUI.display("You are now connected to port " + getPort());
+          sendToServer("#login " + change);
         }catch (IOException e){
         }
       }else{
@@ -176,7 +182,7 @@ public class ChatClient extends AbstractClient
       try{
         sendToServer("#"+ cmd + " " + change);
       }catch (IOException e){
-        
+
       }
 
     }
@@ -197,6 +203,16 @@ public class ChatClient extends AbstractClient
     System.exit(0);
   }
 
+  /**
+	 * Hook method called after the connection has been closed. The default
+	 * implementation does nothing. The method may be overriden by subclasses to
+	 * perform special processing such as cleaning up and terminating, or
+	 * attempting to reconnect.
+	 */
+	protected void connectionClosed() {
+    clientUI.display("Connection closed");
+	}
+
 /**
  * Overriding the connectionException() method to terminate the client when the connection raises an exception
  * @param exception
@@ -204,8 +220,7 @@ public class ChatClient extends AbstractClient
  */
 protected void connectionException(Exception exception) {
   clientUI.display
-    ("Connection Closed.");
-    quit();
+    ("Abnormal termination of connection.");
 }
 
 

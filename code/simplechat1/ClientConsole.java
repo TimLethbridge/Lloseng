@@ -51,8 +51,13 @@ public class ClientConsole implements ChatIF
     }
     catch(IOException exception)
     {
-      System.out.println("Error: Can't setup connection!"
-                + " Terminating client.");
+      if(loginID == null){
+        System.out.println("Error: Can't setup connection!"
+                  + " Terminating client.");
+      }else{
+        System.out.println("Error: No login ID specified!"
+                  + " Connection aborted.");
+      }
       System.exit(1);
     }
   }
@@ -139,7 +144,6 @@ public class ClientConsole implements ChatIF
 
 
     ClientConsole chat= new ClientConsole(loginID, host, port);
-    System.out.println("You are now connected to port " + port);
     chat.accept();  //Wait for console data
   }
 }

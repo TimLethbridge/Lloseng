@@ -23,10 +23,6 @@ public class EchoServer extends AbstractServer
    * The default port to listen on.
    */
   final public static int DEFAULT_PORT = 5555;
-  /**
-   * The default port to listen on.
-   */
-  public String currentClientInfo = "";
 
   /**
    * The interface type variable.  It allows the implementation of
@@ -41,6 +37,7 @@ public class EchoServer extends AbstractServer
    * Constructs an instance of the echo server.
    *
    * @param port The port number to connect on.
+   * @param serverUI The refence to the server interface
    */
   public EchoServer(int port, ChatIF serverUI)
   throws IOException{
@@ -48,6 +45,15 @@ public class EchoServer extends AbstractServer
     this.serverUI = serverUI;
   }
 
+  /**
+   * Constructs an instance of the echo server.
+   *
+   * @param port The port number to connect on.
+   */
+  public EchoServer(int port)
+  throws IOException{
+    super(port);
+  }
 
   //Instance methods ************************************************
 
@@ -71,6 +77,9 @@ public class EchoServer extends AbstractServer
 
           client.setInfo("Login ID", messageSplit[1]);
           client.setInfo("First Command", "Login");
+          System.out.println("Mesage recieved: #login " + client.getInfo("Login ID") + " from null ");
+          System.out.println(client.getInfo("Login ID") + " has logged on ");
+          this.sendToAllClients(client.getInfo("Login ID") + " has logged on ");
 
         }else if(messageSplit[0].equals("login") &&
         client.getInfo("Login ID") != null){
@@ -90,7 +99,7 @@ public class EchoServer extends AbstractServer
 
           }
         }else{
-          System.out.println(client.getInfo("Login ID") + ": " + msg);
+          System.out.println("Message recieved: " + msg + " from " + client.getInfo("Login ID"));
           this.sendToAllClients(client.getInfo("Login ID") + "> "+  msg);
         }
 
@@ -152,11 +161,13 @@ public class EchoServer extends AbstractServer
       case "stop":
       serverUI.display("Terminating listening program....");
       stopListening();
+      this.sendToAllClients("WARNING: Server has stopped listening for connections");
         break;
 
       case "close":
       serverUI.display("Closing....");
       try{
+        this.sendToAllClients("SERVER SHUTTING DOWN! DISCONNECTING!");
         close();
       }catch (IOException e){
       }
@@ -236,8 +247,7 @@ private void handleCommandFromServerUI(String cmd, String change){
    * @param client the connection connected to the client.
    */
   protected void clientConnected(ConnectionToClient client) {
-    currentClientInfo = client.toString();
-    System.out.println(currentClientInfo + " has connected to the server");
+    System.out.println("A new client is attempting to connect to the server");
   }
   /**
    * This method is called each time a client disconnects.
@@ -246,8 +256,9 @@ private void handleCommandFromServerUI(String cmd, String change){
    */
   synchronized protected void clientDisconnected(
     ConnectionToClient client) {
-      System.out.println(currentClientInfo + " has disconnected from the server");
-      currentClientInfo = "";
+      System.out.println(client.getInfo("Login ID") + " has disconnected from the server");
+      this.sendToAllClients(client.getInfo("Login ID") + " has disconnected from the server");
+      client.setInfo("First Command", "Login");
     }
 
   /**
@@ -259,8 +270,9 @@ private void handleCommandFromServerUI(String cmd, String change){
    */
   synchronized protected void clientException(
     ConnectionToClient client, Throwable exception) {
-      System.out.println(currentClientInfo + " has been disconnected from the server");
-      currentClientInfo = "";
+      System.out.println(client.getInfo("Login ID") + " has been disconnected from the server");
+      this.sendToAllClients(client.getInfo("Login ID") + " has disconnected from the server");
+      client.setInfo("First Command", "Login");
     }
   /**
    * This method is responsible for the creation of
@@ -269,6 +281,23 @@ private void handleCommandFromServerUI(String cmd, String change){
    * @param args[0] The port number to listen on.  Defaults to 5555
    *          if no argument is entered.
    */
+   public static void main(String[] args)
+   {
+     int port = 0; //Port to listen on
 
+     try
+     {
+       port = Integer.parseInt(args[0]); //Get port from command line
+     }
+     catch(Throwable t)
+     {
+       port = DEFAULT_PORT; //Set port to 5555
+     }
+
+       ServerConsole sv = new ServerConsole(port);
+       sv.accept();
+
+
+   }
 }
 //End of EchoServer class

@@ -1,0 +1,253 @@
+Name: Owens Ehimen
+Student No: 8067496
+Course No: SEG2105
+Email: oehim101@uottawa.ca
+
+
+---------------------------------------------------------------
+NOTES
+---------------------------------------------------------------
+The logs detailed in this document details the functionality of my code running
+the OCSF Phase 2 Test cases. They include Test Cases from 2001 - 2013 and 2017. 
+
+I was unable to run the Test Cases from 2014, 2015, 2016, 2018 and 2019 simply
+because they all require two computers and currently, there is only one computer 
+in my household.
+
+Also, some of the messages displayed from certain connections/disconnections might
+differ from what was intended in the assignment but I think you will still find 
+that it functions the same.
+
+
+---------------------------------------------------------------
+General Server
+---------------------------------------------------------------
+owens@Owenss-MacBook-Air simplechat1 % java -classpath '../../code:.' EchoServer
+Server listening for connections on port 5555
+^C%                                                                                           owens@Owenss-MacBook-Air simplechat1 % java -classpath '../../code:.' EchoServer
+Server listening for connections on port 5555
+A new client is attempting to connect to the server
+Mesage recieved: #login owens from null 
+owens has logged on 
+^C%                                                                                           owens@Owenss-MacBook-Air simplechat1 % java -classpath '../../code:.' EchoServer
+Server listening for connections on port 5555
+A new client is attempting to connect to the server
+Mesage recieved: #login owens from null 
+owens has logged on 
+Message recieved: Bananas from owens
+owens has been disconnected from the server
+^C%                                                                                           owens@Owenss-MacBook-Air simplechat1 % java -classpath '../../code:.' EchoServer
+Server listening for connections on port 5555
+A new client is attempting to connect to the server
+Mesage recieved: #login owens from null 
+owens has logged on 
+A new client is attempting to connect to the server
+Mesage recieved: #login Ozzy from null 
+Ozzy has logged on 
+What is 3 + 2
+Message recieved: I dont know from owens
+Message recieved: I think its 5 from Ozzy
+Ozzy is right
+^C%                                                                                           owens@Owenss-MacBook-Air simplechat1 % java -classpath '../../code:.' EchoServer
+Server listening for connections on port 5555
+#quit
+> Terminating....
+Server has stopped listening for connections.
+owens@Owenss-MacBook-Air simplechat1 % java -classpath '../../code:.' EchoServer
+Server listening for connections on port 5555
+A new client is attempting to connect to the server
+Mesage recieved: #login owens from null 
+owens has logged on 
+#stop
+> Terminating listening program....
+Server has stopped listening for connections.
+Message recieved: Still there? from owens
+#start
+Server listening for connections on port 5555
+A new client is attempting to connect to the server
+Mesage recieved: #login Ozzy from null 
+Ozzy has logged on 
+Back
+owens has been disconnected from the server
+Ozzy has been disconnected from the server
+#quit
+> Terminating....
+Server has stopped listening for connections.
+owens@Owenss-MacBook-Air simplechat1 % java -classpath '../../code:.' EchoServer
+Server listening for connections on port 5555
+A new client is attempting to connect to the server
+Mesage recieved: #login owens from null 
+owens has logged on 
+#stop
+> Terminating listening program....
+Server has stopped listening for connections.
+#close
+> Closing....
+owens has disconnected from the server
+#start
+Server listening for connections on port 5555
+A new client is attempting to connect to the server
+Mesage recieved: #login owens from null 
+owens has logged on 
+Back
+owens has been disconnected from the server
+#quit
+> Terminating....
+Server has stopped listening for connections.
+owens@Owenss-MacBook-Air simplechat1 % java -classpath '../../code:.' EchoServer
+Server listening for connections on port 5555
+A new client is attempting to connect to the server
+Mesage recieved: #login owens from null 
+owens has logged on 
+owens has been disconnected from the server
+#quit
+> Terminating....
+Server has stopped listening for connections.
+owens@Owenss-MacBook-Air simplechat1 % java -classpath '../../code:.' ServerConsole 1234
+Server listening for connections on port 1234
+#quit
+> Terminating....
+Server has stopped listening for connections.
+owens@Owenss-MacBook-Air simplechat1 % java -classpath '../../code:.' EchoServer        
+Server listening for connections on port 5555
+A new client is attempting to connect to the server
+Mesage recieved: #login owens from null 
+owens has logged on 
+A new client is attempting to connect to the server
+Mesage recieved: #login Ozzy from null 
+Ozzy has logged on 
+A new client is attempting to connect to the server
+Mesage recieved: #login Oseghale from null 
+Oseghale has logged on 
+owens has been disconnected from the server
+Ozzy has been disconnected from the server
+#quit
+> Terminating....
+Server has stopped listening for connections.
+Oseghale has disconnected from the server
+owens@Owenss-MacBook-Air simplechat1 % 
+
+
+
+-----------------------------------------------------------------------------
+Primary Client - Owens
+-----------------------------------------------------------------------------
+
+owens@Owenss-MacBook-Air simplechat1 % javac -classpath ../../code *.java client/*.java common/*.java
+owens@Owenss-MacBook-Air simplechat1 % java -classpath '../../code:.' ClientConsole                  
+Error: No login ID specified! Connection aborted.
+owens@Owenss-MacBook-Air simplechat1 % java -classpath '../../code:.' ClientConsole owens
+Cannot open connection. Awaiting command...
+^C%                                                                                                         owens@Owenss-MacBook-Air simplechat1 % java -classpath '../../code:.' ClientConsole owens
+> owens has logged on 
+> Abnormal termination of connection.
+^C%                                                                                                         owens@Owenss-MacBook-Air simplechat1 % java -classpath '../../code:.' ClientConsole owens
+> owens has logged on 
+Bananas
+> owens> Bananas
+^C%                                                                                                         owens@Owenss-MacBook-Air simplechat1 % java -classpath '../../code:.' ClientConsole owens
+> owens has logged on 
+> Ozzy has logged on 
+> SERVER MSG> What is 3 + 2
+I dont know
+> owens> I dont know
+> Ozzy> I think its 5
+> SERVER MSG> Ozzy is right
+> Abnormal termination of connection.
+^C%                                                                                                         owens@Owenss-MacBook-Air simplechat1 % java -classpath '../../code:.' ClientConsole owens
+> owens has logged on 
+> WARNING: Server has stopped listening for connections
+Still there?
+> owens> Still there?
+> Ozzy has logged on 
+> SERVER MSG> Back
+#quit
+> Terminating....
+> Connection closed
+owens@Owenss-MacBook-Air simplechat1 % java -classpath '../../code:.' ClientConsole owens
+> owens has logged on 
+> WARNING: Server has stopped listening for connections
+> SERVER SHUTTING DOWN! DISCONNECTING!
+> Abnormal termination of connection.
+#login owens
+> Logging in...
+> owens has logged on 
+> SERVER MSG> Back
+#quit
+> Terminating....
+> Connection closed
+owens@Owenss-MacBook-Air simplechat1 % java -classpath '../../code:.' ClientConsole owens
+Cannot open connection. Awaiting command...
+#quit
+> Terminating....
+> Connection closed
+owens@Owenss-MacBook-Air simplechat1 % java -classpath '../../code:.' ClientConsole owens
+> owens has logged on 
+#logoff
+> Logging off...
+> Connection closed
+#quit
+> Terminating....
+> Connection closed
+owens@Owenss-MacBook-Air simplechat1 % java -classpath '../../code:.' ClientConsole owens
+Cannot open connection. Awaiting command...
+#sethost localhost
+> New Host Name: localhost
+#setport 1234
+> New Port Number: 1234
+#quit
+> Terminating....
+> Connection closed
+owens@Owenss-MacBook-Air simplechat1 % java -classpath '../../code:.' ClientConsole owens
+> owens has logged on 
+> Ozzy has logged on 
+> Oseghale has logged on 
+#quit
+> Terminating....
+> Connection closed
+owens@Owenss-MacBook-Air simplechat1 % 
+
+------------------------------------------------------------------------
+Secondary Client - Ozzy
+------------------------------------------------------------------------
+
+owens@Owenss-MacBook-Air simplechat1 % java -classpath '../../code:.' ClientConsole Ozzy             
+> Ozzy has logged on 
+> SERVER MSG> What is 3 + 2
+> owens> I dont know
+I think its 5
+> Ozzy> I think its 5
+> SERVER MSG> Ozzy is right
+> Abnormal termination of connection.
+^C%                                                                                                          owens@Owenss-MacBook-Air simplechat1 % java -classpath '../../code:.' ClientConsole Ozzy
+> Ozzy has logged on 
+> SERVER MSG> Back
+> owens has disconnected from the server
+#quit
+> Terminating....
+> Connection closed
+owens@Owenss-MacBook-Air simplechat1 % java -classpath '../../code:.' ClientConsole Ozzy
+> Ozzy has logged on 
+> Oseghale has logged on 
+> owens has disconnected from the server
+#logoff
+> Logging off...
+> Connection closed
+#quit
+> Terminating....
+> Connection closed
+owens@Owenss-MacBook-Air simplechat1 % 
+
+--------------------------------------------------------------------
+Miscallenous client - Oseghale
+--------------------------------------------------------------------
+
+owens@Owenss-MacBook-Air simplechat1 % java -classpath '../../code:.' ClientConsole Oseghale
+> Oseghale has logged on 
+> owens has disconnected from the server
+> Ozzy has disconnected from the server
+> Abnormal termination of connection.
+#quit
+> Terminating....
+> Connection closed
+owens@Owenss-MacBook-Air simplechat1 % 

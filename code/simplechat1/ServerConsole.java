@@ -1,7 +1,3 @@
-// This file contains material supporting section 3.7 of the textbook:
-// "Object Oriented Software Engineering" and is issued under the open-source
-// license found at www.lloseng.com
-
 import java.io.*;
 import client.*;
 import common.*;
@@ -9,7 +5,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- * This class constructs the UI for a chat client.  It implements the
+ * This class constructs the UI for a Echo Server.  It implements the
  * chat interface in order to activate the display() method.
  * Warning: Some of the code here is cloned in ServerConsole
  *
@@ -18,7 +14,7 @@ import java.net.UnknownHostException;
  * @author Dr Robert Lagani&egrave;re
  * @version July 2000
  */
-public class ClientConsole implements ChatIF
+public class ServerConsole implements ChatIF
 {
   //Class variables *************************************************
 
@@ -30,34 +26,29 @@ public class ClientConsole implements ChatIF
   //Instance variables **********************************************
 
   /**
-   * The instance of the client that created this ConsoleChat.
+   * The instance of the server that created this ServerConsole.
    */
-  ChatClient client;
+  EchoServer server;
 
 
   //Constructors ****************************************************
 
   /**
-   * Constructs an instance of the ClientConsole UI.
+   * Constructs an instance of the ServerConsole UI.
    *
    * @param host The host to connect to.
    * @param port The port to connect on.
    */
-  public ClientConsole(String loginID, String host, int port)
+  public ServerConsole(int port)
   {
     try
     {
-      client= new ChatClient(loginID, host, port, this);
+      server= new EchoServer(port, this);
     }
     catch(IOException exception)
     {
-      if(loginID == null){
-        System.out.println("Error: Can't setup connection!"
-                  + " Terminating client.");
-      }else{
-        System.out.println("Error: No login ID specified!"
-                  + " Connection aborted.");
-      }
+      System.out.println("Error: Can't setup server!"
+                + " Terminating.");
       System.exit(1);
     }
   }
@@ -67,10 +58,16 @@ public class ClientConsole implements ChatIF
 
   /**
    * This method waits for input from the console.  Once it is
-   * received, it sends it to the client's message handler.
+   * received, it sends it to the Server's message handler.
    */
   public void accept()
   {
+    try{
+      server.listen();
+    }catch (Exception ex){
+      System.out.println("ERROR - Could not listen for clients!");
+    }
+
     try
     {
       BufferedReader fromConsole =
@@ -80,7 +77,7 @@ public class ClientConsole implements ChatIF
       while (true)
       {
         message = fromConsole.readLine();
-        client.handleMessageFromClientUI(message);
+        server.handleMessageFromServerUI(message);
       }
     }
     catch (Exception ex)
@@ -105,46 +102,26 @@ public class ClientConsole implements ChatIF
   //Class methods ***************************************************
 
   /**
-   * This method is responsible for the creation of the Client UI.
+   * This method is responsible for the creation of the Server UI.
    *
-   * @param args[0] The login ID of the client
-   * @param args[1] The port to connect to
-   * @param args[2] The host to connect to
+   * @param args[0] The port to connect to
    */
   public static void main(String[] args)
   {
-    String host = "localhost";
     int port = 0;  //The port number
-    String loginID = "";
-    try{
-      loginID = args[0];
-    }catch(ArrayIndexOutOfBoundsException e){
-      loginID = "N/A";
-    }
-
 
     try
     {
-      port = Integer.parseInt(args[1]);
+      port = Integer.parseInt(args[0]);
     }
     catch(ArrayIndexOutOfBoundsException e)
     {
       port = DEFAULT_PORT;
     }
 
-    try
-    {
-      host = args[2];
-    }
-    catch(ArrayIndexOutOfBoundsException e)
-    {
-      host = "localhost";
-    }
+    ServerConsole serv= new ServerConsole(port);
 
-
-
-    ClientConsole chat= new ClientConsole(loginID, host, port);
-    chat.accept();  //Wait for console data
+    serv.accept();  //Wait for console data
   }
 }
-//End of ConsoleChat class
+//End of ServerConsole class

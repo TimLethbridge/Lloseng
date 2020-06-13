@@ -36,7 +36,7 @@ public class EchoServer extends AbstractServer
    * The interface type variable.  It allows the implementation of 
    * the display method in the server.
    */
-  ChatIF serverUI; 
+  ChatIF serverUI;
 
   
   //Instance methods ************************************************
@@ -50,9 +50,21 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
-    System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
+	String mes = (String) msg;
+	// Don't display the command to the server interface and send it to other clients
+	if (mes.contains("#login")) 
+	{
+		int ind = mes.indexOf(" ");
+		int len = mes.length();
+		String ID = mes.substring(ind, len);
+		client.setInfo("Login ID", ID);	
+	}
+	else {
+	    System.out.println("Message received: " + msg + " from " + client);
+	    this.sendToAllClients(msg);
+	}
   }
+
 
   /** 
    * This method reads user input's from the console

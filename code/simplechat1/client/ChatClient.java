@@ -67,6 +67,7 @@ public class ChatClient extends AbstractClient
   public void handleMessageFromClientUI(String message)
   {
     if(message.contains("#")){
+        clientUI.display("POOP");
         switch(message) {
           case message.contains("quit"):
           quit();
@@ -109,10 +110,11 @@ public class ChatClient extends AbstractClient
           case message.contains("getport"):
           clientUI.display(getPort().toString());;
           break;
+        }
     }else{
       try
       {
-      
+        clientUI.display("PEE");
         sendToServer(message);
     
       

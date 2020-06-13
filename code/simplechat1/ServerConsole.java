@@ -32,7 +32,9 @@ public class ServerConsole implements ChatIF {
                 if (message != null) {
                     if (message.charAt(0) == '#') {
                         command(message.substring(1));
-                    } else {
+                    } 
+                    
+                    else {
                         display(message);
                         server.sendToAllClients("SERVER MSG> " + message);
                     }
@@ -47,7 +49,7 @@ public class ServerConsole implements ChatIF {
     }
 
     public void command(String command) {
-
+        
         if (command.equals("quit")) {
             if (server.isListening()) {
                 server.stopListening();

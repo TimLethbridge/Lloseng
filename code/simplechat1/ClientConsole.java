@@ -67,7 +67,8 @@ public class ClientConsole implements ChatIF {
         message = fromConsole.readLine();
         if (message != null) {
           if (message.charAt(0) == '#') {
-            command(message.substring(1));
+            //command(message.substring(1));
+            client.handleMessageFromClientUI(message);
           } else {
             client.handleMessageFromClientUI(message);
           }
@@ -209,8 +210,11 @@ public class ClientConsole implements ChatIF {
         System.out.println("Error getting login ID.");
       }
 
-      if(identification != null){
-        break;
+      if(identification != null ){
+        if(identification.length() > 0){
+          break;
+        }
+        System.out.println("Can not have empty login ID");
       }
     }
 

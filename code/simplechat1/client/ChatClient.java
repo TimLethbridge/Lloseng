@@ -110,7 +110,7 @@ public class ChatClient extends AbstractClient
    *            the exception raised.
    */
   protected void connectionException(Exception exception) {
-    System.out.println("The server has shut down. \nQuitting...")
+    System.out.println("The server has shut down. \nQuitting...");
     quit();
   }
 
@@ -120,8 +120,10 @@ public class ChatClient extends AbstractClient
    * anything they wish.
    */
   protected void connectionEstablished() {
-    System.out.println("Connection established");
+    System.out.println("The connection to the server has been established.");
   }
+
+  
 }
 //End of ChatClient class
 

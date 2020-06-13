@@ -73,7 +73,7 @@ public class ClientConsole implements ChatIF
       while (true) 
       {
         message = fromConsole.readLine();
-        
+        System.out.println("p00p");
         client.handleMessageFromClientUI(message);
       }
     } 

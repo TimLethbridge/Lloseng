@@ -26,7 +26,7 @@ public class ChatClient extends AbstractClient
    * the display method in the client.
    */
   ChatIF clientUI; 
-
+  String loginid;
   
   //Constructors ****************************************************
   
@@ -38,12 +38,14 @@ public class ChatClient extends AbstractClient
    * @param clientUI The interface type variable.
    */
   
-  public ChatClient(String host, int port, ChatIF clientUI) 
+  public ChatClient(String loginid, String host, int port, ChatIF clientUI) 
     throws IOException 
   {
     super(host, port); //Call the superclass constructor
     this.clientUI = clientUI;
+    this.loginid="Guest";
     openConnection();
+    sendToServer("#login ID: " + loginid);
   }
 
   
@@ -66,9 +68,70 @@ public class ChatClient extends AbstractClient
    */
   public void handleMessageFromClientUI(String message)
   {
-    try
-    {
+    try    {
+     if(message.startsWith("#")){
+       switch(message){
+         case "#quit":
+         quit();
+         case "#logoff":
+         quit();
+         case "#sethost":
+         if(!isConnected()){
+         try{
+           String host = message.substring(0);
+           setHost(host);
+           System.out.println("Host is set to: "+host);
+         }catch(Exception e) {
+          clientUI.display("invalid host, please try again");
+          return;
+         }
+        }else{
+          clientUI.display("You need to log off before set host");
+          return;
+         }
+         break;
+         case "#setport":
+         if(!isConnected()){
+         try{
+           int port =Integer.parseInt(message.substring(0));
+           setPort(port);
+           System.out.println("Port is set to: "+ port);
+         }catch(Exception e) {
+          clientUI.display("invalid port, please try again");
+          return;
+         }
+        }else{
+          clientUI.display("You need to log off before set port");
+          return;
+         }
+         break;
+         case "#login":
+         if(!isConnected()){
+         try{
+           openConnection();
+           clientUI.display("^^ logging you in ...^^");
+         }catch(Exception e) {
+          clientUI.display("Exception occurred when log in. please try again");
+          return;
+         }
+        }else{
+          clientUI.display("You already logged in.");
+          return;
+         }
+         break;
+         case "#gethost":
+         clientUI.display("Your current host is: " + getHost());
+         break;
+         case "#getport":
+         clientUI.display("Your current port is: " + getPort());
+         break;
+       }
+     }else
+
+     
       sendToServer(message);
+
+
     }
     catch(IOException e)
     {
@@ -77,20 +140,20 @@ public class ChatClient extends AbstractClient
       quit();
     }
   }
-  
   public void connectionClosed(){
-	clientUI.display("The server has shut down, quitting...");
-}
-
-	/* @param exception
-	 *            the exception raised.
-	 */
-  public void connectionException(Exception exception) {
-	
-	System.out.Println(exception);
-	quit();
-}
-
+    clientUI.display("The server has shut down, quitting...");
+  }
+  
+    /* @param exception
+     *            the exception raised.
+     */
+    public void connectionException(Exception exception) {
+    
+      clientUI.display("Exception occured when connecting, quitting...");
+    quit();
+  }
+  
+  
   /**
    * This method terminates the client.
    */
@@ -98,7 +161,6 @@ public class ChatClient extends AbstractClient
   {
     try
     {
-    {     
       closeConnection();
     }
     catch(IOException e) {}

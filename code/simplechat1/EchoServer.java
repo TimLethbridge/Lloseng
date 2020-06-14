@@ -4,6 +4,7 @@
 
 import java.io.*;
 import ocsf.server.*;
+import common.*;
 
 /**
  * This class overrides some of the methods in the abstract 
@@ -23,6 +24,7 @@ public class EchoServer extends AbstractServer
    * The default port to listen on.
    */
   final public static int DEFAULT_PORT = 5555;
+  ChatIF serverUI; 
   
   //Constructors ****************************************************
   
@@ -31,9 +33,10 @@ public class EchoServer extends AbstractServer
    *
    * @param port The port number to connect on.
    */
-  public EchoServer(int port) 
+  public EchoServer(int port, ChatIF serverUI) 
   {
     super(port);
+    this.serverUI=serverUI;
   }
 
   
@@ -48,9 +51,88 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
-    System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
+    String message=(String)msg;
+    String loginid=message.substring(11);
+    
+    if (message.substring(0,10)=="#login ID: "){
+      if(client.getInfo("loginid")==null){
+        client.setInfo("loginid",loginid);
+        try{
+          client.sendToClient( client.getInfo("loginid") +" logged in");
+      }catch(IOException e){}
+      }else{
+        try{
+          client.sendToClient("You have already logged in!");
+      }catch(IOException e){
+      }
+
+      }
+    }else{
+      if(client.getInfo("loginid")==null){
+        try{     
+        client.sendToClient( "create a login ID first");
+        client.close();
+      }catch(IOException e){}
+    }
+    System.out.println("Message received: " + msg + " from " + client.getInfo("loginid"));
+    
+    this.sendToAllClients(client.getInfo("loginid") + "> " +msg);
   }
+
+  public void handleMessageFromServerUI(String message){
+    try{
+      if(message.startsWith("#")){
+       switch(message.substring(0,7)){
+         case "#close":
+         serverClosed();
+         break;
+         case "#stop":
+         serverStopped();
+         break;
+         case "#quit":
+         close();
+         serverUI.display("server quits...");
+         break;
+         case "#setport":
+         if(!isListening()){
+         try{
+           int port = Integer.parseInt(message.substring(9));
+           setPort(port);
+           serverUI.display("Port is set to: "+ port);
+         }catch(Exception e) {
+          serverUI.display("invalid port, please try again");
+          return;
+         }
+        }else{
+          serverUI.display("You need to close server before set port");
+          return;
+        }
+         break;
+         case "#start":
+         if(!isListening()){
+         try{
+           listen();
+           serverUI.display("^^ logging you in ...^^");
+         }catch(Exception e) {
+          serverUI.display("Exception occurred when log in. please try again");
+          return;
+         }
+        }else{
+          serverUI.display("You need to close server before start server");
+          return;
+         }
+         break;
+         case "#getport":
+         serverUI.display("Your current port is: " + getPort());
+         break;
+       }     }else    
+       serverUI.display(message);  
+       this.sendToAllClients("SERVER MSG> " + message);   
+      }catch(IOException e){
+        serverUI.display("Could not send message from server. Terminating server.");
+        System.exit(1);
+      }
+    }
     
   /**
    * This method overrides the one in the superclass.  Called
@@ -63,6 +145,16 @@ public class EchoServer extends AbstractServer
   }
   
   /**
+   * This method overrides the one in the superclass.  
+   * Called called when the server is closed.
+   */
+   
+  protected void serverClosed()
+  {
+    System.out.println("Server has closed.");
+  }
+  
+  /**
    * This method overrides the one in the superclass.  Called
    * when the server stops listening for connections.
    */
@@ -71,37 +163,7 @@ public class EchoServer extends AbstractServer
     System.out.println
       ("Server has stopped listening for connections.");
   }
-  /**
-   *  This method overrides the one in superclass. called 
-   * each time a new client connection is accepted. 
-   * @param client the connection connected to the client.
-   */
-  protected void clientConnected(ConnectionToClient client) {
-    
-  }
-
-  /**
-   * This method overrides the one in superclass. called 
-   * each time a client disconnects.
-   * @param client the connection with the client.
-   */
-  synchronized protected void clientDisconnected(ConnectionToClient client) {
-  System.out.println(client + "disconnect to the server.");
-this.sendToAllClients(client.getInfo("loginID") + "disconnected from the server.");
-  }
-
-  /**
-   * This method overrides the one in superclass. alled each time an exception is thrown in a
-   * ConnectionToClient thread.
-   *
-   * @param client the client that raised the exception.
-   * @param Throwable the exception thrown.
-   */
-  synchronized protected void clientException(
-    ConnectionToClient client, Throwable exception) {
-    System.out.println(client.getInfo("loginID") + " disconnected from the server.");
-    this.sendToAllClients(client.getInfo("loginID") + " disconnected from the server.");
-}
+  
   //Class methods ***************************************************
   
   /**
@@ -124,7 +186,8 @@ this.sendToAllClients(client.getInfo("loginID") + "disconnected from the server.
       port = DEFAULT_PORT; //Set port to 5555
     }
 	
-    EchoServer sv = new EchoServer(port);
+    ServerConsole sc = new ServerConsole(port);
+    sc.accept();
     
     try 
     {

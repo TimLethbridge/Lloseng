@@ -1,0 +1,198 @@
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ test 2002
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' ClientConsole
+- ERROR - No login ID defined. Please try again. Terminating connection.
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ test 2003
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' ClientConsole HubertLachaine
+Error: Can't setup connection! Terminating client.
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ test 2004
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' ClientConsole HubertLachaine
+> <HubertLachaine>has logged onto the server.
+test 2005
+> <HubertLachaine> > test 2005
+The server is shutting down. Initiating disconnection!
+
+Connection from the Server got Terminated.
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ 
+
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' ClientConsole HubertLachaine
+> <HubertLachaine>has logged onto the server.
+hello
+> <HubertLachaine> > hello
+> SERVER MSG> test 2008
+The server is shutting down. Initiating disconnection!
+
+Connection from the Server got Terminated.
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' ClientConsole HubertLachaine
+Error: Can't setup connection! Terminating client.
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' ClientConsole HubertLachaine
+> <HubertLachaine>has logged onto the server.
+The server is shutting down. Initiating disconnection!
+
+Connection from the Server got Terminated.
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' ClientConsole HubertLachaine
+> <HubertLachaine>has logged onto the server.
+^CHuberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code' ClientConsole HubertLachaine
+> <HubertLachaine>has logged onto the server.
+test 2010
+> <HubertLachaine> > test 2010
+#quit
+Connection from the Server got Terminated.
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' ClientConsole HubertLachaine
+> <HubertLachaine>has logged onto the server.
+test 2011
+> <HubertLachaine> > test 2011
+#logoff
+Connection from the Server got Terminated.
+#login
+> <HubertLachaine>has logged onto the server.
+^CHuberts-MacBook-Pro-10:simplechat1 hubertlachaine$ test 2012
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' ClientConsole HubertLachaine
+Error: Can't setup connection! Terminating client.
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ 
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ test 2014
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' ClientConsole HubertLachaine newhost 1234
+Error: Can't setup connection! Terminating client.
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' ClientConsole HubertLachaine 152.0.0.1 1234
+^CHuberts-MacBook-Pro-10:simplechat1 hubertlachaine$ test 2015
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' ClientConsole HubertLachaine
+> <HubertLachaine>has logged onto the server.
+> <Hub2>has logged onto the server.
+hello
+> <HubertLachaine> > hello
+> <Hub2> > hi
+The server is shutting down. Initiating disconnection!
+
+Connection from the Server got Terminated.
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' ClientConsole HubertLachaine
+Error: Can't setup connection! Terminating client.
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' ClientConsole HubertLachaine
+> <HubertLachaine>has logged onto the server.
+> <Hub2>has logged onto the server.
+The server is shutting down. Initiating disconnection!
+
+Connection from the Server got Terminated.
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' ClientConsole HubertLachaine 1234
+Error: Can't setup connection! Terminating client.
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ 
+
+
+-------------------------------------------------------------------------------------
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ test 2001
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' EchoServer
+Server listening for connections on port 5555
+^CHuberts-MacBook-Pro-10:simplechat1 hubertlachaine$ test 2002
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ test 2004
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' EchoServer
+Server listening for connections on port 5555
+New client connected to the Server!
+Received message #login <HubertLachaine>
+Message received: test 2005 from <HubertLachaine>
+test 2006
+^CHuberts-MacBook-Pro-10:simplechat1 hubertlachaine$ 
+
+test 2006
+^CHuberts-MacBook-Pro-10:simplechat1 hubertlachainejava -classpath '../../code:.' ServerConsole
+Server listening for connections on port 5555
+test 2007
+SERVER MSG> test 2007
+#quit
+Server has stopped listening for connections.
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' ServerConsole
+Server listening for connections on port 5555
+New client connected to the Server!
+Received message #login <HubertLachaine>
+#stop
+Server has stopped listening for connections.
+Message received: hello from <HubertLachaine>
+#start
+Server listening for connections on port 5555
+test 2008
+SERVER MSG> test 2008
+#stop
+Server has stopped listening for connections.
+#close
+<HubertLachaine> has disconnected from the Server!
+test 2010 
+SERVER MSG> test 2010
+#open
+Invalid command: '#open' please try again.
+"start
+SERVER MSG> "start
+#start
+Server listening for connections on port 5555
+New client connected to the Server!
+Received message #login <HubertLachaine>
+#close
+Server has stopped listening for connections.
+<HubertLachaine> has disconnected from the Server!
+#start
+Server listening for connections on port 5555
+New client connected to the Server!
+Received message #login <HubertLachaine>
+Error in the client's connection to the Server!
+New client connected to the Server!
+Received message #login <HubertLachaine>
+Message received: test 2010 from <HubertLachaine>
+Error in the client's connection to the Server!
+^CHuberts-MacBook-Pro-10:simplechat1 hubertlachainetest 2011
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' ServerConsole
+Server listening for connections on port 5555
+New client connected to the Server!
+Received message #login <HubertLachaine>
+Message received: test 2011 from <HubertLachaine>
+Error in the client's connection to the Server!
+New client connected to the Server!
+Received message #login <HubertLachaine>
+Error in the client's connection to the Server!
+^CHuberts-MacBook-Pro-10:simplechat1 hubertlachaine$ test 2012
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' ServerConsole 1234
+Server listening for connections on port 1234
+test 2013 ^
+SERVER MSG> test 2013 ^
+test 2014
+SERVER MSG> test 2014
+^CHuberts-MacBook-Pro-10:simplechat1 hubertlachaine$ test 2015
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' ServerConsole
+Server listening for connections on port 5555
+New client connected to the Server!
+Received message #login <HubertLachaine>
+New client connected to the Server!
+Received message #login <Hub2>
+Message received: hello from <HubertLachaine>
+Message received: hi from <Hub2>
+#close
+Server has stopped listening for connections.
+<HubertLachaine> has disconnected from the Server!
+<Hub2> has disconnected from the Server!
+#start
+Server listening for connections on port 5555
+New client connected to the Server!
+Received message #login <HubertLachaine>
+New client connected to the Server!
+Received message #login <Hub2>
+#stop
+Server has stopped listening for connections.
+#setport 1234
+The Server is already connected.
+#close
+<HubertLachaine> has disconnected from the Server!
+<Hub2> has disconnected from the Server!
+#setport 1234
+Port is set to 1234
+
+-------------------------------------------------------------------------------------
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' ClientConsole Hub2
+> <Hub2>has logged onto the server.
+> <HubertLachaine> > hello
+hi
+> <Hub2> > hi
+> <HubertLachaine> has disconnected from the Server!
+The server is shutting down. Initiating disconnection!
+
+Connection from the Server got Terminated.
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' ClientConsole Hub2
+> <Hub2>has logged onto the server.
+> <HubertLachaine> has disconnected from the Server!
+The server is shutting down. Initiating disconnection!
+
+Connection from the Server got Terminated.

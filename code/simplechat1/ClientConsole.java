@@ -31,7 +31,7 @@ public class ClientConsole implements ChatIF
    * The instance of the client that created this ConsoleChat.
    */
   ChatClient client;
-
+  boolean isConnected = true;
 
   //Constructors ****************************************************
 
@@ -49,6 +49,9 @@ public class ClientConsole implements ChatIF
     }
     catch(IOException exception)
     {
+      System.out.println("Server has disconnected...");
+      isConnected = false;
+      connectionClosed();
       System.out.println("Error: Can't setup connection!"
                 + " Terminating client.");
       System.exit(1);
@@ -119,19 +122,17 @@ public class ClientConsole implements ChatIF
     chat.accept();  //Wait for console data
   }
 
-//  public final boolean isConnected(){
-//    if ()
-//  }
-//
-//  protected void connectionClosed(){
-//    if (!isConnected()) {
-//      System.out.println("The serever has been disconnected...");
-//      System.exit(1);
-//    }
-//  }
-//
-//  protected void connectionException(java.lang.Exception exception){
-//    System.out.println(exception.toString());
-//  }
+
+
+  protected void connectionClosed(){
+    if (!isConnected()) {
+      System.out.println("The serever has been disconnected...");
+      System.exit(1);
+    }
+  }
+
+  protected void connectionException(java.lang.Exception exception){
+    System.out.println(exception.toString());
+  }
 }
 //End of ConsoleChat class

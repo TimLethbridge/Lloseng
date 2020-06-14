@@ -53,7 +53,7 @@ public class EchoServer extends AbstractServer
   {
     String message=(String)msg;
     String loginid=message.substring(11);
-    
+    System.out.println("Message received: " + msg + " from " + client.getInfo("loginid"));
     if (message.substring(0,10)=="#login ID: "){
       if(client.getInfo("loginid")==null){
         client.setInfo("loginid",loginid);
@@ -138,6 +138,7 @@ public class EchoServer extends AbstractServer
    * This method overrides the one in the superclass.  Called
    * when the server starts listening for connections.
    */
+  @Override
   protected void serverStarted()
   {
     System.out.println
@@ -148,16 +149,32 @@ public class EchoServer extends AbstractServer
    * This method overrides the one in the superclass.  
    * Called called when the server is closed.
    */
-   
+   @Override
   protected void serverClosed()
   {
     System.out.println("Server has closed.");
   }
-  
+  @Override
+    protected void clientConnected(ConnectionToClient client) {
+        System.out.println("A new client is attempting to connect to the server.");
+    }
+
+    @Override
+    protected synchronized void clientDisconnected(ConnectionToClient client) {
+        System.out.println(client.getInfo("loginid") + " has disconnected.");
+        sendToAllClients(client.getInfo("loginid") + " has disconnected.");
+    
+  }
+  @Override
+  protected synchronized void clientException(ConnectionToClient client, Throwable exception) {
+      System.out.println(client.getInfo("loginid") + " has disconnected.");
+      sendToAllClients(client.getInfo("loginid") + " has disconnected.");
+  }
   /**
    * This method overrides the one in the superclass.  Called
    * when the server stops listening for connections.
    */
+  @Override
   protected void serverStopped()
   {
     System.out.println
@@ -189,21 +206,6 @@ public class EchoServer extends AbstractServer
     ServerConsole sc = new ServerConsole(port);
     sc.accept();
   }
-    @Override
-    protected void clientConnected(ConnectionToClient client) {
-        System.out.println("A new client is attempting to connect to the server.");
-    }
-
-    @Override
-    protected synchronized void clientDisconnected(ConnectionToClient client) {
-        System.out.println(client.getInfo("loginid") + " has disconnected.");
-        sendToAllClients(client.getInfo("loginid") + " has disconnected.");
     
-  }
-  @Override
-  protected synchronized void clientException(ConnectionToClient client, Throwable exception) {
-      System.out.println(client.getInfo("loginid") + " has disconnected.");
-      sendToAllClients(client.getInfo("loginid") + " has disconnected.");
-  }
 }
 //End of EchoServer class

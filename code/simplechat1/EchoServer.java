@@ -5,6 +5,7 @@
 
 import java.io.*;
 import ocsf.server.*;
+import common.*;
 
 /**
  * This class overrides some of the methods in the abstract 
@@ -24,6 +25,8 @@ public class EchoServer extends AbstractServer
    * The default port to listen on.
    */
   final public static int DEFAULT_PORT = 5555;
+  private boolean serverClosed ;
+  ChatIF serverUI;
   
   //Constructors ****************************************************
   
@@ -87,6 +90,77 @@ public class EchoServer extends AbstractServer
     System.out.println("Message received: " + msg + " from " + client);
     this.sendToAllClients(msg);
   }
+
+  /*
+   *
+   */
+  public void handleMessageFromServerUI(String message){
+    if (message.equals("#quit")) {
+      try{
+        System.out.println("The server is quitting...");
+        this.close();
+      }
+
+      catch(IOException e){
+        System.exit(0);
+      }
+    }
+
+    else if (message.equals("#stop")) {
+      System.out.println("The server has stopped listening for new connections...");
+      this.stopListening();
+    }
+
+    else if (message.equals("#close")) {
+      try{
+        close();
+        System.out.println("Server is shutting down...\nServer will now stop listening for new clients...");
+        System.out.println("Server is shutting down...\nServer is now shut down...");
+        
+      }
+      catch(IOException e){
+
+      }
+      
+    }
+
+    else if (message.startsWith("#setport")) {
+      if (!serverClosed) {
+        System.out.println("Invalid command\nCannot set port if server is open\nPlease close server with command #close");
+        return;        
+      }
+      try{
+        int port = Integer.parseInt(message.split("\\s+")[1]);
+        setPort(port);
+        System.out.println("Port has been set to :"+port);
+      }
+      catch(Exception e){
+        serverUI.display("Invalid port");
+        return;
+      }
+    }
+
+    else if (message.equals("#getport")) {
+      serverUI.display("Port: "+getPort());
+      
+    }
+    else if (message.equals("#start")) {
+      try{
+        this.listen();
+      }
+      catch (Exception e){
+
+      }
+      
+    }
+    else if (message.startsWith("#")) {
+      serverUI.display("Invalid command. Please try again.\nPossible commands are:\n#quit\t: to quit the server\n#stop\t: to stop listening for new clients\n#close\t: to stop listening for new clients and disconnect all existing clients\n#start\t: to start the server, only valid if stopped\n#setport\t: to set the port if stopped\n#getport\t: to get the current port");
+    }
+    else{
+      sendToAllClients(message);
+    }
+
+  }
     
   /**
    * This method overrides the one in the superclass.  Called
@@ -94,8 +168,8 @@ public class EchoServer extends AbstractServer
    */
   protected void serverStarted()
   {
-    System.out.println
-      ("Server listening for connections on port " + getPort());
+    System.out.println("Server listening for connections on port " + getPort());
+    serverClosed = true;
   }
   
   /**
@@ -106,6 +180,7 @@ public class EchoServer extends AbstractServer
   {
     System.out.println
       ("Server has stopped listening for connections.");
+    serverClosed = false;
   }
   
   //Class methods ***************************************************

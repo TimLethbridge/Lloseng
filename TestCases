@@ -1,3 +1,6 @@
+Hubert Lachaîne - 300088965 - hlach070@uottawa.ca
+
+
 Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ test 2002
 Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' ClientConsole
 - ERROR - No login ID defined. Please try again. Terminating connection.

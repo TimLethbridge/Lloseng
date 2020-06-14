@@ -77,6 +77,7 @@ public class ChatClient extends AbstractClient
       quit();
     }
   }
+
   
   /**
    * This method terminates the client.
@@ -89,6 +90,14 @@ public class ChatClient extends AbstractClient
     }
     catch(IOException e) {}
     System.exit(0);
+  }
+
+  protected void connectionException(Exception exception) {
+    quit();
+  }
+  protected void connectionClosed() {
+    clientUI.display("Server has shutdown ... quitting");
+
   }
 }
 //End of ChatClient class

@@ -1,0 +1,16 @@
+/**
+* name: Xia(Cynthia) Sheng 
+* student number: 300091655
+* email: xshen061@uottawa.ca
+**/
+
+Testcase 2001:
+C:\Users\xiash\Lloseng\Lloseng\code\simplechat1>java -classpath ..\..\code;. EchoServer
+Server listening for connections on port 5555
+
+
+Testcase 2002:
+C:\Users\xiash\Lloseng\Lloseng\code\simplechat1>java -classpath ..\..\code;. ClientConsole
+ERROR - No login ID specified.  Connection aborted.
+
+Testcase 2003:

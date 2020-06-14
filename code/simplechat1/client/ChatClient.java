@@ -48,7 +48,7 @@ public class ChatClient extends AbstractClient
     {openConnection();
     sendToServer("#login ID: " + loginid);
     }catch(IOException e){
-      System.out.println("wait...");
+      System.out.println("Cannot open connection.  Awaiting command.");
     }
   }
 

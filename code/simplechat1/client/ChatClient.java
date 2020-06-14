@@ -101,6 +101,7 @@ public class ChatClient extends AbstractClient
 					System.exit(0); // Indicate succesful exit
 					break;
 				case "#logoff": 
+					System.out.println(loginID + " has disconnected.");
 					// Break the connection
 					closeConnection();
 					break;

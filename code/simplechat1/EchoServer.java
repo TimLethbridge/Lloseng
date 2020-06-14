@@ -143,8 +143,11 @@ public class EchoServer extends AbstractServer
 	}
 	else
       	{
+		
+		// Echo to the server console
+		System.out.println("SERVER MESSAGE> " + input);
+		// Send to the clients
 		input += ("#server"); // Add identifier
-		// Send everything to the clients
 		this.sendToAllClients(input);
 	}
    }   

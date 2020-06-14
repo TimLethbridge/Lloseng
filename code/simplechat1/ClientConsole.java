@@ -125,7 +125,7 @@ public class ClientConsole implements ChatIF
 
 
   protected void connectionClosed(){
-    if (!isConnected) {
+    if (isConnected == false) {
       System.out.println("The serever has been disconnected...");
       System.exit(1);
     }

@@ -44,8 +44,12 @@ public class ChatClient extends AbstractClient
     super(host, port); //Call the superclass constructor
     this.clientUI = clientUI;
     this.loginid="Guest";
-    openConnection();
+    try
+    {openConnection();
     sendToServer("#login ID: " + loginid);
+    }catch(IOException e){
+      System.out.println("wait...");
+    }
   }
 
   
@@ -141,7 +145,14 @@ public class ChatClient extends AbstractClient
     }
   }
   public void connectionClosed(){
-    clientUI.display("The server has shut down, quitting...");
+    try {
+			if (!isConnected()) {
+				closeConnection();
+			}
+		} catch (IOException e) {
+      connectionException(e);
+      clientUI.display("The server has shut down, quitting...");
+    }
   }
   
     /* @param exception

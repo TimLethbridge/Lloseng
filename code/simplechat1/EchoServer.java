@@ -5,6 +5,7 @@
 import java.io.*;
 import ocsf.server.*;
 import common.*;
+import java.util.Scanner;
 
 /**
  * This class overrides some of the methods in the abstract 
@@ -24,7 +25,7 @@ public class EchoServer extends AbstractServer
    * The default port to listen on.
    */
   final public static int DEFAULT_PORT = 5555;
-  ChatIF serverUI; 
+
   
   //Constructors ****************************************************
   
@@ -33,10 +34,10 @@ public class EchoServer extends AbstractServer
    *
    * @param port The port number to connect on.
    */
-  public EchoServer(int port, ChatIF serverUI) 
+  public EchoServer(int port) 
   {
     super(port);
-    this.serverUI=serverUI;
+
   }
 
   
@@ -80,7 +81,7 @@ public class EchoServer extends AbstractServer
   }
   }
   public void handleMessageFromServerUI(String message){
-    try{
+
       if(message.startsWith("#")){
        switch(message.substring(0,7)){
          case "#close":
@@ -90,21 +91,25 @@ public class EchoServer extends AbstractServer
          serverStopped();
          break;
          case "#quit":
-         close();
-         serverUI.display("server quits...");
+         try{
+         close();}
+         catch(IOException e){
+
+         }
+         System.out.println("server quits...");
          break;
          case "#setport":
          if(!isListening()){
          try{
            int port = Integer.parseInt(message.substring(9));
            setPort(port);
-           serverUI.display("Port is set to: "+ port);
+           System.out.println("Port is set to: "+ port);
          }catch(Exception e) {
-          serverUI.display("invalid port, please try again");
+          System.out.println("invalid port, please try again");
           return;
          }
         }else{
-          serverUI.display("You need to close server before set port");
+          System.out.println("You need to close server before set port");
           return;
         }
          break;
@@ -112,25 +117,27 @@ public class EchoServer extends AbstractServer
          if(!isListening()){
          try{
            listen();
-           serverUI.display("^^ logging you in ...^^");
+           System.out.println("^^ logging you in ...^^");
          }catch(Exception e) {
-          serverUI.display("Exception occurred when log in. please try again");
+          System.out.println("Exception occurred when log in. please try again");
           return;
          }
         }else{
-          serverUI.display("You need to close server before start server");
+          System.out.println("You need to close server before start server");
           return;
          }
          break;
          case "#getport":
-         serverUI.display("Your current port is: " + getPort());
+         System.out.println("Your current port is: " + getPort());
          break;
-       }     }else    
-       serverUI.display(message);  
+         default:
+         System.out.println("Invalid command");
+				break;
+       }     
+      }else   { 
+       System.out.println(message);  
        this.sendToAllClients("SERVER MSG> " + message);   
-      }catch(IOException e){
-        serverUI.display("Could not send message from server. Terminating server.");
-        System.exit(1);
+
       }
     }
     
@@ -193,19 +200,27 @@ public class EchoServer extends AbstractServer
   public static void main(String[] args) 
   {
     int port = 0; //Port to listen on
-
+    Scanner in = new Scanner(System.in);
+		System.out.println("Please Enter a Port Number: ");
     try
     {
       port = Integer.parseInt(args[0]); //Get port from command line
     }
     catch(Throwable t)
     {
-      port = DEFAULT_PORT; //Set port to 5555
+      port = in.nextInt();
     }
 	
-    ServerConsole sc = new ServerConsole(port);
-    sc.accept();
-  }
+    EchoServer sv = new EchoServer(port);
     
+    try 
+    {
+      sv.listen(); //Start listening for connections
+    } 
+    catch (Exception ex) 
+    {
+      System.out.println("ERROR - Could not listen for clients!");
+    }
+  }
 }
 //End of EchoServer class

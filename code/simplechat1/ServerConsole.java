@@ -4,7 +4,6 @@
 
 import common.ChatIF;
 import java.io.*;
-import client.*;
 import common.*;
 /**
  * This class constructs the UI for a chat server, followed ClientConsole.java.  
@@ -35,7 +34,7 @@ public class ServerConsole implements ChatIF {
    */
   public ServerConsole(int port) 
   {
-      echoServer = new EchoServer(port,this);
+      echoServer = new EchoServer(port);
     try 
     {
       echoServer.listen(); 

@@ -49,7 +49,6 @@ public class ClientConsole implements ChatIF
     }
     catch(IOException exception)
     {
-      System.out.println("Server has disconnected...");
       isConnected = false;
       connectionClosed();
       System.out.println("Error: Can't setup connection!"
@@ -118,7 +117,19 @@ public class ClientConsole implements ChatIF
     {
       host = "localhost";
     }
-    ClientConsole chat= new ClientConsole(host, DEFAULT_PORT);
+    System.out.println("Enter the Port Number: ");
+
+    BufferedReader portFromConsole = new BufferedReader(new InputStreamReader(System.in));
+    String portString;
+    portString = portFromConsole.readLine();
+    try {
+      port = Integer.parseInt(portString);
+    }catch (NumberFormatException numException || portString.lenth > 4)
+    {
+      port = DEFAULT_PORT;
+      System.out.println("Number is invalid, using default...");
+    }
+    ClientConsole chat= new ClientConsole(host, port);
     chat.accept();  //Wait for console data
   }
 

@@ -104,7 +104,7 @@ public class ClientConsole implements ChatIF
    */
   public static void main(String[] args)
   {
-    String host = "";
+    String host = "--------------";
     int port = 0;  //The port number
 
     try
@@ -120,7 +120,9 @@ public class ClientConsole implements ChatIF
   }
 
   protected void connectionClosed(){
-    System.out.println("The serever has been disconnected...");
+    if (!isConnected()) {
+      System.out.println("The serever has been disconnected...");
+    }
   }
 
   protected void connectionException(java.lang.Exception exception){

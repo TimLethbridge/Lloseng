@@ -62,11 +62,9 @@ public class ChatClient extends AbstractClient
   /**
    * This method handles all data coming from the UI            
    *
-   * @param message The message from the UI.    
-   */
-  public void handleMessageFromClientUI(String message)
-  {
-    try
+   * @param message The message from the UI.  
+
+   try
     {
       sendToServer(message);
     }
@@ -75,6 +73,100 @@ public class ChatClient extends AbstractClient
       clientUI.display
         ("Could not send message to server.  Terminating client.");
       quit();
+    }
+
+
+   */
+  public void handleMessageFromClientUI(String message){
+
+    if (message.equals("#quit")) {
+      clientUI.display("Quitting...");
+      quit();
+    }
+
+    else if (message.equals("#logoff")) {
+      try {
+        closeConnection();
+      }
+      catch (IOException ignored){
+        return;
+      }
+      
+    }
+
+    else if (message.startsWith("#sethost")) {
+      if (isConnected()) {
+        clientUI.display("Invalid command\n Can not set host once logged in\nPlease log out first with command #logoff");
+        return;
+      }
+      
+      else if (!isConnected()) {
+        try{
+          String host = message.split("\\s+")[1];
+          setHost(host);
+          clientUI.display("Host server has been set to: " +host);
+        }
+        catch(Exception e){
+          clientUI.display("Invalid host server.");
+          return;
+        }  
+      }     
+    }
+
+    else if (message.startsWith("#setport")) {
+      if (isConnected()) {
+        clientUI.display("Invalid command\n Can not set port once logged in\nPlease log out first with command #logoff");
+        return;
+      
+      }
+
+      else if (!isConnected()) {
+        try{
+          int port = Integer.parseInt(message.split("\\s+")[1]);
+          setPort(port);
+          clientUI.display("Port has been set to: " +port);
+        }
+        catch(Exception e){
+          clientUI.display("Invalid port.");
+          return;
+        }  
+      }
+    }
+
+    else if (message.equals("#login")) {
+      if (isConnected()) {
+        clientUI.display("Invalid command\n Can not log in once logged in\nPlease log out first with command #logoff");
+        return;
+      }
+
+      else if (!isConnected()) {
+        try{
+          openConnection();
+          clientUI.display("Loggin in.");
+        }
+        catch(IOException e){
+          clientUI.display("Unable to log in.");
+        }
+      }
+    }
+
+    else if (message.equals("#gethost")) {
+      clientUI.display("Host: "+getHost());
+    }
+    else if (message.equals("#getport")) {
+      clientUI.display("Port: "+getPort());
+    }
+    else if (message.startsWith("#")) {
+      clientUI.display("Invalid command. Please try again.\nPossible commands are :\n\n#quit\t: to quit\n#logoff\t: to log off\n#sethost\t: to set host if logged off\n#setport\t: to set port if logged off\n#login\t: to log in if not logged in already\n#gethost\t: to get the current host\n#getport\t: to get the current port");
+    }
+    else{
+      try{
+        sendToServer(message);
+      }
+      catch(IOException e){
+        clientUI.display("Could not send message to server.\nTerminating client.");
+        quit();
+      }
     }
   }
   
@@ -98,7 +190,7 @@ public class ChatClient extends AbstractClient
    * attempting to reconnect.
    */
   protected void connectionClosed() {
-    System.out.println("The connection to the server has been closed.");
+    clientUI.display("The connection to the server has been closed.");
   }
 
   /**
@@ -110,7 +202,7 @@ public class ChatClient extends AbstractClient
    *            the exception raised.
    */
   protected void connectionException(Exception exception) {
-    System.out.println("The server has shut down. \nQuitting...");
+    clientUI.display("The server has shut down. \nQuitting...");
     quit();
   }
 
@@ -120,7 +212,7 @@ public class ChatClient extends AbstractClient
    * anything they wish.
    */
   protected void connectionEstablished() {
-    System.out.println("The connection to the server has been established.");
+    clientUI.display("The connection to the server has been established.");
   }
 
   

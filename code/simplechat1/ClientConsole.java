@@ -104,7 +104,7 @@ public class ClientConsole implements ChatIF
    */
   public static void main(String[] args)
   {
-    String host = "--------------";
+    String host = "";
     int port = 0;  //The port number
 
     try

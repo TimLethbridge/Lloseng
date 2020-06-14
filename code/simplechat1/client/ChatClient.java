@@ -151,7 +151,7 @@ public class ChatClient extends AbstractClient
 			}
 		} catch (IOException e) {
       connectionException(e);
-      clientUI.display("The server has shut down, quitting...");
+      clientUI.display("Abnormal termination of connection.");
     }
   }
   
@@ -160,7 +160,7 @@ public class ChatClient extends AbstractClient
      */
     public void connectionException(Exception exception) {
     
-      clientUI.display("Exception occured when connecting, quitting...");
+      clientUI.display("Abnormal termination of connection.");
     quit();
   }
   

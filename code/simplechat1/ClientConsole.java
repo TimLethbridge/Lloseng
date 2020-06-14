@@ -113,7 +113,7 @@ public class ClientConsole implements ChatIF
     loginid=args[0];
     }
     catch(Exception e){
-      System.out.println("You need to specify login ID. Terminating...");
+      System.out.println("ERROR - No login ID specified.  Connection aborted.");
       System.exit(0);
       return;
     }

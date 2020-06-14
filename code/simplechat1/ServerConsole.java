@@ -30,18 +30,10 @@ public class ServerConsole implements ChatIF{
    * @param host The host to connect to.
    * @param port The port to connect on.
    */
-  public ServerConsole(int port){
-  	server = new EchoServer(port);
-    try 
-    {
-      server.listen();
-    } 
-    catch(IOException exception) 
-    {
-      System.out.println("Error: Couldnt listen for clients");
-      System.exit(0);
-    }
+  public ServerConsole(int port)throws IOException{ ///////// see pics 
+  	server = new EchoServer(port,this);
   }
+
 
   
   //Instance methods ************************************************
@@ -112,7 +104,7 @@ public class ServerConsole implements ChatIF{
    *
    * @param args[0] The host to connect to.
    */
-  public static void main(String[] args) 
+  public static void main(String[] args) throws IOException
   {
     int port = 0;  //The port number
 
@@ -125,7 +117,12 @@ public class ServerConsole implements ChatIF{
       port = DEFAULT_PORT;
     }
     ServerConsole server= new ServerConsole(port);
+    try{
     server.accept();  //Wait for console data
+    }
+    catch(Exception ex){
+      System.out.println("Could not listen for clients...");
+    }
   }
 }
-//End of ConsoleChat class
+//End of ServerConsole class

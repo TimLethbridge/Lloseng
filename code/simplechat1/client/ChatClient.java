@@ -25,7 +25,8 @@ public class ChatClient extends AbstractClient
    * The interface type variable.  It allows the implementation of 
    * the display method in the client.
    */
-  ChatIF clientUI; 
+  private ChatIF clientUI;
+  private String loginID = ""; 
 
   
   //Constructors ****************************************************
@@ -36,14 +37,31 @@ public class ChatClient extends AbstractClient
    * @param host The server to connect to.
    * @param port The port number to connect on.
    * @param clientUI The interface type variable.
+   * @param loginID The clients loginID
    */
   
-  public ChatClient(String host, int port, ChatIF clientUI) 
+  public ChatClient(String host, int port, ChatIF clientUI,String loginID) 
     throws IOException 
   {
     super(host, port); //Call the superclass constructor
     this.clientUI = clientUI;
-    openConnection();
+    this.loginID = loginID;
+
+    if (loginID.equals("")) {
+      clientUI.display("No loginID detected\nTerminating connection...");
+      quit();
+    }
+
+    else{
+      try{
+        openConnection();
+        sendToServer("#login"+loginID);
+        clientUI.display(loginID+" has logged on");
+      }
+      catch(Exception e){
+        clientUI.display("Unable to connect to server\nAwaiting command...");
+      }
+    }
   }
 
   
@@ -63,19 +81,6 @@ public class ChatClient extends AbstractClient
    * This method handles all data coming from the UI            
    *
    * @param message The message from the UI.  
-
-   try
-    {
-      sendToServer(message);
-    }
-    catch(IOException e)
-    {
-      clientUI.display
-        ("Could not send message to server.  Terminating client.");
-      quit();
-    }
-
-
    */
   public void handleMessageFromClientUI(String message){
 
@@ -86,6 +91,7 @@ public class ChatClient extends AbstractClient
 
     else if (message.equals("#logoff")) {
       try {
+        clientUI.display("Logging off...");
         closeConnection();
       }
       catch (IOException ignored){
@@ -124,7 +130,7 @@ public class ChatClient extends AbstractClient
         try{
           int port = Integer.parseInt(message.split("\\s+")[1]);
           setPort(port);
-          clientUI.display("Port has been set to: " +port);
+          clientUI.display("Port has been set to: " +getPort());
         }
         catch(Exception e){
           clientUI.display("Invalid port.");
@@ -142,7 +148,7 @@ public class ChatClient extends AbstractClient
       else if (!isConnected()) {
         try{
           openConnection();
-          clientUI.display("Loggin in.");
+          clientUI.display("Loggin in...");
         }
         catch(IOException e){
           clientUI.display("Unable to log in.");

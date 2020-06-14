@@ -4,7 +4,6 @@
 
 import java.io.*;
 import ocsf.server.*;
-
 /**
  * This class overrides some of the methods in the abstract 
  * superclass in order to give more functionality to the server.
@@ -24,6 +23,8 @@ public class EchoServer extends AbstractServer
    */
   final public static int DEFAULT_PORT = 5555;
   
+  private boolean sc = false;
+
   //Constructors ****************************************************
   
   /**
@@ -47,9 +48,29 @@ public class EchoServer extends AbstractServer
    */
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
-  {
-    System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
+  { 
+    try
+    {
+      String idcommand = (String)(msg);
+      String[] aidcommand = idcommand.split(" ");
+      if(aidcommand[0].equals("#login"))
+      {        
+        if (client.getInfo("loginid")==null){
+          String idname = aidcommand[1];
+          client.setInfo("loginid",idname);
+          this.sendToAllClients(client.getInfo("loginid") + " has logged on.");
+        }
+        else{
+          client.sendToClient("Error, wrong command.");
+          client.close();
+        } 
+      }
+    }
+    catch(Exception ex){
+    }
+    System.out.println("Message received: " + msg + " from " + client.getInfo("loginid"));
+    Object echmsg = (String)(client.getInfo("loginid")) + " " + (String)(msg);
+    this.sendToAllClients(echmsg);
   }
     
   /**
@@ -71,7 +92,22 @@ public class EchoServer extends AbstractServer
     System.out.println
       ("Server has stopped listening for connections.");
   }
-  
+  //hml
+  protected void clientConnected(ConnectionToClient client) {
+    System.out.println("A new client is attempting to connect to the server.");
+    System.out.println(client.getInfo("loginid") + " has logged on.");
+  }
+
+  synchronized protected void clientDisconnected(ConnectionToClient client) {
+    System.out.println(client.getInfo("loginid") + " has disconnected.");
+  }
+
+  protected void serverClosed(){
+    sc = true;
+  }
+  protected boolean serverisClosed(){
+    return sc;
+  }
   //Class methods ***************************************************
   
   /**
@@ -95,7 +131,10 @@ public class EchoServer extends AbstractServer
     }
 	
     EchoServer sv = new EchoServer(port);
-    
+    ServerConsole serverco = new ServerConsole(sv);
+
+
+
     try 
     {
       sv.listen(); //Start listening for connections
@@ -104,6 +143,7 @@ public class EchoServer extends AbstractServer
     {
       System.out.println("ERROR - Could not listen for clients!");
     }
+    serverco.accept();
   }
 }
 //End of EchoServer class

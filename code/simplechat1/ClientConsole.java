@@ -124,7 +124,7 @@ public class ClientConsole implements ChatIF
     portString = portFromConsole.readLine();
     try {
       port = Integer.parseInt(portString);
-    }catch (NumberFormatException numException || portString.lenth > 4)
+    }catch (NumberFormatException numException)
     {
       port = DEFAULT_PORT;
       System.out.println("Number is invalid, using default...");

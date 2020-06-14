@@ -68,8 +68,7 @@ public class ClientConsole implements ChatIF
   {
     try
     {
-      BufferedReader fromConsole =
-        new BufferedReader(new InputStreamReader(System.in));
+      BufferedReader fromConsole = new BufferedReader(new InputStreamReader(System.in));
       String message;
 
       while (true)
@@ -118,13 +117,12 @@ public class ClientConsole implements ChatIF
       host = "localhost";
     }
     System.out.println("Enter the Port Number: ");
-
+    try{
     BufferedReader portFromConsole = new BufferedReader(new InputStreamReader(System.in));
     String portString;
     portString = portFromConsole.readLine();
-    try {
       port = Integer.parseInt(portString);
-    }catch (NumberFormatException numException)
+    }catch (Exception numException)
     {
       port = DEFAULT_PORT;
       System.out.println("Number is invalid, using default...");

@@ -1,0 +1,29 @@
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ test 2002
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' ClientConsole
+- ERROR - No login ID defined. Please try again. Terminating connection.
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ test 2003
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' ClientConsole HubertLachaine
+Error: Can't setup connection! Terminating client.
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ test 2004
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' ClientConsole HubertLachaine
+> <HubertLachaine>has logged onto the server.
+test 2005
+> <HubertLachaine> > test 2005
+The server is shutting down. Initiating disconnection!
+
+Connection from the Server got Terminated.
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ 
+
+-------------------------------------------------------------------------------------
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ test 2001
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' EchoServer
+Server listening for connections on port 5555
+^CHuberts-MacBook-Pro-10:simplechat1 hubertlachaine$ test 2002
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ test 2004
+Huberts-MacBook-Pro-10:simplechat1 hubertlachaine$ java -classpath '../../code:.' EchoServer
+Server listening for connections on port 5555
+New client connected to the Server!
+Received message #login <HubertLachaine>
+Message received: test 2005 from <HubertLachaine>
+test 2006
+^CHuberts-MacBook-Pro-10:simplechat1 hubertlachaine$ 

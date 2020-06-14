@@ -48,9 +48,41 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
-    System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
+    String message = msg.toString();
+    if (message.startsWith("#")) {
+      String[] param = message.substring(1).split(" ");
+
+      if (param[0].equals("login") && param.length > 1) {
+        if (client.getInfo("username") == null) {
+          client.setInfo("username", param [1]);
+          System.out.println("Received message #login " + param[1]);
+          this.sendToAllClients(param[1] + "has logged onto the server.");
+        }
+
+        else {
+          try {
+            client.sendToClient("You already have a username. Couldn't execute commmand.");
+          }
+          catch (IOException e) {
+        }
+        }
+      }
+    }
+    else {
+      if (client.getInfo("username") == null) {
+        try {
+          client.sendToClient("You must set a username before sending messages to the server.");
+          client.close();
+        }
+        catch (IOException e) {}
+      }
+      else {
+        System.out.println("Message received: " + msg + " from " + client.getInfo("username"));
+        this.sendToAllClients(client.getInfo("username") + " > " + message);
+      }
+    }
   }
+
   public void handleMessageFromServer(String messages){
     if (messages.startsWith("#")) {
       String[] parameters = messages.split(" ");
@@ -143,7 +175,8 @@ public class EchoServer extends AbstractServer
    * @param client the connection with the client.
    */
   synchronized public void clientDisconnected(ConnectionToClient client) {
-    System.out.println("A client disconnected from the Server!");
+    System.out.println(client.getInfo("username") + " has disconnected from the Server!");
+    this.sendToAllClients(client.getInfo("username") + " has disconnected from the Server!");
   }
   synchronized public void clientException(
           ConnectionToClient client, Throwable exception) {

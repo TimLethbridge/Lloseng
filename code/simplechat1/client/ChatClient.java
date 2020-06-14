@@ -43,7 +43,7 @@ public class ChatClient extends AbstractClient
   {
     super(host, port); //Call the superclass constructor
     this.clientUI = clientUI;
-    this.loginid="Guest";
+    this.loginid=loginid;
     try
     {openConnection();
     sendToServer("#login ID: " + loginid);

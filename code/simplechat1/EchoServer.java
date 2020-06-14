@@ -78,7 +78,7 @@ public class EchoServer extends AbstractServer
     
     this.sendToAllClients(client.getInfo("loginid") + "> " +msg);
   }
-
+  }
   public void handleMessageFromServerUI(String message){
     try{
       if(message.startsWith("#")){

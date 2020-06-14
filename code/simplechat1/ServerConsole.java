@@ -64,7 +64,7 @@ public class ServerConsole implements ChatIF {
       while (true) 
       {
         message = fromConsole.readLine();
-        client.handleMessageFromClientUI(message);
+        echoServer.handleMessageFromServerUI(message);
       }
     } 
     catch (Exception ex) 
@@ -104,12 +104,13 @@ public class ServerConsole implements ChatIF {
     }
     catch(ArrayIndexOutOfBoundsException e)
     {
-      port = DEFAULT_PORT;
+      port = 5555;
     }
        
     ServerConsole sv = new ServerConsole(port);
     sv.accept();  
 
+}
 }
 //End of ServerConsole class
 

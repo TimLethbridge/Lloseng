@@ -41,18 +41,9 @@ public class ClientConsole implements ChatIF
    * @param host The host to connect to.
    * @param port The port to connect on.
    */
-  public ClientConsole(String host, int port) 
+  public ClientConsole(String host, int port, String id) 
   {
-    try 
-    {
-      client= new ChatClient(host, port, this);
-    } 
-    catch(IOException exception) 
-    {
-      System.out.println("Error: Can't setup connection!"
-                + " Terminating client.");
-      System.exit(1);
-    }
+      client= new ChatClient(host, port, id, this); 
   }
 
   
@@ -62,24 +53,24 @@ public class ClientConsole implements ChatIF
    * This method waits for input from the console.  Once it is 
    * received, it sends it to the client's message handler.
    */
-  public void accept(String login) 
+  public void accept() 
   {
     try
     {
       BufferedReader fromConsole = 
         new BufferedReader(new InputStreamReader(System.in));
       String message;
-	String cmd = ("#login " + login);
-	client.handleMessageFromClientUI(cmd);
 
       while (true) 
       {
 	message = fromConsole.readLine();
+	// For commands passed
 	if (message.equals("#sethost")) {
 		// User didn't enter full command for changing host
 		System.out.println("No host specified. Using default host...");
 		client.handleMessageFromClientUI("#sethost localhost");
 	}
+	// No commands passed. Just plain messages
 	else 
         	client.handleMessageFromClientUI(message);
       }
@@ -98,7 +89,24 @@ public class ClientConsole implements ChatIF
    */
   public void display(String message) 
   {
-    System.out.println(message);
+    	if (message.contains("#server")) {
+		// Remove #server and display server's maessage
+		int index = message.indexOf('#');
+		String mes = message.substring(0, index);
+		System.out.println("SERVER MSG> " + mes);
+	} 
+	else {
+		// Split the message and print: loginID> msg (messages)
+		if (message.contains(" has loged on")) {
+			String[] mes = message.split(" ", 2);
+			System.out.println(mes[0] + " " + mes[1]);
+		}
+		else {
+			String[] mes = message.split(" ", 2);
+			System.out.println(mes[0] + "> " + mes[1]);
+		}
+	}
+    		
   }
 
   
@@ -147,8 +155,8 @@ public class ClientConsole implements ChatIF
 		port = DEFAULT_PORT;
 		host = args[1];
 	}
-    ClientConsole chat= new ClientConsole(host, port);
-    chat.accept(clientID);  //Wait for console data
+    ClientConsole chat= new ClientConsole(host, port, clientID);
+    chat.accept();  //Wait for console data
   }
 }
 //End of ConsoleChat class

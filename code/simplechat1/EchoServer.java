@@ -188,15 +188,22 @@ public class EchoServer extends AbstractServer
 	
     ServerConsole sc = new ServerConsole(port);
     sc.accept();
-    
-    try 
-    {
-      sv.listen(); //Start listening for connections
-    } 
-    catch (Exception ex) 
-    {
-      System.out.println("ERROR - Could not listen for clients!");
+  }
+    @Override
+    protected void clientConnected(ConnectionToClient client) {
+        System.out.println("A new client is attempting to connect to the server.");
     }
+
+    @Override
+    protected synchronized void clientDisconnected(ConnectionToClient client) {
+        System.out.println(client.getInfo("loginid") + " has disconnected.");
+        sendToAllClients(client.getInfo("loginid") + " has disconnected.");
+    
+  }
+  @Override
+  protected synchronized void clientException(ConnectionToClient client, Throwable exception) {
+      System.out.println(client.getInfo("loginid") + " has disconnected.");
+      sendToAllClients(client.getInfo("loginid") + " has disconnected.");
   }
 }
 //End of EchoServer class

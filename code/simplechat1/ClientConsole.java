@@ -41,18 +41,9 @@ public class ClientConsole implements ChatIF
    * @param host The host to connect to.
    * @param port The port to connect on.
    */
-  public ClientConsole(String host, int port) 
+  public ClientConsole(String host, int port, String id) 
   {
-    try 
-    {
-      client= new ChatClient(host, port, this);
-    } 
-    catch(IOException exception) 
-    {
-      System.out.println("Error: Can't setup connection!"
-                + " Terminating client.");
-      System.exit(1);
-    }
+      client= new ChatClient(host, port, id, this); 
   }
 
   
@@ -72,14 +63,21 @@ public class ClientConsole implements ChatIF
 
       while (true) 
       {
-        message = fromConsole.readLine();
-        client.handleMessageFromClientUI(message);
+	message = fromConsole.readLine();
+	// For commands passed
+	if (message.equals("#sethost")) {
+		// User didn't enter full command for changing host
+		System.out.println("No host specified. Using default host...");
+		client.handleMessageFromClientUI("#sethost localhost");
+	}
+	// No commands passed. Just plain messages
+	else 
+        	client.handleMessageFromClientUI(message);
       }
     } 
     catch (Exception ex) 
     {
-      System.out.println
-        ("Unexpected error while reading from console!");
+	System.out.println("Could not read from console!");
     }
   }
 
@@ -87,11 +85,28 @@ public class ClientConsole implements ChatIF
    * This method overrides the method in the ChatIF interface.  It
    * displays a message onto the screen.
    *
-   * @param message The string to be displayed.
+   * @param message The string fto be displayed.
    */
   public void display(String message) 
   {
-    System.out.println("> " + message);
+    	if (message.contains("#server")) {
+		// Remove #server and display server's maessage
+		int index = message.indexOf('#');
+		String mes = message.substring(0, index);
+		System.out.println("SERVER MSG> " + mes);
+	} 
+	else {
+		// Split the message and print: loginID> msg (messages)
+		if (message.contains(" has loged on")) {
+			String[] mes = message.split(" ", 2);
+			System.out.println(mes[0] + " " + mes[1]);
+		}
+		else {
+			String[] mes = message.split(" ", 2);
+			System.out.println(mes[0] + "> " + mes[1]);
+		}
+	}
+    		
   }
 
   
@@ -100,22 +115,47 @@ public class ClientConsole implements ChatIF
   /**
    * This method is responsible for the creation of the Client UI.
    *
-   * @param args[0] The host to connect to.
+   * @param args[0] Login-id of the user to connect to a server.
    */
   public static void main(String[] args) 
   {
+	String clientID = "";
     String host = "";
     int port = 0;  //The port number
 
     try
     {
-      host = args[0];
+	// Given that only clientID argument is mandatory, check if user entered additional arguments
+	if (args.length == 3) {
+		clientID = args[0];
+		host = args[1];
+		port = Integer.parseInt(args[2]);
+
+	} 
+	else if (args.length == 2) {
+		// Determine the type of argument. Assume that second argument is port argument
+		clientID = args[0];
+		port = Integer.parseInt(args[1]);
+		host = "localhost";
+	}
+	else
+      		clientID = args[0];
+		host = "localhost";
+		port = DEFAULT_PORT;
     }
     catch(ArrayIndexOutOfBoundsException e)
     {
-      host = "localhost";
+      System.out.println("ERROR - No login ID specified.  Connection aborted.");
+	System.exit(1);
     }
-    ClientConsole chat= new ClientConsole(host, DEFAULT_PORT);
+	// The assumption was wrong.
+    	catch (NumberFormatException e) 
+    	{
+		// Use the default port
+		port = DEFAULT_PORT;
+		host = args[1];
+	}
+    ClientConsole chat= new ClientConsole(host, port, clientID);
     chat.accept();  //Wait for console data
   }
 }

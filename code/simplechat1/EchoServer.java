@@ -4,6 +4,7 @@
 
 import java.io.*;
 import ocsf.server.*;
+import common.*;
 
 /**
  * This class overrides some of the methods in the abstract 
@@ -17,13 +18,6 @@ import ocsf.server.*;
  */
 public class EchoServer extends AbstractServer 
 {
-  //Class variables *************************************************
-  
-  /**
-   * The default port to listen on.
-   */
-  final public static int DEFAULT_PORT = 5555;
-  
   //Constructors ****************************************************
   
   /**
@@ -35,6 +29,14 @@ public class EchoServer extends AbstractServer
   {
     super(port);
   }
+
+  //Instance variables **********************************************
+  
+  /**
+   * The interface type variable.  It allows the implementation of 
+   * the display method in the server.
+   */
+  ChatIF serverUI;
 
   
   //Instance methods ************************************************
@@ -48,10 +50,108 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
-    System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
+	String mes = (String) msg;
+	// Don't display the command to the server interface and send it to other clients
+	if (mes.contains("#login")) 
+	{
+		// Log the user into the system
+		int ind = mes.indexOf(" "); // Start of identification string
+		int len = mes.length(); // End of identiification string
+		String ID = mes.substring(ind+1, len);
+		client.setInfo("Login ID", ID);
+
+		// Indicate who connected to the administrator
+		System.out.println("A new client is attempting to connect to the server.");
+		System.out.println("Message received #login " + client.getInfo("Login ID") + " from null.");
+		System.out.println(client.getInfo("Login ID") + " has logged on.");
+		try {
+			// Add > so that client's console does not mistake the login as a message
+			client.sendToClient(client.getInfo("Login ID") + " has logged on.");
+		}
+		catch (IOException e) {
+			System.out.println("Could not notify the client!");
+		}
+
+		
+	}
+	else {
+	    System.out.println("Message received: " + msg + " from " + client.getInfo("Login ID"));
+	    this.sendToAllClients(client.getInfo("Login ID") + " " + msg);
+	}
   }
-    
+
+  /** 
+   * This method reads user input's from the console
+   *
+   * @param in Input from the console
+   */
+   public void handleInputFromServerConsole(String input) 
+   {
+	// Check if message is a command
+	if (input.charAt(0) == '#') {
+	// Split the message into two
+	String[] mes = input.split(" ", 2);
+	// Select appropriate function
+	switch(mes[0]) {
+		case "#close":
+			try {
+				close();
+			}
+			catch(IOException e) 
+			{
+				System.out.println(": " + e);
+			}
+			break;
+		case "#stop": 
+			stopListening();
+			break;
+		case "#quit": 
+			try {
+				close();
+				System.exit(0);
+			}
+			catch(IOException e) 
+			{
+				System.out.println(": " + e);
+			}
+			break;
+		case "#setport": 
+			try {
+				setPort(Integer.parseInt(mes[1]));
+			}
+			catch (Exception e) {
+				System.out.println("No port specified. Using default port...");
+				setPort(5555);
+			}
+			break;
+		case "#start": 
+			try {
+				listen();
+			}
+			catch(IOException e) 
+			{
+				System.out.println(": " + e);
+			}
+			break;
+		case "#getport": 
+			System.out.println(getPort());
+			break;
+		default:
+			System.out.println("Command not valid!");
+			break;
+		}
+	}
+	else
+      	{
+		
+		// Echo to the server console
+		System.out.println("SERVER MESSAGE> " + input);
+		// Send to the clients
+		input += ("#server"); // Add identifier
+		this.sendToAllClients(input);
+	}
+   }   
+ 
   /**
    * This method overrides the one in the superclass.  Called
    * when the server starts listening for connections.
@@ -61,49 +161,19 @@ public class EchoServer extends AbstractServer
     System.out.println
       ("Server listening for connections on port " + getPort());
   }
-  
-  /**
-   * This method overrides the one in the superclass.  Called
-   * when the server stops listening for connections.
-   */
+
   protected void serverStopped()
   {
     System.out.println
       ("Server has stopped listening for connections.");
+	sendToAllClients("WARNING - Server has stopped listening for connections.");
   }
-  
-  //Class methods ***************************************************
-  
-  /**
-   * This method is responsible for the creation of 
-   * the server instance (there is no UI in this phase).
-   *
-   * @param args[0] The port number to listen on.  Defaults to 5555 
-   *          if no argument is entered.
-   */
-  public static void main(String[] args) 
-  {
-    int port = 0; //Port to listen on
 
-    try
-    {
-      port = Integer.parseInt(args[0]); //Get port from command line
-    }
-    catch(Throwable t)
-    {
-      port = DEFAULT_PORT; //Set port to 5555
-    }
-	
-    EchoServer sv = new EchoServer(port);
-    
-    try 
-    {
-      sv.listen(); //Start listening for connections
-    } 
-    catch (Exception ex) 
-    {
-      System.out.println("ERROR - Could not listen for clients!");
-    }
+  protected void serverClosed()
+  {
+    System.out.println("Server is closed");
+    sendToAllClients("WARNING - The server has stopped listening for connections. SERVER SHUTTING DOWN! DISCONNECTING!");
   }
+  
 }
 //End of EchoServer class

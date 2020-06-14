@@ -25,7 +25,10 @@ public class ChatClient extends AbstractClient
    * The interface type variable.  It allows the implementation of 
    * the display method in the client.
    */
-  ChatIF clientUI; 
+  ChatIF clientUI;
+
+  // Variable to store login id
+  String loginID; 
 
   
   //Constructors ****************************************************
@@ -38,12 +41,23 @@ public class ChatClient extends AbstractClient
    * @param clientUI The interface type variable.
    */
   
-  public ChatClient(String host, int port, ChatIF clientUI) 
-    throws IOException 
+// Don't try to connect immediately
+  public ChatClient(String host, int port, String ID, ChatIF clientUI) 
   {
     super(host, port); //Call the superclass constructor
     this.clientUI = clientUI;
-    openConnection();
+    this.loginID = ID;
+
+    // Try to open connection
+    try {
+	openConnection();
+	// Send the server command for logging in the user
+	sendToServer("#login " + ID);
+    }
+    catch(IOException exception) 
+    {
+      	System.out.println("Cannot open connection.  Awaiting command.");
+    }
   }
 
   
@@ -56,7 +70,7 @@ public class ChatClient extends AbstractClient
    */
   public void handleMessageFromServer(Object msg) 
   {
-    clientUI.display(msg.toString());
+	clientUI.display((String)msg);
   }
 
   /**
@@ -68,16 +82,83 @@ public class ChatClient extends AbstractClient
   {
     try
     {
-      sendToServer(message);
+	// Check if message is a command
+	if (message.charAt(0) == '#') {
+		// Split the message into two
+		String[] mes = message.split(" ", 4);
+		if (mes[0].equals("#login") && mes.length == 2) {
+			// Open the connection if it is still closed
+			if (!(isConnected()))
+				openConnection();
+			sendToServer(message);
+		}
+		else {
+			// Select appropriate function
+			switch(mes[0]) {
+				case "#quit":
+					// Break the connection and close the client 
+					closeConnection();
+					System.exit(0); // Indicate succesful exit
+					break;
+				case "#logoff": 
+					System.out.println(loginID + " has disconnected.");
+					// Break the connection
+					closeConnection();
+					break;
+				case "#sethost": 
+					// Send the argument of the command to the function
+					if (mes[1].equals("")) {
+						setHost("localhost");
+						System.out.println("Host set to: " + getHost());
+					}
+					else {
+						setHost(mes[1]);
+						System.out.println("Host set to: " + getHost());
+					}
+					break;
+				case "#setport": 
+					// Convert argument of the command to int and pass it
+					try {
+						setPort(Integer.parseInt(mes[1]));
+						System.out.println("Port set to: " + getPort());
+					}
+					catch (Exception e) {
+						System.out.println("No port supplied. Using default....");
+						setPort(5555);
+						System.out.println("Port set to: " + getPort());
+					}
+					break;
+				case "#login": 
+					// Open connection only if connection is closed
+					if (!(isConnected())) {
+						openConnection();
+						sendToServer("#login " + loginID);
+					}
+					else 
+						System.out.println("You must logoff first before login");
+					break;
+				case "#gethost": 
+					System.out.println(getHost());
+					break;
+				case "#getport": 
+					System.out.println(getPort());
+					break;
+				default:
+					System.out.println("Command not valid!");
+					break;
+			}
+		}
+	}
+	else
+      		sendToServer(message); 
     }
     catch(IOException e)
     {
       clientUI.display
-        ("Could not send message to server.  Terminating client.");
-      quit();
+        ("Cannot open connection.  Awaiting command.");
     }
-  }
-  
+  }	
+
   /**
    * This method terminates the client.
    */

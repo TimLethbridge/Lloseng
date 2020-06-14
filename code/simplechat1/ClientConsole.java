@@ -45,7 +45,7 @@ public class ClientConsole implements ChatIF
   {
     try 
     {
-      client= new ChatClient(host, port, this);
+      client = new ChatClient(host, port, this);
     } 
     catch(IOException exception) 
     {
@@ -83,6 +83,8 @@ public class ClientConsole implements ChatIF
     }
   }
 
+
+
   /**
    * This method overrides the method in the ChatIF interface.  It
    * displays a message onto the screen.
@@ -91,7 +93,7 @@ public class ClientConsole implements ChatIF
    */
   public void display(String message) 
   {
-    System.out.println("> " + message);
+    System.out.println("   > " + message);
   }
 
   
@@ -109,14 +111,25 @@ public class ClientConsole implements ChatIF
 
     try
     {
-      host = args[0];
+      host = args[0]; //get hotname from argument [0]
     }
     catch(ArrayIndexOutOfBoundsException e)
     {
       host = "localhost";
     }
-    ClientConsole chat= new ClientConsole(host, DEFAULT_PORT);
+    try
+    {
+      port = Integer.parseInt(args[1]); //Get port from arguments [1]
+    }
+    catch(Throwable t)
+    {
+      port = DEFAULT_PORT; //Set port to 5555
+    }
+    ClientConsole chat= new ClientConsole(host, port);
     chat.accept();  //Wait for console data
   }
 }
+
+
+
 //End of ConsoleChat class

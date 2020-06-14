@@ -56,6 +56,9 @@ public class ChatClient extends AbstractClient
    */
   public void handleMessageFromServer(Object msg) 
   {
+    if (msg == null){
+      quit();
+    }
     clientUI.display(msg.toString());
   }
 
@@ -77,6 +80,13 @@ public class ChatClient extends AbstractClient
       quit();
     }
   }
+    public void connectionException(Throwable exception){
+    System.out.println(exception.getMessage()); //displays information about the exception
+
+  }
+  public void connectionClosed(){
+    System.out.println("--Client Terminated Normally--");
+  }
   
   /**
    * This method terminates the client.
@@ -87,7 +97,9 @@ public class ChatClient extends AbstractClient
     {
       closeConnection();
     }
-    catch(IOException e) {}
+    catch(IOException e) {
+      connectionException(e);
+    }
     System.exit(0);
   }
 }

@@ -48,8 +48,21 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
+    if (msg == null){
+      this.clientDisconnected(client);
+    }
+    else{
     System.out.println("Message received: " + msg + " from " + client);
     this.sendToAllClients(msg);
+  }
+  }
+
+  public void clientDisconnected(ConnectionToClient client){
+    System.out.println("Client has disconnected.");
+  }
+
+  public void clientConnected(ConnectionToClient client) {
+    System.out.println("Client has connected succesfully.");
   }
     
   /**
@@ -70,6 +83,7 @@ public class EchoServer extends AbstractServer
   {
     System.out.println
       ("Server has stopped listening for connections.");
+    this.sendToAllClients(null);
   }
   
   //Class methods ***************************************************

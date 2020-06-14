@@ -54,17 +54,31 @@ public class EchoServer extends AbstractServer
 	// Don't display the command to the server interface and send it to other clients
 	if (mes.contains("#login")) 
 	{
-		int ind = mes.indexOf(" ");
-		int len = mes.length();
-		String ID = mes.substring(ind, len);
-		client.setInfo("Login ID", ID);	
+		// Log the user into the system
+		int ind = mes.indexOf(" "); // Start of identification string
+		int len = mes.length(); // End of identiification string
+		String ID = mes.substring(ind+1, len);
+		client.setInfo("Login ID", ID);
+
+		// Indicate who connected to the administrator
+		System.out.println("A new client is attempting to connect to the server.");
+		System.out.println("Message received #login " + client.getInfo("Login ID") + " from null.");
+		System.out.println(client.getInfo("Login ID") + " has logged on.");
+		try {
+			// Add > so that client's console does not mistake the login as a message
+			client.sendToClient(client.getInfo("Login ID") + " has logged on.");
+		}
+		catch (IOException e) {
+			System.out.println("Could not notify the client!");
+		}
+
+		
 	}
 	else {
-	    System.out.println("Message received: " + msg + " from " + client);
-	    this.sendToAllClients(msg);
+	    System.out.println("Message received: " + msg + " from " + client.getInfo("Login ID"));
+	    this.sendToAllClients(client.getInfo("Login ID") + " " + msg);
 	}
   }
-
 
   /** 
    * This method reads user input's from the console
@@ -143,6 +157,19 @@ public class EchoServer extends AbstractServer
   {
     System.out.println
       ("Server listening for connections on port " + getPort());
+  }
+
+  protected void serverStopped()
+  {
+    System.out.println
+      ("Server has stopped listening for connections.");
+	sendToAllClients("WARNING - Server has stopped listening for connections.");
+  }
+
+  protected void serverClosed()
+  {
+    System.out.println("Server is closed");
+    sendToAllClients("WARNING - The server has stopped listening for connections. SERVER SHUTTING DOWN! DISCONNECTING!");
   }
   
 }

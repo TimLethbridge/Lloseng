@@ -71,7 +71,37 @@ public class EchoServer extends AbstractServer
     System.out.println
       ("Server has stopped listening for connections.");
   }
-  
+  /**
+   *  This method overrides the one in superclass. called 
+   * each time a new client connection is accepted. 
+   * @param client the connection connected to the client.
+   */
+  protected void clientConnected(ConnectionToClient client) {
+    
+  }
+
+  /**
+   * This method overrides the one in superclass. called 
+   * each time a client disconnects.
+   * @param client the connection with the client.
+   */
+  synchronized protected void clientDisconnected(ConnectionToClient client) {
+  System.out.println(client + "disconnect to the server.");
+this.sendToAllClients(client.getInfo("loginID") + "disconnected from the server.");
+  }
+
+  /**
+   * This method overrides the one in superclass. alled each time an exception is thrown in a
+   * ConnectionToClient thread.
+   *
+   * @param client the client that raised the exception.
+   * @param Throwable the exception thrown.
+   */
+  synchronized protected void clientException(
+    ConnectionToClient client, Throwable exception) {
+    System.out.println(client.getInfo("loginID") + " disconnected from the server.");
+    this.sendToAllClients(client.getInfo("loginID") + " disconnected from the server.");
+}
   //Class methods ***************************************************
   
   /**

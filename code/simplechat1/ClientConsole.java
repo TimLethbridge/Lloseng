@@ -119,14 +119,19 @@ public class ClientConsole implements ChatIF
     chat.accept();  //Wait for console data
   }
 
-  protected void connectionClosed(){
-    if (!isConnected()) {
-      System.out.println("The serever has been disconnected...");
-    }
-  }
-
-  protected void connectionException(java.lang.Exception exception){
-    System.out.println(exception.toString());
-  }
+//  public final boolean isConnected(){
+//    if ()
+//  }
+//
+//  protected void connectionClosed(){
+//    if (!isConnected()) {
+//      System.out.println("The serever has been disconnected...");
+//      System.exit(1);
+//    }
+//  }
+//
+//  protected void connectionException(java.lang.Exception exception){
+//    System.out.println(exception.toString());
+//  }
 }
 //End of ConsoleChat class

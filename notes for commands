@@ -1,0 +1,13 @@
+notes for commands
+
+cd Desktop/SEG_2105_Summer2020_Assignment_1/Lloseng/code 
+
+javac ocsf/*/*.java 
+
+cd simplechat1
+
+
+javac -classpath ../../code *.java client/*.java common/*.java
+________________________________________________
+java -classpath '../../code:.' EchoServer
+java -classpath '../../code:.' ClientConsole

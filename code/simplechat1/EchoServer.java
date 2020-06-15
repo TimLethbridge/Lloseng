@@ -45,8 +45,7 @@ public class EchoServer extends AbstractServer
    * @param msg The message received from the client.
    * @param client The connection from which the message originated.
    */
-  public void handleMessageFromClient
-    (Object msg, ConnectionToClient client)
+  public void handleMessageFromClient (Object msg, ConnectionToClient client)
   {
     System.out.println("Message received: " + msg + " from " + client);
     this.sendToAllClients(msg);

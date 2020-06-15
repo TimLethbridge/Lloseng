@@ -71,6 +71,55 @@ public class ClientConsole implements ChatIF
       while (true)
       {
         message = fromConsole.readLine();
+
+        switch (message){
+          case "#quit":
+            //code
+            break;
+          case "#logoff":
+            //code
+            break;
+          case "#setPort": //setting the Port number *************************************************
+            System.out.println("Enter the new Port: ");
+            int num;
+            String numberString;
+            try
+            {
+              BufferedReader numberFromConsole = new BufferedReader(new InputStreamReader(System.in));
+              numberString = numberFromConsole.readLine();
+              num = Integer.parseInt(portString);
+            }
+            catch (Exception numException)
+            {
+              num = DEFAULT_PORT;
+              System.out.println("Number is invalid, using default...");
+            }
+            setPort(num);
+            break;
+          case "#setHost": //setting the Host ********************************************************
+            System.out.println("Enter the new Host: ");
+            String messageString;
+            try
+            {
+              BufferedReader messageFromConsole = new BufferedReader(new InputStreamReader(System.in));
+              messageString = messageFromConsole.readLine();
+              setHost(messageString);
+            }
+            catch (Exception numException)
+            {
+              System.out.println("Host name is invalid, using default...");
+            }
+            break;
+          case "#getHost": //get host ****************************************************************
+            System.out.println("The host is: " + client.getHost());
+            break;
+          case "#getPort": //get port ****************************************************************
+            System.out.println("The port number is: "+client.getPort());
+            break;
+          default:
+            break;
+        }
+
         client.handleMessageFromClientUI(message);
       }
     }
@@ -145,5 +194,20 @@ public class ClientConsole implements ChatIF
   protected void connectionException(java.lang.Exception exception){
     System.out.println(exception.toString());
   }
+
+  final public void setHost(String host) {
+    this.host = host;
+  }
+  final public void setPort(int port) {
+    this.port = port;
+  }
+
+  public final java.lang.String getHost(){
+    return host;
+  }
+  public final int getPort(){
+    return port;
+  }
+
 }
 //End of ConsoleChat class

@@ -117,13 +117,18 @@ public class ClientConsole implements ChatIF
       host = "localhost";
     }
     System.out.println("Enter the Port Number: ");
-    try{
+
+    //now we have to allow the client to chose the port
+    try
+    {
     BufferedReader portFromConsole = new BufferedReader(new InputStreamReader(System.in));
     String portString;
     portString = portFromConsole.readLine();
       port = Integer.parseInt(portString);
-    }catch (Exception numException)
+    }
+    catch (Exception numException)
     {
+      // if we find an error, we will take the default port: 5555
       port = DEFAULT_PORT;
       System.out.println("Number is invalid, using default...");
     }

@@ -173,6 +173,7 @@ public class ChatClient extends AbstractClient
     try
     {
       closeConnection();
+      clientUI.display("client quits");
     }
     catch(IOException e) {}
     System.exit(0);

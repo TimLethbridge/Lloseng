@@ -87,7 +87,7 @@ public class ClientConsole implements ChatIF
             {
               BufferedReader numberFromConsole = new BufferedReader(new InputStreamReader(System.in));
               numberString = numberFromConsole.readLine();
-              num = Integer.parseInt(portString);
+              num = Integer.parseInt(numberString);
             }
             catch (Exception numException)
             {

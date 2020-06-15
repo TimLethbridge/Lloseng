@@ -31,7 +31,8 @@ public class ClientConsole implements ChatIF
    * The instance of the client that created this ConsoleChat.
    */
   ChatClient client;
-
+  protected static String host = "";
+  protected static int port = 0;  //The port number
 
   //Constructors ****************************************************
 
@@ -153,8 +154,7 @@ public class ClientConsole implements ChatIF
    */
   public static void main(String[] args)
   {
-    String host = "";
-    int port = 0;  //The port number
+
 
     try
     {

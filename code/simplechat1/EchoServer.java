@@ -49,9 +49,12 @@ public class EchoServer extends AbstractServer
   {
     System.out.println("Message received: " + msg + " from " + client);
     if (client.getClass().equals(ServerConsole.class)) {
+      System.out.println("It works");
       this.sendToAllClients("SERVER MSG>");
+      System.out.println("IT works 2");
       this.sendToAllClients(msg);
     }else {
+      System.out.println("The else works");
       this.sendToAllClients(msg);
     }
   }

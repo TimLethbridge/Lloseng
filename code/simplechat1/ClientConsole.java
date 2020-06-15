@@ -120,10 +120,9 @@ public class ClientConsole implements ChatIF
             System.out.println("The port number is: "+client.getPort());
             break;
           default:
+            client.handleMessageFromClientUI(message);
             break;
         }
-
-        client.handleMessageFromClientUI(message);
       }
     }
     catch (Exception ex)

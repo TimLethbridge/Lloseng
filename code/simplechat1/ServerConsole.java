@@ -36,7 +36,7 @@ public class ServerConsole implements ChatIF {
      * @param host The host to connect to.
      * @param port The port to connect on.
      */
-    public serverConsole(String host, int port)
+    public ServerConsole(String host, int port)
     {
         try
         {

@@ -1,23 +1,12 @@
-// This file contains material supporting section 3.7 of the textbook:
-// "Object Oriented Software Engineering" and is issued under the open-source
-// license found at www.lloseng.com 
+//ServerConsole.java
 
+//Similar to ClientConsole, but with modification to allow for server inputs
 import java.io.*;
 import client.*;
 import common.*;
 
-/**
- * This class constructs the UI for a chat client.  It implements the
- * chat interface in order to activate the display() method.
- * Warning: Some of the code here is cloned in ServerConsole 
- *
- * @author Fran&ccedil;ois B&eacute;langer
- * @author Dr Timothy C. Lethbridge  
- * @author Dr Robert Lagani&egrave;re
- * @version July 2000
- */
-public class ClientConsole implements ChatIF 
-{
+public class ServerConsole implements ChatIF{
+
   //Class variables *************************************************
   
   /**
@@ -30,7 +19,7 @@ public class ClientConsole implements ChatIF
   /**
    * The instance of the client that created this ConsoleChat.
    */
-  ChatClient client;
+  EchoServer server;
 
   
   //Constructors ****************************************************
@@ -41,22 +30,35 @@ public class ClientConsole implements ChatIF
    * @param host The host to connect to.
    * @param port The port to connect on.
    */
-  public ClientConsole(String host, int port,String loginID) 
-  {
-    try 
-    {
-      client= new ChatClient(host, port, this,loginID);
-    } 
-    catch(IOException exception) 
-    {
-      System.out.println("Error: Can't setup connection!"
-                + " Terminating client.");
-      System.exit(1);
-    }
+  public ServerConsole(int port)throws IOException{ ///////// see pics 
+  	server = new EchoServer(port,this);
   }
+
 
   
   //Instance methods ************************************************
+
+  /**
+ 	 * Hook method called after the connection has been closed. The default
+ 	 * implementation does nothing. The method may be overriden by subclasses to
+ 	 * perform special processing such as cleaning up and terminating, or
+ 	 * attempting to reconnect.
+ 	 */
+ 	protected void connectionClosed() {
+ 		System.out.println("The server has shutdown.");
+ 	}
+
+  	/**
+ 	 * Hook method called each time an exception is thrown by the client's
+ 	 * thread that is waiting for messages from the server. The method may be
+ 	 * overridden by subclasses.
+ 	 * 
+ 	 * @param exception
+ 	 *            the exception raised.
+ 	 */
+ 	protected void connectionException(Exception exception) {
+ 		connectionClosed();
+ 	}
   
   /**
    * This method waits for input from the console.  Once it is 
@@ -73,7 +75,7 @@ public class ClientConsole implements ChatIF
       while (true) 
       {
         message = fromConsole.readLine();
-        client.handleMessageFromClientUI(message);
+        server.handleMessageFromServerUI(message);
       }
     } 
     catch (Exception ex) 
@@ -91,8 +93,8 @@ public class ClientConsole implements ChatIF
    */
   public void display(String message) 
   {
-    System.out.println("> " + message);
-  }
+    System.out.println("SERVER MSG> " + message);
+  	}
 
   
   //Class methods ***************************************************
@@ -102,25 +104,25 @@ public class ClientConsole implements ChatIF
    *
    * @param args[0] The host to connect to.
    */
-  public static void main(String[] args) 
+  public static void main(String[] args) throws IOException
   {
-    String host = "";
-    String loginID="";
     int port = 0;  //The port number
 
     try
     {
-      loginID = args[0];
-      host = args[1];
-      port = Integer.parseInt(args[2]);
+      port = Integer.parseInt(args[0]);
     }
-    catch(ArrayIndexOutOfBoundsException e)
+    catch(Throwable t)
     {
-      host = "localhost";
       port = DEFAULT_PORT;
     }
-    ClientConsole chat= new ClientConsole(host,port,loginID);
-    chat.accept();  //Wait for console data
+    ServerConsole server= new ServerConsole(port);
+    try{
+    server.accept();  //Wait for console data
+    }
+    catch(Exception ex){
+      System.out.println("Could not listen for clients...");
+    }
   }
 }
-//End of ConsoleChat class
+//End of ServerConsole class

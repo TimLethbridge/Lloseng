@@ -154,7 +154,7 @@ public class ClientConsole implements ChatIF
    */
   public static void main(String[] args)
   {
-    host = '';
+    host = "";
     port = 0;
 
     try

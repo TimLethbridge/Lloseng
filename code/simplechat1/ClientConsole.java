@@ -185,6 +185,13 @@ public class ClientConsole implements ChatIF
 
     ClientConsole chat= new ClientConsole(host, port);
     chat.accept();  //Wait for console data
+
+    final public void setHost(String host1) {
+    host = host1;
+  }
+    final public void setPort(int port1) {
+    port = port1;
+  }
   }
 
 
@@ -200,12 +207,7 @@ public class ClientConsole implements ChatIF
     System.out.println(exception.toString());
   }
 
-  final public void setHost(String host1) {
-    host = host1;
-  }
-  final public void setPort(int port1) {
-    port = port1;
-  }
+
 
 
 }

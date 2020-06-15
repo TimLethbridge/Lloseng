@@ -93,7 +93,7 @@ public class ServerConsole implements ChatIF {
                             num = DEFAULT_PORT;
                             System.out.println("Number is invalid, using default...");
                         }
-                        setPort(num);
+                        server.setPort(num);
                         break;
                     case "#setHost": //setting the Host ********************************************************
                         System.out.println("Enter the new Host: ");
@@ -102,7 +102,7 @@ public class ServerConsole implements ChatIF {
                         {
                             BufferedReader messageFromConsole = new BufferedReader(new InputStreamReader(System.in));
                             messageString = messageFromConsole.readLine();
-                            setHost(messageString);
+                            server.setHost(messageString);
                         }
                         catch (Exception numException)
                         {
@@ -149,8 +149,8 @@ public class ServerConsole implements ChatIF {
      */
     public static void main(String[] args)
     {
-        host = "";
-        port = 0;
+        String host= "";
+        int port= 0;
 
         try
         {
@@ -195,18 +195,6 @@ public class ServerConsole implements ChatIF {
         System.out.println(exception.toString());
     }
 
-    final public void setHost(String host) {
-        this.host = host;
-    }
-    final public void setPort(int port) {
-        this.port = port;
-    }
 
-    public final java.lang.String getHost(){
-        return host;
-    }
-    public final int getPort(){
-        return port;
-    }
 
 }

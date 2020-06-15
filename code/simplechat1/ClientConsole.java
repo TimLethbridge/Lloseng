@@ -153,10 +153,8 @@ public class ClientConsole implements ChatIF
    */
   public static void main(String[] args)
   {
-    String host;
-    host = "";
-    int port ;
-    port = 0;
+    String host = "";
+    int port = 0;
     try
     {
       host = args[0];

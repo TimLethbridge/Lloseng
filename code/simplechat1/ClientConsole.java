@@ -31,8 +31,7 @@ public class ClientConsole implements ChatIF
    * The instance of the client that created this ConsoleChat.
    */
   ChatClient client;
-  public static String host = "";
-  public static int port = 0;  //The port number
+
 
   //Constructors ****************************************************
 
@@ -154,7 +153,8 @@ public class ClientConsole implements ChatIF
    */
   public static void main(String[] args)
   {
-
+    public static String host = "";
+    public static int port = 0;  //The port number
 
     try
     {
@@ -180,6 +180,8 @@ public class ClientConsole implements ChatIF
       port = DEFAULT_PORT;
       System.out.println("Number is invalid, using default...");
     }
+
+
     ClientConsole chat= new ClientConsole(host, port);
     chat.accept();  //Wait for console data
   }

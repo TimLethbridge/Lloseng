@@ -199,11 +199,11 @@ public class ClientConsole implements ChatIF
     System.out.println(exception.toString());
   }
 
-  final public void setHost(String host) {
-    this.host = host;
+  final public void setHost(String host1) {
+    host = host1;
   }
-  final public void setPort(int port) {
-    this.port = port;
+  final public void setPort(int port1) {
+    port = port1;
   }
 
 

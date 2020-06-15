@@ -55,8 +55,8 @@ public class EchoServer extends AbstractServer
       this.sendToAllClients(msg);
     }else {
       System.out.println("The else works");
-      System.out.println(ServerConsole.class.toString());
-      System.out.println(client.getClass());
+      System.out.println(ServerConsole.class.getClass().getName());
+      System.out.println(client.getClass().getName());
       this.sendToAllClients("Msg can be sent");
       this.sendToAllClients(msg);
     }

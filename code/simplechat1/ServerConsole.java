@@ -149,8 +149,8 @@ public class ServerConsole implements ChatIF {
      */
     public static void main(String[] args)
     {
-        String host= "";
-        int port= 0;
+        String host = "";
+        int port = 0;
 
         try
         {

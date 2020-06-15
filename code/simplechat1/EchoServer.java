@@ -49,7 +49,7 @@ public class EchoServer extends AbstractServer
   {
     System.out.println("Message received: " + msg + " from " + client);
     if (client.getClass().equals(ServerConsole.class)) {
-      this.sendToallClients("SERVER MSG>");
+      this.sendToAllClients("SERVER MSG>");
       this.sendToAllClients(msg);
     }else {
       this.sendToAllClients(msg);

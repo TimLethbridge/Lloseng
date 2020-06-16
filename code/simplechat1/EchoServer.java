@@ -96,6 +96,13 @@ public class EchoServer extends AbstractServer
     System.out.println("The client "+ client +" has disconnected from the server");
   }
 
+  //server closed****************************************************
+//  public final void close(){
+//    try {
+//      System.out.println("");
+//    }
+//  }
+
 
   //Class methods ***************************************************
 

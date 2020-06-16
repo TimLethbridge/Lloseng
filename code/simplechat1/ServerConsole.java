@@ -71,9 +71,8 @@ public class ServerConsole implements ChatIF {
 
                 switch (message){
                     case "#quit":
-                        System.out.println("Quit...");
-                        connectionClosed();
-                        System.exit(1);
+                        System.out.println("Server Quit...");
+                        close();
                         break;
                     case "#logoff":
                         //code

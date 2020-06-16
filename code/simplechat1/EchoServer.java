@@ -101,6 +101,9 @@ public class EchoServer extends AbstractServer
     try {
       System.out.println("Server quit...");
     }
+  }catch(IOException e)
+  {
+    System.out.println("There was an error while quitting");
   }
 
 

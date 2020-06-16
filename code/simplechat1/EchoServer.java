@@ -97,11 +97,11 @@ public class EchoServer extends AbstractServer
   }
 
   //server closed****************************************************
-//  public final void close(){
-//    try {
-//      System.out.println("");
-//    }
-//  }
+  public final void close(){
+    try {
+      System.out.println("Server closed...");
+    }
+  }
 
 
   //Class methods ***************************************************

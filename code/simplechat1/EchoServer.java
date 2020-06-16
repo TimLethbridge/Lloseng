@@ -99,7 +99,7 @@ public class EchoServer extends AbstractServer
   //server closed****************************************************
   public final void close(){
     try {
-      System.out.println("Server closed...");
+      System.out.println("Server quit...");
     }
   }
 

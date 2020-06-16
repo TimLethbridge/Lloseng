@@ -33,7 +33,9 @@ public class ClientConsole implements ChatIF {
 
   private boolean run = true;
 
-  private String loginID;
+  private String internalLoginID;
+  private String internalHost;
+  private int internalPort;
 
   // Constructors ****************************************************
 
@@ -44,11 +46,14 @@ public class ClientConsole implements ChatIF {
    * @param port The port to connect on.
    */
   public ClientConsole(String loginID, String host, int port) {
+    internalLoginID = loginID;
+    internalHost = host;
+    internalPort = port;
     try {
       client = new ChatClient(loginID, host, port, this);
+      System.out.println(loginID + " has logged on.");
     } catch (IOException exception) {
-      System.out.println("Error: Can't setup connection!" + " Terminating client.");
-      System.exit(1);
+      System.out.println("Error: Can't open connection.  Awaiting Command");
     }
   }
 
@@ -67,8 +72,7 @@ public class ClientConsole implements ChatIF {
         message = fromConsole.readLine();
         if (message != null) {
           if (message.charAt(0) == '#') {
-            //command(message.substring(1));
-            client.handleMessageFromClientUI(message);
+            command(message.substring(1));
           } else {
             client.handleMessageFromClientUI(message);
           }
@@ -76,98 +80,123 @@ public class ClientConsole implements ChatIF {
           client.handleMessageFromClientUI(message);
         }
       }
-    } catch (Exception ex) {
+    }
+
+    catch (Exception ex) {
       System.out.println("Unexpected error while reading from console!");
+      System.out.println(ex.getMessage());
     }
   }
 
   public void command(String command) {
 
-    System.out.println("Command: " + command);
-    System.out.println("Status: " + client.isConnected());
+    // Determines if client is connected
+    boolean isConnected = true;
+    try {
+      isConnected = client.isConnected();
+    } catch (Exception notCnnected) {
+      isConnected = false;
+    }
 
-    if (command.equals("quit")) {
-      if (client.isConnected()) {
-        try {
-          client.closeConnection();
-          run = false;
-        } catch (Exception ex) {
-          System.out.println("Unexpected error while terminating connection");
+    // Switch/case/default statement to determine command
+    switch (command) {
+
+      case ("quit"):
+        if (isConnected) {
+          try {
+            client.closeConnection();
+            run = false;
+          } catch (Exception ex) {
+            System.out.println("Unexpected error while terminating connection");
+          }
         }
-      }
+        break;
 
-    } else if (command.equals("logoff")) {
-
-      if (!client.isConnected()) {
-        System.out.println("Client already logged off");
-      }
-
-      else {
-        System.out.println("Attempting to logoff");
-        try {
-          client.closeConnection();
-        } catch (Exception ex) {
-          System.out.println("Unexpected error while terminating connection");
+      case ("logoff"):
+        if (!isConnected) {
+          System.out.println("Client already logged off");
         }
-      }
-    }
 
-    else if (command.equals("login")) {
-      if (client.isConnected()) {
-        System.out.println("Client already logged in");
-      } else {
-        ClientConsole chat = new ClientConsole(client.getLoginID(), client.getHost(), client.getPort());
-        chat.accept();
-      }
-    }
+        else {
+          try {
+            client.closeConnection();
+          } catch (Exception ex) {
+            System.out.println("Unexpected error while terminating connection");
+          }
+        }
+        break;
 
-    else if (command.substring(0, 7).equals("sethost")) {
-      if (client.isConnected()) {
-        System.out.println("Client currently logged in. Please log off before changing host.");
-      } else {
-        client.setHost(command.substring(8));
-        System.out.println("SetHost" + client.getHost());
-      }
-    }
+      case ("login"):
+        if (isConnected) {
+          System.out.println("Client already logged in");
+        } else {
+          ClientConsole chat = new ClientConsole(internalLoginID, internalHost, internalPort);
+          chat.accept();
+        }
+        break;
 
-    else if ((command.substring(0, 7)).equals("setport")) {
-      System.out.println("Attempting to changeport");
-      if (client.isConnected()) {
-        System.out.println("Client currently logged in. Please log off before changing port.");
-      } else {
-        try {
-          int changePort = Integer.parseInt(command.substring(8));
-          client.setPort(changePort);
-          System.out.println("SetPort" + client.getPort());
-        } catch (Exception e) {
-          System.out.println("Invalid port number");
+      case ("getport"):
+        System.out.println(internalPort);
+        break;
+
+      case ("gethost"):
+        System.out.println(internalHost);
+        break;
+
+      default:
+
+        if (command.length() > 8 && command.substring(0, 7).equals("sethost")) {
+          // Checks to see if client is connected, if so, disallow host changed.
+          // This is in a try/catch statement to allow host change before connection is
+          // established
+
+          if (isConnected) {
+            System.out.println("Client currently logged in. Please log off before changing host.");
+          } else {
+            internalHost = command.substring(8);
+            System.out.println("Host set to: " + internalHost);
+          }
+        }
+
+        else if (command.length() > 8 && (command.substring(0, 7)).equals("setport")) {
+
+          // Iniitalize changeport as DEFAULT_PORT, incase something goes wrong.
+          int changePort = DEFAULT_PORT;
+
+          // Confirms that port change is valid.
+          try {
+            changePort = Integer.parseInt(command.substring(8));
+
+            // Checks to see if client is connected, if so, disallow port changed.
+            // This is in a try/catch statement to allow port change before connection is
+            // established
+            if (isConnected) {
+              System.out.println("Client currently logged in. Please log off before changing port.");
+            } 
+            else {
+              internalPort = changePort;
+              System.out.println("Port set to: " + internalPort);
+            }
+          }
+
+          catch (Exception e) {
+            System.out.println("Invalid port number");
+          }
 
         }
-      }
-    }
 
-    else if (command.substring(0, 7).equals("gethost")) {
-      System.out.println(client.getHost());
-    }
-
-    else if (command.substring(0, 7).equals("getport")) {
-      System.out.println(client.getPort());
-    }
-
-    else {
-      System.out.println("Command unknown, please try again");
+        else {
+          System.out.println("Command unknown, please try again");
+        }
     }
 
   }
+
   /*
-  private void setLoginID(String identification) {
-    loginID = identification;
-  }
-
-  private String getLoginID() {
-    return loginID;
-  }
-  */
+   * private void setLoginID(String identification) { loginID = identification; }
+   * 
+   * private String getLoginID() { return loginID; }
+   */
 
   /**
    * This method overrides the method in the ChatIF interface. It displays a
@@ -176,11 +205,11 @@ public class ClientConsole implements ChatIF {
    * @param message The string to be displayed.
    */
   public void display(String message) {
-    System.out.println("> " + message);
+    System.out.println(message);
   }
 
   public void connectionException(Exception exception) {
-    System.out.println("Server has shut down. Terminating session");
+    System.out.println("Abnormal termination of connection.");
   }
 
   // Class methods ***************************************************
@@ -190,61 +219,41 @@ public class ClientConsole implements ChatIF {
    *
    * @param args[0] The host to connect to.
    */
-  public static void main(String[] args){
-    
+  public static void main(String[] args) {
+
     String host = "";
-    int port=DEFAULT_PORT;  //The port number
+    int port = DEFAULT_PORT; // The port number
 
-    //Getting the login id
-  
-    BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-    String identification = new String();
+    // Getting the login id
 
-    while(true){
-      System.out.println("Please enter your login ID");
-      try{
-        identification = reader.readLine();
-      
-      }
-      catch (Exception ex){
-        System.out.println("Error getting login ID.");
-      }
+    // BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    // String identification = new String();
 
-      if(identification != null ){
-        if(identification.length() > 0){
-          break;
-        }
-        System.out.println("Can not have empty login ID");
-      }
+    try {
+      String clientID = args[0];
+      ClientConsole chat = new ClientConsole(clientID, host, port);
+      chat.accept();
+    } catch (Exception Ex) {
+      System.out.println("ERROR - No login ID specified.  Connection aborted.");
     }
 
-    System.out.println("Please specify port number (If blank, default port 5555 will be used)");
-    try{
-      String input = reader.readLine();
-      port = Integer.parseInt( input );
-    }
-
-    catch (Exception ex){
-      System.out.println
-        ("Invalid port number. Default port of 5555 will be used");
-    }
-  
-    if(port > 65535 || port < 0){
-      System.out.println("Invalid Port Number");
-    }
-    else{
-      System.out.println("Connection to server at port "+port);
-      try
-      {
-        host = args[0];
-      }
-      catch(ArrayIndexOutOfBoundsException e)
-      {
-        host = "localhost";
-      }
-      ClientConsole chat= new ClientConsole(identification, host, port);
-      chat.accept();  //Wait for console data
-    }
+    /*
+     * System.out.
+     * println("Please specify port number (If blank, default port 5555 will be used)"
+     * ); try { String input = reader.readLine(); port = Integer.parseInt(input); }
+     * 
+     * catch (Exception ex) {
+     * System.out.println("Invalid port number. Default port of 5555 will be used");
+     * }
+     * 
+     * if (port > 65535 || port < 0) { System.out.println("Invalid Port Number"); }
+     * else { System.out.println("Connection to server at port " + port); try { host
+     * = args[0]; } catch (ArrayIndexOutOfBoundsException e) { host = "localhost"; }
+     * 
+     * ClientConsole chat = new ClientConsole(identification, host, port);
+     * chat.accept(); // Wait for console data
+     */
   }
 }
+
 // End of ConsoleChat class

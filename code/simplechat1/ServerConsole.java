@@ -72,7 +72,7 @@ public class ServerConsole implements ChatIF {
                 switch (message){
                     case "#quit":
                         System.out.println("Server Quit...");
-                        close();
+                        server.close();
                         break;
                     case "#logoff":
                         //code

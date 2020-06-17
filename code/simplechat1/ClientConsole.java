@@ -31,6 +31,7 @@ public class ClientConsole implements ChatIF
    * The instance of the client that created this ConsoleChat.
    */
   ChatClient client;
+  public static String clientName;
 
   //Constructors ****************************************************
 
@@ -40,11 +41,11 @@ public class ClientConsole implements ChatIF
    * @param host The host to connect to.
    * @param port The port to connect on.
    */
-  public ClientConsole(String host, int port)
+  public ClientConsole(String loginid, String host, int port)
   {
     try
     {
-      client= new ChatClient(host, port, this);
+      client= new ChatClient(loginid, host, port, this);
     }
     catch(IOException exception)
     {
@@ -68,10 +69,17 @@ public class ClientConsole implements ChatIF
     {
       BufferedReader fromConsole = new BufferedReader(new InputStreamReader(System.in));
       String message;
+      String loginValid = "";
+
+      client.handleMessageFromClientUI("#login <"+getClientId()+">");
+      client.handleMessageFromClientUI(" #login <"+getClientId()+"> has logged on.");
 
       while (true)
       {
         message = fromConsole.readLine();
+        if (message.length()>= 6) {
+          loginValid = message.substring(0, 6);
+        }
 
         switch (message){
           case "#quit":
@@ -119,7 +127,11 @@ public class ClientConsole implements ChatIF
             System.out.println("The port number is: "+client.getPort());
             break;
           default:
-            client.handleMessageFromClientUI(message);
+            if (loginValid.equals("#login")){
+              client.handleMessageFromClientUI(message + " from <" + getClientId() + ">");
+            }else {
+              client.handleMessageFromClientUI("Message received: <" + message + "> from <" + getClientId() + ">");
+            }
             break;
         }
       }
@@ -152,8 +164,23 @@ public class ClientConsole implements ChatIF
    */
   public static void main(String[] args)
   {
+    String logingID = "";
     String host = "";
     int port = 0;
+
+    while (logingID.equals("")){
+      System.out.println("Enter your ID: ");
+      try {
+        BufferedReader idFromConsole = new BufferedReader(new InputStreamReader(System.in));
+        logingID = idFromConsole.readLine();
+        clientName = logingID;
+      }
+      catch (Exception ex)
+      {
+        System.out.println("ID chosen is incorrect, Please try again");
+      }
+    }
+
     try
     {
       host = args[0];
@@ -170,7 +197,7 @@ public class ClientConsole implements ChatIF
     BufferedReader portFromConsole = new BufferedReader(new InputStreamReader(System.in));
     String portString;
     portString = portFromConsole.readLine();
-      port = Integer.parseInt(portString);
+    port = Integer.parseInt(portString);
     }
     catch (Exception numException)
     {
@@ -180,7 +207,7 @@ public class ClientConsole implements ChatIF
     }
 
 
-    ClientConsole chat= new ClientConsole(host, port);
+    ClientConsole chat= new ClientConsole(logingID, host, port);
     chat.accept();  //Wait for console data
 
   }
@@ -198,8 +225,9 @@ public class ClientConsole implements ChatIF
     System.out.println(exception.toString());
   }
 
-
-
+  public static String getClientId(){
+    return clientName;
+  }
 
 }
 //End of ConsoleChat class

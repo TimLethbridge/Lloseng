@@ -23,6 +23,7 @@ public class EchoServer extends AbstractServer
    * The default port to listen on.
    */
   final public static int DEFAULT_PORT = 5555;
+  public static boolean hasConnected = false;
 
   //Constructors ****************************************************
 
@@ -48,58 +49,65 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient (Object msg, ConnectionToClient client)
   {
     String messageSent = msg.toString();
-     switch (messageSent) {
-       case "Quit":
-         System.out.println("Server is quitting...");
-         System.exit(1);
-         break;
-       case "Stop":
-         stopListening();
-         break;
-       case "Close":
-         stopListening();
-         //****
-         break;
-       case "#getPort":
-         handleMessageFromClient("the port number is "+getPort(),client);
-         break;
-       case "#setPort":
-         int num;
-         String numberString;
-         try
-         {
-           BufferedReader numberFromConsole = new BufferedReader(new InputStreamReader(System.in));
-           numberString = numberFromConsole.readLine();
-           num = Integer.parseInt(numberString);
-         }
-         catch (Exception numException)
-         {
-           num = DEFAULT_PORT;
-           System.out.println("Number is invalid, using default...");
-         }
-         setPort(num);
-         break;
-       case "Start":
-         if (!isListening()) {
-           System.out.println("Server will start listening for new clients...");
-           serverStarted();
-         } else {
-           System.out.println("Server is already listening for clients!");
-         }
-         break;
-       default:
-         System.out.println("Message received: " + msg + " from " + client);
-         if (client.getClass().equals(ServerConsole.class)) {
-           this.sendToAllClients("SERVER MSG>");
-           this.sendToAllClients(msg);
-         } else {
-           this.sendToAllClients(msg);
-         }
-         break;
+    String loginValid = "";
+    loginValid = messageSent.substring(0,6);
+
+    if (loginValid.equals("#login") && !hasConnected){
+      System.out.println("Message received "+messageSent);
+      client.setInfo("client ID: ",msg);
+      hasConnected = true;
+    }else if(loginValid.equals("#login") && hasConnected){
+      handleMessageFromClient("You are already logged in!",client);
+    }else {
+      switch (messageSent) {
+        case "Quit":
+          System.out.println("Server is quitting...");
+          System.exit(1);
+          break;
+        case "Stop":
+          stopListening();
+          break;
+        case "Close":
+          stopListening();
+          //****
+          break;
+        case "#getPort":
+          handleMessageFromClient("the port number is " + getPort(), client);
+          break;
+        case "#setPort":
+          int num;
+          String numberString;
+          try {
+            BufferedReader numberFromConsole = new BufferedReader(new InputStreamReader(System.in));
+            numberString = numberFromConsole.readLine();
+            num = Integer.parseInt(numberString);
+          } catch (Exception numException) {
+            num = DEFAULT_PORT;
+            System.out.println("Number is invalid, using default...");
+          }
+          setPort(num);
+          break;
+        case "Start":
+          if (!isListening()) {
+            System.out.println("Server will start listening for new clients...");
+            serverStarted();
+          } else {
+            System.out.println("Server is already listening for clients!");
+          }
+          break;
+        default:
+          System.out.println(msg);
+          if (client.getClass().equals(ServerConsole.class)) { //this statment is false, need to be changed
+            this.sendToAllClients("SERVER MSG>");
+            this.sendToAllClients(msg);
+          } else {
+            this.sendToAllClients(msg);
+          }
+          break;
 
 
-
-     }
+      }
+    }
 
   }
 
@@ -126,7 +134,8 @@ public class EchoServer extends AbstractServer
   //client connected ************************************************
   protected void clientConnected(ConnectionToClient client)
   {
-    System.out.println("The client "+ client +" has connected to the server");
+    //System.out.println("The client "+ client +" has connected to the server");
+    System.out.println("A new client is attempting to connect to the server.");
   }
 
 

@@ -36,11 +36,11 @@ public class ServerConsole implements ChatIF {
      * @param host The host to connect to.
      * @param port The port to connect on.
      */
-    public ServerConsole(String host, int port)
+    public ServerConsole(String serverID, String host, int port)
     {
         try
         {
-            server= new ChatClient(host, port, this);
+            server= new ChatClient(serverID, host, port, this);
         }
         catch(IOException exception)
         {
@@ -64,7 +64,6 @@ public class ServerConsole implements ChatIF {
         {
             BufferedReader fromConsole = new BufferedReader(new InputStreamReader(System.in));
             String message;
-
             while (true)
             {
                 message = fromConsole.readLine();
@@ -108,7 +107,7 @@ public class ServerConsole implements ChatIF {
                         server.handleMessageFromClientUI("#getPort");
                         break;
                     default:
-                        server.handleMessageFromClientUI(message);
+                        server.handleMessageFromClientUI("The server sent: "+message);
                         break;
                 }
             }
@@ -141,6 +140,7 @@ public class ServerConsole implements ChatIF {
      */
     public static void main(String[] args)
     {
+        String serverID = "TheServer";
         String host = "";
         int port = 0;
 
@@ -170,7 +170,7 @@ public class ServerConsole implements ChatIF {
         }
 
 
-        ServerConsole chatServer = new ServerConsole(host, port);
+        ServerConsole chatServer = new ServerConsole(serverID, host, port);
         chatServer.accept();  //Wait for console data
     }
 

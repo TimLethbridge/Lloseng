@@ -224,6 +224,13 @@ public class ClientConsole implements ChatIF {
     String host = "";
     int port = DEFAULT_PORT; // The port number
 
+    try{
+      host = args[1];
+      port = Integer.parseInt(args[2]);
+    }
+    catch(Exception ex){
+    }
+
     // Getting the login id
 
     // BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));

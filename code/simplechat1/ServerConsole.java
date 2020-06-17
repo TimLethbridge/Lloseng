@@ -32,8 +32,8 @@ public class ServerConsole implements ChatIF {
                 if (message != null) {
                     if (message.charAt(0) == '#') {
                         command(message.substring(1));
-                    } 
-                    
+                    }
+
                     else {
                         display(message);
                         server.sendToAllClients("SERVER MSG> " + message);
@@ -49,35 +49,8 @@ public class ServerConsole implements ChatIF {
     }
 
     public void command(String command) {
-        
-        if (command.equals("quit")) {
-            if (server.isListening()) {
-                server.stopListening();
-            }
-            try {
-                server.close();
-            } catch (Exception ex) {
-                System.out.println("Unexpected error while quitting server");
-            }
-        }
 
-        else if (command.equals("stop")) {
-            if (server.isListening()) {
-                server.stopListening();
-            } else {
-                System.out.println("Server is not currently listening");
-            }
-        }
-
-        else if (command.equals("close")) {
-            try {
-                server.close();
-            } catch (Exception ex) {
-                System.out.println("Unexpected error while closing server");
-            }
-        }
-
-        else if (command.substring(0, 7).equals("setport")) {
+        if (command.length() > 7 && command.substring(0, 7).equals("setport")) {
             if (server.isListening()) {
                 System.out.println("Server currently listening. Please stop listening before changing port");
             } else {
@@ -91,17 +64,73 @@ public class ServerConsole implements ChatIF {
             }
         }
 
-        else if (command.equals("start")) {
-            try {
-                server.listen();
-            } catch (Exception ex) {
-                System.out.println("Unexpected error when starting server");
-            }
-        }
-
         else {
-            System.out.println("Command unknown, please try again");
+            switch (command) {
+                case ("quit"):
+                    run = false;
+                    if (server.isListening()) {
+                        server.stopListening();
+                    }
+                    try {
+                        server.sendToAllClients("SERVER SHUTTING DOWN! DISCONNECTING");
+                        server.close();
+
+                    } catch (Exception ex) {
+                        System.out.println("Unexpected error while quitting server");
+                    }
+                    break;
+
+                case ("stop"):
+                    if (server.isListening()) {
+                        server.stopListening();
+                        server.sendToAllClients("WARNING - Server has stopped listening for connections.");
+                    } else {
+                        System.out.println("Server is not currently listening");
+                    }
+                    break;
+
+                case ("close"):
+                    try {
+                        server.sendToAllClients("SERVER SHUTTING DOWN! DISCONNECTING");
+                        server.close();
+                    } catch (Exception ex) {
+                        System.out.println("Unexpected error while closing server");
+                    }
+                    break;
+
+                case ("start"):
+                    try {
+                        server.listen();
+                    } catch (Exception ex) {
+                        System.out.println("Unexpected error when starting server");
+                    }
+                    break;
+
+                default:
+                    System.out.println("Command unknown, please try again");
+            }
+
         }
     }
 
+    public static void main(String[] args) {
+        int port = 5555; // Port to listen on
+
+        try {
+            port = Integer.parseInt(args[0]); // Get port from command line
+        } catch (Exception ex) {
+            
+        }
+        EchoServer sv = new EchoServer(port);
+
+        try {
+            sv.listen(); // Start listening for connections
+        } catch (Exception ex) {
+            System.out.println("ERROR - Could not listen for clients!");
+        }
+
+        // Initiates and starts a serverConsole to allow for server communications.
+        ServerConsole console = new ServerConsole(sv);
+        console.startConsole();
+    }
 }

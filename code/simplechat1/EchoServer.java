@@ -44,7 +44,7 @@ public class EchoServer extends AbstractServer {
    * 
    */
   public void clientConnected(ConnectionToClient client) {
-    System.out.println("Client " + client + " has Connected");
+    System.out.println("Client " + client.getInfo("loginID") + " has Connected");
   }
 
   /**
@@ -58,7 +58,8 @@ public class EchoServer extends AbstractServer {
    */
   public void clientDisconnected(ConnectionToClient client) {
     System.out.println("Disconnecting");
-    System.out.println("Client " + client + " has Disconnected");
+    System.out.println("Client " + client.getInfo("loginID") + " has Disconnected");
+    sendToAllClients("Client " + client.getInfo("loginID") + " has Disconnected");
   }
 
   // Instance methods ************************************************
@@ -70,10 +71,19 @@ public class EchoServer extends AbstractServer {
    * @param client The connection from which the message originated.
    */
   public void handleMessageFromClient(Object msg, ConnectionToClient client) {
-
+    
+    // Handles cases where message is null, signaling a client force quit, then
+    // disconnects client
     if (msg == null) {
       clientDisconnected(client);
-    } else if (msg.toString().length() > 9 && msg.toString().substring(0, 6).equals("#login")) {
+    }
+
+    // Handles cases of login attempts, by looking for #login in substring(0,6)
+    else if (msg.toString().length() > 9 && msg.toString().substring(0, 6).equals("#login")) {
+      System.out.println("Message received: " + msg + " from; " + client.getInfo("loginID"));
+
+      // Checks if the client has already logged in. If so, doesn't allow a second
+      // login
       try {
         client.getInfo("loginID").toString();
         client.sendToClient("Only one login attempt is allowed per client.");
@@ -81,18 +91,22 @@ public class EchoServer extends AbstractServer {
         Object loginID = msg.toString().substring(8, msg.toString().length() - 1);
         client.setInfo("loginID", loginID);
       }
+    }
 
-    } else {
+    // Handles cases that are not login attempts
+    else {
+      // Checks that the client has logged in. If not,
       try {
         client.getInfo("loginID").toString();
-        System.out.println("Message received: " + msg + " from " + client.getInfo("loginID"));
-        this.sendToAllClients(msg);
-      } catch (Exception ex) {
-        System.out.println("First command must be #login, please try again");
-        try{
+        System.out.println("Message received: " + msg + " from; " + client.getInfo("loginID"));
+        client.sendToClient(client.getInfo("loginID").toString() + "> " + msg);
+      }
+
+      catch (Exception ex) {
+        try {
+          client.sendToClient("SERVER MSG> First command must be #login, please try again");
           client.close();
-        }
-        catch (Exception ex2){
+        } catch (Exception ex2) {
           System.out.println("Error terminating connection with client");
         }
       }
@@ -125,12 +139,12 @@ public class EchoServer extends AbstractServer {
    *                is entered.
    */
   public static void main(String[] args) {
-    int port = 0; // Port to listen on
+    int port = DEFAULT_PORT; // Port to listen on
 
     try {
       port = Integer.parseInt(args[0]); // Get port from command line
     } catch (Throwable t) {
-      port = DEFAULT_PORT; // Set port to 5555
+      
     }
 
     EchoServer sv = new EchoServer(port);

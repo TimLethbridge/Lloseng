@@ -6,22 +6,41 @@ import common.*;
  * 
  */
 
+
+/**
+ * This class constructs the UI for a console client. It implements the chat
+ * interface in order to activate the display() method. Warning: Some of the
+ * code here is cloned in ServerConsole
+ *
+ * @author Morris Cai : 300067686
+ * @version June 2020
+ */
 public class ServerConsole implements ChatIF {
     // Instance variables
     private boolean run = true;
     private EchoServer server;
 
-    // Constructor
+    /**
+     * Constructs an instance of the ServerConsole UI
+     * 
+     * @param sv The server that the console is acting upon
+     */
     public ServerConsole(EchoServer sv) {
         server = sv;
     }
 
-    // Displays a message with a ">>" prefix
+    /**
+     *  Displays a message on the console with a ">>" prefix
+     * 
+     * @param message The message to be displayed
+     */
     public void display(String message) {
         System.out.println(">> " + message);
     }
 
-    //
+    /**
+     * Starts the console and starts listening for connections and commands
+     */
     public void startConsole() {
         try {
             BufferedReader fromConsole = new BufferedReader(new InputStreamReader(System.in));
@@ -48,8 +67,18 @@ public class ServerConsole implements ChatIF {
         }
     }
 
+
+    /**
+     * Method which takes commands and executes them
+     * 
+     * Commands usually take the form of "#COMMAND", but should be fed into this method
+     * without the #.  
+     * 
+     * @param command The command that should be executed, without "#"
+     */
     public void command(String command) {
 
+        //As switch/case cases do not account for substrings, the substring method of setport ____ must be handled separately
         if (command.length() > 7 && command.substring(0, 7).equals("setport")) {
             if (server.isListening()) {
                 System.out.println("Server currently listening. Please stop listening before changing port");
@@ -66,6 +95,8 @@ public class ServerConsole implements ChatIF {
 
         else {
             switch (command) {
+
+                //#quit closes all connections, then quits gracefully
                 case ("quit"):
                     run = false;
                     if (server.isListening()) {
@@ -79,7 +110,8 @@ public class ServerConsole implements ChatIF {
                         System.out.println("Unexpected error while quitting server");
                     }
                     break;
-
+                
+                //#stop stops listening for new connections, but existing connections stay open
                 case ("stop"):
                     if (server.isListening()) {
                         server.stopListening();
@@ -88,7 +120,8 @@ public class ServerConsole implements ChatIF {
                         System.out.println("Server is not currently listening");
                     }
                     break;
-
+                
+                //#close disconnects all connected clients and stop listening, but doesn't quit, allow for #start to restart the server
                 case ("close"):
                     try {
                         server.sendToAllClients("SERVER SHUTTING DOWN! DISCONNECTING");
@@ -98,6 +131,7 @@ public class ServerConsole implements ChatIF {
                     }
                     break;
 
+                //#start restarts the server and starts listening
                 case ("start"):
                     try {
                         server.listen();
@@ -106,13 +140,19 @@ public class ServerConsole implements ChatIF {
                     }
                     break;
 
+                //If command is not found, print out this error
                 default:
                     System.out.println("Command unknown, please try again");
             }
-
         }
     }
 
+
+    /**
+   * This method is responsible for the creation of the ServerConsoleUI
+   *
+   * @param args[0] The port to connect to.
+   */
     public static void main(String[] args) {
         int port = 5555; // Port to listen on
 

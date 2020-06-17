@@ -14,7 +14,9 @@ import common.*;
  * @author Fran&ccedil;ois B&eacute;langer
  * @author Dr Timothy C. Lethbridge
  * @author Dr Robert Lagani&egrave;re
- * @version July 2000
+ * @version June 2020, edited by Morris Cai from Version. July 2000
+ * 
+ * 
  */
 public class ClientConsole implements ChatIF {
   // Class variables *************************************************
@@ -68,6 +70,8 @@ public class ClientConsole implements ChatIF {
       BufferedReader fromConsole = new BufferedReader(new InputStreamReader(System.in));
       String message;
 
+      // loops infinitely, until #quit command is called, which sets run = false, and
+      // stops the loop
       while (run) {
         message = fromConsole.readLine();
         if (message != null) {
@@ -82,12 +86,21 @@ public class ClientConsole implements ChatIF {
       }
     }
 
+    // Exceptions where the reader encounters an error
     catch (Exception ex) {
       System.out.println("Unexpected error while reading from console!");
       System.out.println(ex.getMessage());
     }
   }
 
+  /**
+   * Method which takes commands and executes them
+   * 
+   * Commands usually take the form of "#COMMAND", but should be fed into this
+   * method without the #.
+   * 
+   * @param command The command that should be executed, without "#"
+   */
   public void command(String command) {
 
     // Determines if client is connected
@@ -172,8 +185,7 @@ public class ClientConsole implements ChatIF {
             // established
             if (isConnected) {
               System.out.println("Client currently logged in. Please log off before changing port.");
-            } 
-            else {
+            } else {
               internalPort = changePort;
               System.out.println("Port set to: " + internalPort);
             }
@@ -224,11 +236,10 @@ public class ClientConsole implements ChatIF {
     String host = "";
     int port = DEFAULT_PORT; // The port number
 
-    try{
+    try {
       host = args[1];
       port = Integer.parseInt(args[2]);
-    }
-    catch(Exception ex){
+    } catch (Exception ex) {
     }
 
     // Getting the login id

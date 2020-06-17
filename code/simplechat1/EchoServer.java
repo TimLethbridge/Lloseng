@@ -13,8 +13,9 @@ import ocsf.server.*;
  * @author Dr Robert Lagani&egrave;re
  * @author Fran&ccedil;ois B&eacute;langer
  * @author Paul Holden
- * @version July 2000
+ * @version June 2020, edited by Morris Cai from Version. July 2000
  */
+
 public class EchoServer extends AbstractServer {
   // Class variables *************************************************
 
@@ -102,6 +103,8 @@ public class EchoServer extends AbstractServer {
         client.sendToClient(client.getInfo("loginID").toString() + "> " + msg);
       }
 
+      //If the first client is not already logged in, which would trigger an exception in client.getInfo, 
+      // tell the client that the login command must be the first entry
       catch (Exception ex) {
         try {
           client.sendToClient("SERVER MSG> First command must be #login, please try again");

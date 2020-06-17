@@ -72,6 +72,20 @@ public class EchoServer extends AbstractServer
       ("Server has stopped listening for connections.");
   }
   
+  //handle client connection and disconnection
+  protected void clientConnected(ConnectionToClient client) {
+	  System.out.println("The client, " + client + ", has successfully connected.");
+	  client.setInfo("connected", true);
+  }
+  
+  protected void clientDisconnected(ConnectionToClient client) {
+	  System.out.println("The client, " + client + ", has successfully disconnected.");
+  }
+  
+  protected void clientException(ConnectionToClient client, Throwable exception) {
+	  clientDisconnected(client);
+  }  
+  
   //Class methods ***************************************************
   
   /**

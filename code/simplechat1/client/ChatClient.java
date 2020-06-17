@@ -79,6 +79,27 @@ public class ChatClient extends AbstractClient
   }
   
   /**
+	 * This method closes the connection to the server.
+	 *
+	 * @param quit The decision to close connection.
+	 */
+	protected void connectionClosed(boolean quit) {
+		if (quit) {
+			System.exit(0);
+		}
+	}
+
+	/**
+	 * This method responds to the shutdown of the server.
+	 *
+	 * @param exception The exception to be handled before closing.
+	 */
+	protected void connectionException(Exception exception) {
+		System.out.println("The connection to the server is now closing.");
+		connectionClosed(true);
+	}
+  
+  /**
    * This method terminates the client.
    */
   public void quit()

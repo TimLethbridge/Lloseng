@@ -66,16 +66,73 @@ public class ChatClient extends AbstractClient
    */
   public void handleMessageFromClientUI(String message)
   {
-    try
-    {
-      sendToServer(message);
-    }
-    catch(IOException e)
-    {
-      clientUI.display
-        ("Could not send message to server.  Terminating client.");
-      quit();
-    }
+	//check if message is a command
+			if(message.charAt(0) == '#') {
+				try{
+					String[] input = message.split(" ", 0);
+					switch (input[0]) {
+
+					case "#quit": quit();
+					break;
+
+					case "#logoff" : closeConnection();
+					break;
+
+					case "#sethost" :
+						if(!isConnected()) {
+							setHost(input[1]);
+						}
+						else {
+							throw new IOException("You must logoff first before setting the host.");
+						}
+						break;
+
+					case "#setport":
+						if(!isConnected()) {
+							setPort(Integer.parseInt(input[1]));
+						}
+						else {
+							throw new IOException("You must logoff first before setting the port.");
+						}
+						break;
+
+					case "#login":
+						if(!isConnected()) {
+							openConnection();
+						}
+						else {
+							throw new IOException("You have not logged out.");
+						}
+						break;
+
+					case "#gethost":
+						clientUI.display("Host: "+ getHost());
+						break;
+
+					case "#getport":
+						clientUI.display("Port: " + getPort());
+						break;
+
+					default:
+						throw new IOException("Invalid Command"); 
+					}
+				}
+				catch(IOException e) {
+					System.exit(0);
+				}
+			}
+			else {
+				try
+				{
+					sendToServer(message);
+				}
+				catch(IOException e)
+				{
+					clientUI.display
+					("Could not send message to server. Terminating client.");
+					quit();
+				}  
+			}
   }
   
   /**

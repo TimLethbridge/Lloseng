@@ -41,20 +41,50 @@ public class EchoServer extends AbstractServer
 		super(port);
 	}
 
-
 	//Instance methods ************************************************
 
 	/**
 	 * This method handles any messages received from the client.
 	 *
-	 * @param msg The message received from the client.
+	 * @param message The message received from the client.
 	 * @param client The connection from which the message originated.
 	 */
 	public void handleMessageFromClient
-	(Object msg, ConnectionToClient client)
+	(Object message, ConnectionToClient client)
 	{
-		System.out.println("Message received: " + msg + " from " + client);
-		this.sendToAllClients(msg);
+		if(((String) message).charAt(0) == '#') {
+			if((boolean)(client.getInfo("connected"))){	
+				String[] input = ((String)message).split(" ", 0);
+				client.setInfo("connected", false);
+
+				//check to see if message is login message
+				if(input[0].equals("#login")) {
+					client.setInfo("login", input[1]);
+				}
+				else {
+					try {
+						client.sendToClient("You must log in to start session.");
+						client.close();
+					}
+					catch(IOException e){
+						System.exit(0);
+					}
+				}
+			}
+			else{
+				if(((String)message).startsWith("#login")){
+					try{
+						client.sendToClient("You are already logged in.");
+					}
+					catch(IOException e){
+						System.exit(0);
+					}
+				}
+			}
+
+			System.out.println("Message received: " + message + " from " + client.getInfo("login"));
+			this.sendToAllClients("["+ client.getInfo("login") + "] " + message);
+		}
 	}
 
 	public void processServerMessage(String message) throws IOException {

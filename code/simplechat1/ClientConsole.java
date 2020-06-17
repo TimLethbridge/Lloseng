@@ -77,7 +77,6 @@ public class ClientConsole implements ChatIF
           case "#quit":
             System.out.println("Quit...");
             client.quit();
-            System.exit(1);
             break;
           case "#logoff":
             //code

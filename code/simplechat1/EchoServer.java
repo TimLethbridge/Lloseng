@@ -47,20 +47,60 @@ public class EchoServer extends AbstractServer
    */
   public void handleMessageFromClient (Object msg, ConnectionToClient client)
   {
-    System.out.println("Message received: " + msg + " from " + client);
-    if (client.getClass().equals(ServerConsole.class)) {
-      System.out.println("It works");
-      this.sendToAllClients("SERVER MSG>");
-      System.out.println("IT works 2");
-      this.sendToAllClients(msg);
-    }else {
-      System.out.println("The else works");
-      System.out.println(ServerConsole.class.getClass().getName().toString());
-      System.out.println(client.getClass().getName().toString());
-      System.out.println(msg.getClass().getName().toString());
-      this.sendToAllClients("Msg can be sent");
-      this.sendToAllClients(msg);
-    }
+    String messageSent = msg.toString();
+     switch (messageSent) {
+       case "Quit":
+         System.out.println("Server is quitting...");
+         System.exit(1);
+         break;
+       case "Stop":
+         stopListening();
+         break;
+       case "Close":
+         stopListening();
+         //****
+         break;
+       case "#getPort":
+         handleMessageFromClient("the port number is "+getPort(),client);
+         break;
+       case "#setPort":
+         int num;
+         String numberString;
+         try
+         {
+           BufferedReader numberFromConsole = new BufferedReader(new InputStreamReader(System.in));
+           numberString = numberFromConsole.readLine();
+           num = Integer.parseInt(numberString);
+         }
+         catch (Exception numException)
+         {
+           num = DEFAULT_PORT;
+           System.out.println("Number is invalid, using default...");
+         }
+         setPort(num);
+         break;
+       case "Start":
+         if (!isListening()) {
+           System.out.println("Server will start listening for new clients...");
+           serverStarted();
+         } else {
+           System.out.println("Server is already listening for clients!");
+         }
+         break;
+       default:
+         System.out.println("Message received: " + msg + " from " + client);
+         if (client.getClass().equals(ServerConsole.class)) {
+           this.sendToAllClients("SERVER MSG>");
+           this.sendToAllClients(msg);
+         } else {
+           this.sendToAllClients(msg);
+         }
+         break;
+
+
+
+     }
+
   }
 
   /**
@@ -97,13 +137,13 @@ public class EchoServer extends AbstractServer
   }
 
   //server closed****************************************************
-  public final void close() {
-    try {
-      System.out.println("Server quit...");
-    } catch (IOException e) {
-      System.out.println("There was an error while quitting");
-    }
-  }
+//  public void close() {
+//    try {
+//      System.out.println("Server quit...");
+//    } catch (IOException e) {
+//      System.out.println("There was an error while quitting");
+//    }
+//  }
 
   //Class methods ***************************************************
 

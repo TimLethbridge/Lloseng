@@ -71,48 +71,41 @@ public class ServerConsole implements ChatIF {
 
                 switch (message){
                     case "#quit":
-                        System.out.println("Server Quit...");
-                        this.sendToServer("Hellooooo");
+                        System.out.println("Server is Quitting...");
+                        server.handleMessageFromClientUI("Quit");
                         break;
-                    case "#logoff":
-                        //code
+                    case "#close":
+                        System.out.println("Server is Quitting...");
+                        server.handleMessageFromClientUI("Close");
+                        break;
+                    case "#stop":
+                        System.out.println("Server will stop listening for new clients...");
+                        server.handleMessageFromClientUI("Stop");
+                        break;
+                    case "#start":
+                        System.out.println("Server is listening for new clients...");
+                        server.handleMessageFromClientUI("Start");
                         break;
                     case "#setPort": //setting the Port number *************************************************
-                        System.out.println("Enter the new Port: ");
-                        int num;
-                        String numberString;
-                        try
-                        {
-                            BufferedReader numberFromConsole = new BufferedReader(new InputStreamReader(System.in));
-                            numberString = numberFromConsole.readLine();
-                            num = Integer.parseInt(numberString);
-                        }
-                        catch (Exception numException)
-                        {
-                            num = DEFAULT_PORT;
-                            System.out.println("Number is invalid, using default...");
-                        }
-                        server.setPort(num);
-                        break;
-                    case "#setHost": //setting the Host ********************************************************
-                        System.out.println("Enter the new Host: ");
-                        String messageString;
-                        try
-                        {
-                            BufferedReader messageFromConsole = new BufferedReader(new InputStreamReader(System.in));
-                            messageString = messageFromConsole.readLine();
-                            server.setHost(messageString);
-                        }
-                        catch (Exception numException)
-                        {
-                            System.out.println("Host name is invalid, using default...");
-                        }
-                        break;
-                    case "#getHost": //get host ****************************************************************
-                        System.out.println("The host is: " + server.getHost());
+                        System.out.println("Enter the new Port in the server cmd: ");
+                        server.handleMessageFromClientUI("#setPort");
+//                        int num;
+//                        String numberString;
+//                        try
+//                        {
+//                            BufferedReader numberFromConsole = new BufferedReader(new InputStreamReader(System.in));
+//                            numberString = numberFromConsole.readLine();
+//                            num = Integer.parseInt(numberString);
+//                        }
+//                        catch (Exception numException)
+//                        {
+//                            num = DEFAULT_PORT;
+//                            System.out.println("Number is invalid, using default...");
+//                        }
+//                        server.setPort(num);
                         break;
                     case "#getPort": //get port ****************************************************************
-                        System.out.println("The port number is: "+server.getPort());
+                        server.handleMessageFromClientUI("#getPort");
                         break;
                     default:
                         server.handleMessageFromClientUI(message);

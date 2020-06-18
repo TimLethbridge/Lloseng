@@ -32,6 +32,7 @@ public class ClientConsole implements ChatIF
    */
   ChatClient client;
   public static String clientName;
+  public static boolean correctID;
 
   //Constructors ****************************************************
 
@@ -65,14 +66,20 @@ public class ClientConsole implements ChatIF
    */
   public void accept()
   {
+      if (!correctID){
+          System.out.println("You did not enter your id correctly!");
+          client.handleMessageFromClientUI(": #login is not detected, Terminating client");
+          System.exit(0);
+
+      }
     try
     {
       BufferedReader fromConsole = new BufferedReader(new InputStreamReader(System.in));
       String message;
       String loginValid = "";
 
-      client.handleMessageFromClientUI("#login <"+getClientId()+">");
-      client.handleMessageFromClientUI(" #login <"+getClientId()+"> has logged on.");
+      client.handleMessageFromClientUI(getClientId());
+      client.handleMessageFromClientUI(" "+getClientId()+" has logged on.");
 
       while (true)
       {
@@ -87,50 +94,29 @@ public class ClientConsole implements ChatIF
             client.quit();
             break;
           case "#logoff":
-            //code
+              System.out.println("You have logged off, if you want to login again, Please choose your new Host and Port: ");
+            client.handleMessageFromClientUI("Client has logged off");
+            client.setHost(changeHost());
+            client.setPort(changePort());
+
             break;
-          case "#setPort": //setting the Port number *************************************************
-            System.out.println("Enter the new Port: ");
-            int num;
-            String numberString;
-            try
-            {
-              BufferedReader numberFromConsole = new BufferedReader(new InputStreamReader(System.in));
-              numberString = numberFromConsole.readLine();
-              num = Integer.parseInt(numberString);
-            }
-            catch (Exception numException)
-            {
-              num = DEFAULT_PORT;
-              System.out.println("Number is invalid, using default...");
-            }
-            client.setPort(num);
+          case "#setPort": //setting the Port number
+            client.setPort(changePort());
             break;
-          case "#setHost": //setting the Host ********************************************************
-            System.out.println("Enter the new Host: ");
-            String messageString;
-            try
-            {
-              BufferedReader messageFromConsole = new BufferedReader(new InputStreamReader(System.in));
-              messageString = messageFromConsole.readLine();
-              client.setHost(messageString);
-            }
-            catch (Exception numException)
-            {
-              System.out.println("Host name is invalid, using default...");
-            }
+          case "#setHost": //setting the Host
+            client.setHost(changeHost());
             break;
-          case "#getHost": //get host ****************************************************************
+          case "#getHost": //get host
             System.out.println("The host is: " + client.getHost());
             break;
-          case "#getPort": //get port ****************************************************************
+          case "#getPort": //get port
             System.out.println("The port number is: "+client.getPort());
             break;
           default:
             if (loginValid.equals("#login")){
               client.handleMessageFromClientUI(message + " from <" + getClientId() + ">");
             }else {
-              client.handleMessageFromClientUI("Message received: <" + message + "> from <" + getClientId() + ">");
+              client.handleMessageFromClientUI(message + " from <" + getClientId() + ">");
             }
             break;
         }
@@ -166,20 +152,30 @@ public class ClientConsole implements ChatIF
   {
     String logingID = "";
     String host = "";
+    String firstCommand = "";
     int port = 0;
+    correctID = true; //to verifie that the #login command inserted
 
-    while (logingID.equals("")){
-      System.out.println("Enter your ID: ");
+    //do {
+      System.out.println("Please Login and enter your ID: #login <...id...>");
       try {
         BufferedReader idFromConsole = new BufferedReader(new InputStreamReader(System.in));
         logingID = idFromConsole.readLine();
         clientName = logingID;
+
+        //we need to make sure that this is the first commend made by the client, otherwise terminate him
+        firstCommand = clientName.substring(0, 6);
+
       }
       catch (Exception ex)
       {
-        System.out.println("ID chosen is incorrect, Please try again");
+          System.out.println("Unexpected error while reading from console!");
       }
-    }
+    //}
+    //while (!logingID.equals("") && !firstCommand.equals("#login"));
+      if (!logingID.equals("") && !firstCommand.equals("#login")){
+          correctID = false;
+      }
 
     try
     {
@@ -227,6 +223,42 @@ public class ClientConsole implements ChatIF
 
   public static String getClientId(){
     return clientName;
+  }
+
+
+  public static int changePort(){
+      System.out.println("Chose your new port: ");
+      int portChange = 0;
+      try
+      {
+          BufferedReader portFromConsole2 = new BufferedReader(new InputStreamReader(System.in));
+          String portString;
+          portString = portFromConsole2.readLine();
+          portChange = Integer.parseInt(portString);
+      }
+      catch (Exception numException)
+      {
+          // if we find an error, we will take the default port: 5555
+          portChange = DEFAULT_PORT;
+          System.out.println("Number is invalid, using default...");
+      }
+      return portChange;
+  }
+
+  public static String changeHost(){
+      System.out.println("Enter the new Host: ");
+      String messageString;
+      try
+      {
+          BufferedReader messageFromConsole = new BufferedReader(new InputStreamReader(System.in));
+          messageString = messageFromConsole.readLine();
+      }
+      catch (Exception numException)
+      {
+          System.out.println("Host name is invalid, using default...");
+          messageString = "localhost";
+      }
+      return messageString;
   }
 
 }

@@ -85,29 +85,15 @@ public class ServerConsole implements ChatIF {
                         System.out.println("Server is listening for new clients...");
                         server.handleMessageFromClientUI("Start");
                         break;
-                    case "#setPort": //setting the Port number *************************************************
+                    case "#setPort": //setting the Port number
                         System.out.println("Enter the new Port in the server cmd: ");
                         server.handleMessageFromClientUI("#setPort");
-//                        int num;
-//                        String numberString;
-//                        try
-//                        {
-//                            BufferedReader numberFromConsole = new BufferedReader(new InputStreamReader(System.in));
-//                            numberString = numberFromConsole.readLine();
-//                            num = Integer.parseInt(numberString);
-//                        }
-//                        catch (Exception numException)
-//                        {
-//                            num = DEFAULT_PORT;
-//                            System.out.println("Number is invalid, using default...");
-//                        }
-//                        server.setPort(num);
                         break;
-                    case "#getPort": //get port ****************************************************************
+                    case "#getPort": //get port
                         server.handleMessageFromClientUI("#getPort");
                         break;
                     default:
-                        server.handleMessageFromClientUI("The server sent: "+message);
+                        server.handleMessageFromClientUI("SERVER MSG>"+message);
                         break;
                 }
             }
@@ -127,7 +113,7 @@ public class ServerConsole implements ChatIF {
      */
     public void display(String message)
     {
-        System.out.println("SERVER MSG> " + message);
+        System.out.println("> " + message);
     }
 
 

@@ -48,9 +48,14 @@ public class EchoServer extends AbstractServer
    */
   public void handleMessageFromClient (Object msg, ConnectionToClient client)
   {
+    String serverMSG = "";
     String messageSent = msg.toString();
     String loginValid = "";
     loginValid = messageSent.substring(0,6);
+
+    if (messageSent.length()>=11){
+      serverMSG = messageSent.substring(0,11);
+    }
 
     if (loginValid.equals("#login") && !hasConnected){
       System.out.println("Message received "+messageSent);
@@ -67,9 +72,21 @@ public class EchoServer extends AbstractServer
         case "Stop":
           stopListening();
           break;
+        case ": #login is not detected, Terminating client":
+          try {
+            client.close(); //closing the client from the server
+            handleMessageFromClient("#login is not detected, terminating client!",client);
+          }catch (IOException exp){
+            System.out.println("IOException occured.");
+          }
+          break;
         case "Close":
           stopListening();
-          //****
+          try{
+          client.close();
+          }catch (IOException ex){
+            System.out.println("IOException occured.");
+          }
           break;
         case "#getPort":
           handleMessageFromClient("the port number is " + getPort(), client);
@@ -95,14 +112,12 @@ public class EchoServer extends AbstractServer
             System.out.println("Server is already listening for clients!");
           }
           break;
+        case "Client has logged off":
+          System.out.println("Client has logged off");
+          break;
         default:
           System.out.println(msg);
-          if (client.getClass().equals(ServerConsole.class)) { //this statment is false, need to be changed
-            this.sendToAllClients("SERVER MSG>");
-            this.sendToAllClients(msg);
-          } else {
-            this.sendToAllClients(msg);
-          }
+          this.sendToAllClients(msg);
           break;
 
 

@@ -5,7 +5,6 @@
 import java.io.*;
 import client.*;
 import common.*;
-import java.util.Scanner;
 /**
  * This class constructs the UI for a chat client.  It implements the
  * chat interface in order to activate the display() method.
@@ -126,8 +125,6 @@ public class ClientConsole implements ChatIF
     {
       host = "localhost";
     }
-
-    Scanner in = new Scanner(System.in);
     
     try
     {
@@ -135,7 +132,7 @@ public class ClientConsole implements ChatIF
     }
     catch(ArrayIndexOutOfBoundsException e)
     {
-      port = in.nextInt();
+      port = DEFAULT_PORT;
     }
 
     ClientConsole cc= new ClientConsole(loginid,host, port);

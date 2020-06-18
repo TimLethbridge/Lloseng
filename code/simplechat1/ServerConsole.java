@@ -119,4 +119,4 @@ public class ServerConsole implements ChatIF
 //   }
 
 }
-//End of ConsoleChat class
+//End of ServerConsole class

@@ -1,0 +1,158 @@
+/**
+* name: Xia(Cynthia) Sheng 
+* student number: 300091655
+* email: xshen061@uottawa.ca
+**/
+
+Testcase 2001:
+C:\Users\xiash\Lloseng\Lloseng\code\simplechat1>java -classpath ..\..\code;. EchoServer
+Server listening for connections on port 5555
+
+
+Testcase 2002:
+C:\Users\xiash\Lloseng\Lloseng\code\simplechat1>java -classpath ..\..\code;. ClientConsole
+ERROR - No login ID specified.  Connection aborted.
+
+Testcase 2003:
+C:\Users\xiash\Lloseng\Lloseng\code\simplechat1>java -classpath ..\..\code;. ClientConsole abc
+Cannot open connection. Awaiting command...
+Wait for client input)
+
+Testcase 2004:
+server:
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login abc from localhost (127.0.0.1)
+abc has logged on.
+
+client：
+abc logged in.
+
+Testcase 2005：
+server:
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login abc from localhost (127.0.0.1)
+abc logged in.
+> Message received: Hello! from abc
+
+client:
+abc logged in.
+Hello
+>Hello! 
+
+
+Testcase 2006：
+Server:
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login abc from localhost (127.0.0.1)
+abc logged in.
+A new client is attempting to connect to the server.
+Message received: #login xyz from localhost (127.0.0.1)
+xyz logged in.
+Message received: xyz from xyz
+Message received: abc from abc
+serveruser
+SERVER MSG>serveruser
+
+client:
+C:\Users\xiash\Lloseng\Lloseng\code\simplechat1>java -classpath ..\..\code;. ClientConsole abc
+abc logged in.
+xyz> xyz
+abc
+abc>abc
+SERVER MSG> serveruser
+
+
+C:\Users\xiash\Lloseng\Lloseng\code\simplechat1>java -classpath ..\..\code;. ClientConsole xyz
+xyz logged in.
+abc> abc
+xyz
+abc>xyz
+SERVER MSG> serveruser
+
+
+Testcase 2007：
+server:
+Server listening for connections on port 5555
+#quit
+The server quits.
+Server has stopped listening for connections.
+
+Testcase 2008:
+Server:
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login abc from localhost (127.0.0.1)
+abc logged in.
+#stop
+Server has stopped listening for connections.
+Message received: Hello! from abc
+#start
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login xyz from localhost (127.0.0.1)
+xyz logged in.
+#quit
+Server has stopped listening for connections.
+> abc has disconnected from the server.
+> abc has disconnected from the server.
+
+client:
+abc logged in.
+Hello!
+abc> Hello!
+>Abnormal termination of connection.
+
+xyz logged in
+>Abnormal termination of connection.
+
+
+testcase 2009:
+server:
+Server listening for connections on port 5555
+A new client is attempting to connect to the server.
+Message received: #login abc from localhost (127.0.0.1)
+abc logged in.
+#stop
+Server has stopped listening for connections.
+#close
+abc has disconnected from the server.
+
+
+client：
+abc logged in.
+WARNING - Server has stopped listening for connections.
+SERVER SHUTTING DOWN! DISCONNECTING!
+> Abnormal termination of connection.
+
+
+testcase 2010:
+client:
+#quit
+Client quits.
+
+
+testcase 2011:
+client:
+#logoff
+Client quits.
+#quit
+Client quits.
+
+testcase 2013:
+server:
+Server listening for connections on port 1234
+#quit
+server quits...
+Server has stopped listening for connections.
+
+
+
+
+
+
+
+
+

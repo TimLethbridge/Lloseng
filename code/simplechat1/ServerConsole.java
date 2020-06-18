@@ -4,7 +4,6 @@
 
 import common.ChatIF;
 import java.io.*;
-import common.*;
 /**
  * This class constructs the UI for a chat server, followed ClientConsole.java.  
  * It implements the chatIF interface in order to activate the display() method.
@@ -45,6 +44,10 @@ public class ServerConsole implements ChatIF {
                 + " Terminating client.");
       System.exit(1);
     }
+  }
+
+  public ServerConsole(EchoServer server){
+    this.echoServer = server;
   }
   //Instance methods ************************************************
   

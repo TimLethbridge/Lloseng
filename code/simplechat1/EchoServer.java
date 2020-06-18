@@ -53,42 +53,38 @@ public class EchoServer extends AbstractServer
     (Object msg, ConnectionToClient client)
   {
     String message=(String)msg;
-    String loginid=message.substring(11);
-    System.out.println("Message received: " + msg + " from " + client.getInfo("loginid"));
-    if (message.substring(0,10)=="#login ID: "){
+    String[] mes = message.split(" ");
+    try
+    {
+    if (mes[0].equals("#login")){
       if(client.getInfo("loginid")==null){
+        String loginid = mes[1];
         client.setInfo("loginid",loginid);
-        try{
-          client.sendToClient( client.getInfo("loginid") +" logged in");
-      }catch(IOException e){}
-      }else{
-        try{
-          client.sendToClient("You have already logged in!");
-      }catch(IOException e){
-      }
+        this.sendToAllClients( client.getInfo("loginid") +" logged in");
 
+      }else{
+
+          client.sendToClient("Error, please try again!");
+          client.close();
       }
-    }else{
-      if(client.getInfo("loginid")==null){
-        try{     
-        client.sendToClient( "create a login ID first");
-        client.close();
-      }catch(IOException e){}
     }
+  }catch(Exception ex){}
     System.out.println("Message received: " + msg + " from " + client.getInfo("loginid"));
     
     this.sendToAllClients(client.getInfo("loginid") + "> " +msg);
-  }
+  
   }
   public void handleMessageFromServerUI(String message){
 
       if(message.startsWith("#")){
        switch(message.substring(0,7)){
          case "#close":
+         sendToAllClients("SERVER SHUTTING DOWN! DISCONNECTING!");
          serverClosed();
          break;
          case "#stop":
          serverStopped();
+         sendToAllClients("WARNING - Server has stopped listening for connections.");
          break;
          case "#quit":
          try{
@@ -200,18 +196,18 @@ public class EchoServer extends AbstractServer
   public static void main(String[] args) 
   {
     int port = 0; //Port to listen on
-    Scanner in = new Scanner(System.in);
-		System.out.println("Please Enter a Port Number: ");
+    
     try
     {
       port = Integer.parseInt(args[0]); //Get port from command line
     }
     catch(Throwable t)
     {
-      port = in.nextInt();
+      port = DEFAULT_PORT; //Set port to 5555
     }
 	
     EchoServer sv = new EchoServer(port);
+    ServerConsole sc = new ServerConsole(sv);
     
     try 
     {
@@ -221,6 +217,8 @@ public class EchoServer extends AbstractServer
     {
       System.out.println("ERROR - Could not listen for clients!");
     }
+    sc.accept();
   }
+  
 }
 //End of EchoServer class

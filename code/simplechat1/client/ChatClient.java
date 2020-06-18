@@ -66,17 +66,60 @@ public class ChatClient extends AbstractClient
    */
   public void handleMessageFromClientUI(String message)
   {
-    try
-    {
-      sendToServer(message);
+    if (message.startsWith("#")) {
+      String[] cmd = message.split(" ");
+      switch (cmd[0]) {
+        case "#quit":
+          clientUI.display("Terminating connection.");
+          quit();
+          break;
+        case "#logoff":
+          try {
+            clientUI.display("Logging off.");
+            connectionClosed();
+          } catch(IOException e) {
+            System.out.println("Error logging off.");
+          }
+        case "#sethost":
+          if (!isConnected()) {
+            this.setHost(cmd[1]);
+            clientUI.display("New host has been set.");
+          } else {
+            clientUI.display("Must be logged off.");
+          }
+          break;
+        case "#setport":
+          if (!isConnected()) {
+            this.setPort(Integer.parseInt(cmd[1]));
+            clientUI.display("New port has been set.");
+          } else {
+            clientUI.display("Must be logged off.");
+          }
+          break;
+        case "#login":
+          try {
+            openConnection();
+          } catch (IOException e) {
+            System.out.println("Must not be connected.");
+          }
+          break;
+        case "#gethost":
+          clientUI.display("Currect host: " + this.getHost());
+          break;
+        case "#getport":
+          clientUI.display("Current port: " + this.getPort());
+          break;
+      }
+    } else {
+        try {
+          sendToServer(message);
+        } catch (IOException e) {
+          clientUI.display
+            ("Could not send message to server.  Terminating client.");
+          quit();
+        }
+      }
     }
-    catch(IOException e)
-    {
-      clientUI.display
-        ("Could not send message to server.  Terminating client.");
-      quit();
-    }
-  }
 
   /**
 	 * Hook method called after the connection has been closed. The default

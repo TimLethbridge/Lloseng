@@ -76,7 +76,7 @@ public class ChatClient extends AbstractClient
         case "#logoff":
           try {
             clientUI.display("Logging off.");
-            connectionClosed();
+            closeConnection();
           } catch(IOException e) {
             System.out.println("Error logging off.");
           }

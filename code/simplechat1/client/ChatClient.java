@@ -85,7 +85,7 @@ public class ChatClient extends AbstractClient
 	 * attempting to reconnect.
 	 */
 	public void connectionClosed() {
-      System.out.println("The connection with the server has ended.");
+      clientUI.display("The connection with the server has ended.");
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class ChatClient extends AbstractClient
 	 *            the exception raised.
 	 */
 	public void connectionException(Exception exception) {
-      System.out.println("Server has stopped communicating. Shutting down.");
+      clientUI.display("Server has stopped communicating. Shutting down.");
       quit();
 	}
    

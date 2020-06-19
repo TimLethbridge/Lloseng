@@ -41,11 +41,11 @@ public class ClientConsole implements ChatIF
    * @param host The host to connect to.
    * @param port The port to connect on.
    */
-  public ClientConsole(String host, int port) 
+  public ClientConsole(String login, String host, int port) 
   {
     try 
     {
-      client= new ChatClient(host, port, this);
+      client= new ChatClient(login, host, port, this);
     } 
     catch(IOException exception) 
     {
@@ -64,16 +64,59 @@ public class ClientConsole implements ChatIF
    */
   public void accept() 
   {
+    boolean logStatus = true;
     try
     {
-      BufferedReader fromConsole = 
-        new BufferedReader(new InputStreamReader(System.in));
+      BufferedReader fromConsole = new BufferedReader(new InputStreamReader(System.in));
       String message;
+
 
       while (true) 
       {
         message = fromConsole.readLine();
-        client.handleMessageFromClientUI(message);
+        if(message.contains("#")){ 
+          if (message.equals("#quit")) {
+            System.exit(0);
+          }else if(message.equals("#gethost")){
+            System.out.println(client.getHost());
+          }else if (message.equals("#getport")){
+            System.out.println(client.getPort());
+          }else if (message.equals("#logoff")){
+            logStatus = false;
+            client.handleMessageFromClientUI(client.getLogin()+" left the server.");
+            System.out.println("Connection closed.");
+          }else if (message.equals("#login")){
+            if(logStatus==true){
+              System.out.println("You are already logged in.");
+            }
+            logStatus = true;
+
+          }else if (message.contains("#sethost")){
+            if (logStatus==false) {
+              client.setHost(message.split(" ")[1]);
+            }else{
+              System.out.println("Error, you can only set host when you are logged out.");
+            }
+          }else if (message.contains("#setport")){
+            if (logStatus==false) {
+              String temp =message.split(" ")[1];
+              int temp1 = Integer.parseInt(temp);
+              client.setPort(temp1);
+            }else{
+              System.out.println("Error, you can only set port when you are logged out.");
+            }
+          }else{
+            System.out.println("Error, #'s are functions, this function does not exist.");
+          } 
+        }else{
+          if(logStatus==true){
+            client.handleMessageFromClientUI(message);
+          }else{
+            System.out.println("Currently, you are logged out, please log back in.");
+          }
+        }
+        
+        
       }
     } 
     catch (Exception ex) 
@@ -92,6 +135,7 @@ public class ClientConsole implements ChatIF
   public void display(String message) 
   {
     System.out.println("> " + message);
+
   }
 
   
@@ -106,17 +150,29 @@ public class ClientConsole implements ChatIF
   {
     String host = "";
     int port = 0;  //The port number
-
+    String login = "";
     try
     {
-      host = args[0];
+      host = args[1];
     }
     catch(ArrayIndexOutOfBoundsException e)
     {
       host = "localhost";
     }
-    ClientConsole chat= new ClientConsole(host, DEFAULT_PORT);
-    chat.accept();  //Wait for console data
+    try{
+      port = Integer.parseInt(args[2]);
+    }catch(ArrayIndexOutOfBoundsException e){
+      port = DEFAULT_PORT;
+    }
+    if (args.length !=0){
+      login = args[0];
+      ClientConsole chat= new ClientConsole(login, host, port);
+      chat.accept();  //Wait for console data
+
+    }else{
+      System.out.println("You didn't login, please login.");
+
+    }
   }
 }
 //End of ConsoleChat class

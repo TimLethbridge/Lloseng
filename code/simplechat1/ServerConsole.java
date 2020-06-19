@@ -70,7 +70,7 @@ public class ServerConsole implements ChatIF
       while (true) 
       {
         message = fromConsole.readLine();
-        server.handleMessageFromServerUI(message); // to implement in EchoServer
+        server.handleMessageFromServerUI(message);
       }
     } 
     catch (Exception ex) 
@@ -87,7 +87,7 @@ public class ServerConsole implements ChatIF
    * @param message The string to be displayed.
    */
   public void display(String message) 
-  { // TEMPORARY TO ALLOW FOR COMPILATION
+  {
     System.out.println("SERVER MSG> " + message);
   }
 

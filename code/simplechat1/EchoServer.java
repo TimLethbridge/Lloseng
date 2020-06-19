@@ -51,6 +51,61 @@ public class EchoServer extends AbstractServer
     System.out.println("Message received: " + msg + " from " + client);
     this.sendToAllClients(msg);
   }
+
+  public void handleMessageFromServerUI(String message)
+  {
+    if (message.startsWith("#")) {
+      String[] cmd = message.split(" ");
+      switch (cmd[0]) {
+        case "#quit":
+          try {
+            close();
+            System.out.println("Connection terminated.");
+          } catch (IOException e) {
+            System.out.println("Unable to terminate connection.");
+          }
+          break;
+        case "#stop":
+          this.sendToAllClients("Server has stopped listening for new clients.");
+          this.stopListening();
+          break;
+        case "#close":
+          this.sendToAllClients("Server has stopped listening for new clients.");
+          this.stopListening();
+          try {
+            close();
+            System.out.println("Connection terminated.");
+          } catch (IOException e) {
+            System.out.println("Unable to terminate connection.");
+          }
+          break;
+        case "#setport":
+          if (!isListening()) {
+            this.setPort(Integer.parseInt(cmd[1]));
+            System.out.println("New port has been set.");
+          } else {
+            System.out.println("Server must be closed.");
+          }
+          break;
+        case "#start":
+          if (!isListening()) {
+            try {
+              listen();
+            } catch (IOException e) {
+              System.out.println("Unable to listen for new clients.");
+            }
+          } else {
+            System.out.println("Server must be stopped.");
+          }
+          break;
+        case "#getport":
+          System.out.println("Current port: " + this.getPort());
+          break;
+      }
+    } else {
+        sendToAllClients("Could not send message to client(s).  Terminating server.");
+      }
+    }
     
   /**
    * This method overrides the one in the superclass.  Called

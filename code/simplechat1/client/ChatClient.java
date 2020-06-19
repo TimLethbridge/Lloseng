@@ -88,7 +88,7 @@ public class ChatClient extends AbstractClient
             this.setHost(cmd[1]);
             clientUI.display("New host has been set.");
           } else {
-            clientUI.display("Must be logged off.");
+            System.out.println("Must be logged off.");
           }
           break;
         case "#setport":
@@ -96,7 +96,7 @@ public class ChatClient extends AbstractClient
             this.setPort(Integer.parseInt(cmd[1]));
             clientUI.display("New port has been set.");
           } else {
-            clientUI.display("Must be logged off.");
+            System.out.println("Must be logged off.");
           }
           break;
         case "#login":

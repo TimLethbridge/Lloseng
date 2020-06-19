@@ -48,8 +48,33 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
-    System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
+    if (msg.toString().startsWith("#login")) {
+      String[] message = msg.toString().split(" ");
+      if (message.length != 0) {
+        if (client.getInfo("loginID") == null) {
+          client.setInfo("loginID", message[1]);
+          this.sendToAllClients(client.getInfo("loginID") + " has logged on.");
+        } else {
+          try {
+            client.sendToClient("Username cannot be changed.");
+          } catch (IOException e) {
+            //
+          }
+        }
+      }
+    } else {
+      if (client.getInfo("loginID") == null) {
+        try {
+          client.sendToClient("Error: No username provided.");
+          client.close();
+        } catch (IOException e) {
+          //
+        }
+      } else {
+        System.out.println(client.getInfo("loginID") + "> " + msg);
+        this.sendToAllClients(client.getInfo("loginID") + "> " + msg);
+      }
+    }
   }
 
   public void handleMessageFromServerUI(String message)
@@ -103,7 +128,7 @@ public class EchoServer extends AbstractServer
           break;
       }
     } else {
-        sendToAllClients("Could not send message to client(s).  Terminating server.");
+        this.sendToAllClients("SERVER MSG> " + message);
       }
     }
     
@@ -133,7 +158,11 @@ public class EchoServer extends AbstractServer
    * @param client the connection connected to the client.
    */
   protected void clientConnected(ConnectionToClient client) {
-    System.out.println("A client has connected to the server.");
+    if (client.getInfo("loginID") != null) {
+      this.sendToAllClients(client.getInfo("loginID") + " has connected to the server.");
+    } else {
+      this.sendToAllClients("A client has connected to the server.");
+    }
   }
 
   /**
@@ -144,7 +173,7 @@ public class EchoServer extends AbstractServer
    * @param client the connection with the client.
    */
   synchronized protected void clientDisconnected(ConnectionToClient client) {
-    System.out.println("A client has disconnected from the server.");
+    this.sendToAllClients(client.getInfo("loginID") + " has disconnected from the server.");
   }
 
   /**

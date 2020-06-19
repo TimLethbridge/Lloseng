@@ -32,52 +32,53 @@ public class ServerConsole implements ChatIF
   //Constructors ****************************************************
 
   /**
-//    * Constructs an instance of the ClientConsole UI.
-//    *
-//    * @param host The host to connect to.
-//    * @param port The port to connect on.
-//    */
-//   public ClientConsole(String host, int port) 
-//   {
-//     try 
-//     {
-//       client= new ChatClient(host, port, this);
-//     } 
-//     catch(IOException exception) 
-//     {
-//       System.out.println("Error: Can't setup connection!"
-//                 + " Terminating client.");
-//       System.exit(1);
-//     }
-//   }
+   * Constructs an instance of the ClientConsole UI.
+   *
+   * @param host The host to connect to.
+   * @param port The port to connect on.
+   */
+  public ServerConsole(int port) 
+  {
+    server = new EchoServer(port);
+    try 
+    {
+      server.listen();
+    } 
+    catch(IOException exception) 
+    {
+      System.out.println("Error: Can't setup connection!"
+                + " Terminating client.");
+      System.exit(1);
+    }
+  }
 
   
-//   //Instance methods ************************************************
+  //Instance methods ************************************************
   
-//   /**
-//    * This method waits for input from the console.  Once it is 
-//    * received, it sends it to the client's message handler.
-//    */
-//   public void accept() 
-//   {
-//     try
-//     {
-//       BufferedReader fromConsole = 
-//         new BufferedReader(new InputStreamReader(System.in));
-//       String message;
+  /**
+   * This method waits for input from the console.  Once it is 
+   * received, it sends it to the client's message handler.
+   */
+  public void accept() 
+  {
+    try
+    {
+      BufferedReader fromConsole = 
+        new BufferedReader(new InputStreamReader(System.in));
+      String message;
 
-//       while (true) 
-//       {
-//         message = fromConsole.readLine();
-//         client.handleMessageFromClientUI(message);
-//       }
-//     } 
-//     catch (Exception ex) 
-//     {
-//       System.out.println
-//         ("Unexpected error while reading from console!");
-//     }
-//   }
+      while (true) 
+      {
+        message = fromConsole.readLine();
+        server.handleMessageFromServerUI(message); // to implement in EchoServer
+      }
+    } 
+    catch (Exception ex) 
+    {
+      System.out.println
+        ("Unexpected error while reading from console!");
+    }
+  }
 
   /**
    * This method overrides the method in the ChatIF interface.  It
@@ -87,36 +88,29 @@ public class ServerConsole implements ChatIF
    */
   public void display(String message) 
   { // TEMPORARY TO ALLOW FOR COMPILATION
-    System.out.println("> " + message);
+    System.out.println("SERVER MSG> " + message);
   }
 
   
-//   //Class methods ***************************************************
+  //Class methods ***************************************************
   
-//   /**
-//    * This method is responsible for the creation of the Client UI.
-//    *
-//    * @param args[0] The host to connect to.
-//    */
-//   public static void main(String[] args) 
-//   {
-//     String host = "";
-//     int port = 0;  //The port number
+  /**
+   * This method is responsible for the creation of the Client UI.
+   *
+   * @param args[0] The host to connect to.
+   */
+  public static void main(String[] args) 
+  {
+    int port = 0;
 
-//     try {
-//       host = args[0]; //DEFAULT_PORT = 5555
-//       port = Integer.parseInt(args[1]);
-//     } catch(ArrayIndexOutOfBoundsException e) {
-//       host = "localhost";
-//       try {
-//         port = Integer.parseInt(args[0]);
-//       } catch (Exception other) {
-//         port = DEFAULT_PORT;
-//       }
-//     }
-//     ClientConsole chat= new ClientConsole(host, port);
-//     chat.accept();  //Wait for console data
-//   }
+    try {
+      port = Integer.parseInt(args[0]);
+    } catch(ArrayIndexOutOfBoundsException e) {
+      port = DEFAULT_PORT;
+      }
+    ServerConsole chat = new ServerConsole(port);
+    chat.accept();
+  }
 
 }
 //End of ServerConsole class

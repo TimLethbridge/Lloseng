@@ -159,9 +159,9 @@ public class EchoServer extends AbstractServer
    */
   protected void clientConnected(ConnectionToClient client) {
     if (client.getInfo("loginID") != null) {
-      this.sendToAllClients(client.getInfo("loginID") + " has connected to the server.");
+      System.out.println(client.getInfo("loginID") + " has connected to the server.");
     } else {
-      this.sendToAllClients("A client has connected to the server.");
+      System.out.println("A client has connected to the server.");
     }
   }
 

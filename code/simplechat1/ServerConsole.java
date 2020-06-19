@@ -3,7 +3,7 @@
 // license found at www.lloseng.com 
 
 import java.io.*;
-import client.*;
+// import client.*;
 import common.*;
 
 /**
@@ -16,7 +16,7 @@ import common.*;
  * @author Dr Robert Lagani&egrave;re
  * @version July 2000
  */
-public class ClientConsole implements ChatIF 
+public class ServerConsole implements ChatIF 
 {
   //Class variables *************************************************
   
@@ -27,12 +27,8 @@ public class ClientConsole implements ChatIF
   
   //Instance variables **********************************************
   
-  /**
-   * The instance of the client that created this ConsoleChat.
-   */
-  ChatClient client;
+  EchoServer server;
 
-  
   //Constructors ****************************************************
 
   /**
@@ -41,11 +37,12 @@ public class ClientConsole implements ChatIF
    * @param host The host to connect to.
    * @param port The port to connect on.
    */
-  public ClientConsole(String loginID, String host, int port) 
+  public ServerConsole(int port) 
   {
+    server = new EchoServer(port);
     try 
     {
-      client= new ChatClient(loginID, host, port, this);
+      server.listen();
     } 
     catch(IOException exception) 
     {
@@ -73,7 +70,7 @@ public class ClientConsole implements ChatIF
       while (true) 
       {
         message = fromConsole.readLine();
-        client.handleMessageFromClientUI(message);
+        server.handleMessageFromServerUI(message);
       }
     } 
     catch (Exception ex) 
@@ -91,7 +88,7 @@ public class ClientConsole implements ChatIF
    */
   public void display(String message) 
   {
-    System.out.println("> " + message);
+    System.out.println("SERVER MSG> " + message);
   }
 
   
@@ -104,31 +101,16 @@ public class ClientConsole implements ChatIF
    */
   public static void main(String[] args) 
   {
-    String loginID = "";
-    String host = "";
-    int port = 0;  //The port number
+    int port = 0;
 
     try {
-      loginID = args[0];
-      host = args[1];
-      port = Integer.parseInt(args[2]);
-    } catch(ArrayIndexOutOfBoundsException e1) {
+      port = Integer.parseInt(args[0]);
+    } catch(ArrayIndexOutOfBoundsException e) {
       port = DEFAULT_PORT;
-      try {
-        loginID = args[0];
-        host = args[1];
-      } catch (ArrayIndexOutOfBoundsException e2) {
-        host = "localhost";
-        try {
-          loginID = args[0];
-        } catch (ArrayIndexOutOfBoundsException e3) {
-          System.out.println("ERROR - No login ID specified. Connection aborted.");
-          System.exit(1);
-        }
       }
-    }
-    ClientConsole chat= new ClientConsole(loginID, host, port); // MUST implement loginID to main
-    chat.accept();  //Wait for console data
+    ServerConsole chat = new ServerConsole(port);
+    chat.accept();
   }
+
 }
-//End of ConsoleChat class
+//End of ServerConsole class

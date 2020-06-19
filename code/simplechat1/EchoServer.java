@@ -48,9 +48,89 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
-    System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
+    if (msg.toString().startsWith("#login")) {
+      String[] message = msg.toString().split(" ");
+      if (message.length != 0) {
+        if (client.getInfo("loginID") == null) {
+          client.setInfo("loginID", message[1]);
+          this.sendToAllClients(client.getInfo("loginID") + " has logged on.");
+        } else {
+          try {
+            client.sendToClient("Username cannot be changed.");
+          } catch (IOException e) {
+            //
+          }
+        }
+      }
+    } else {
+      if (client.getInfo("loginID") == null) {
+        try {
+          client.sendToClient("Error: No username provided.");
+          client.close();
+        } catch (IOException e) {
+          //
+        }
+      } else {
+        System.out.println("Message received: " + msg + " from " + client.getInfo("loginID"));
+        this.sendToAllClients(client.getInfo("loginID") + "> " + msg);
+      }
+    }
   }
+
+  public void handleMessageFromServerUI(String message)
+  {
+    if (message.startsWith("#")) {
+      String[] cmd = message.split(" ");
+      switch (cmd[0]) {
+        case "#quit":
+          try {
+            close();
+            System.out.println("Connection terminated.");
+          } catch (IOException e) {
+            System.out.println("Unable to terminate connection.");
+          }
+          break;
+        case "#stop":
+          this.sendToAllClients("Server has stopped listening for new clients.");
+          this.stopListening();
+          break;
+        case "#close":
+          this.sendToAllClients("Server has stopped listening for new clients.");
+          this.stopListening();
+          try {
+            close();
+            System.out.println("Connection terminated.");
+          } catch (IOException e) {
+            System.out.println("Unable to terminate connection.");
+          }
+          break;
+        case "#setport":
+          if (!isListening()) {
+            this.setPort(Integer.parseInt(cmd[1]));
+            System.out.println("New port has been set.");
+          } else {
+            System.out.println("Server must be closed.");
+          }
+          break;
+        case "#start":
+          if (!isListening()) {
+            try {
+              listen();
+            } catch (IOException e) {
+              System.out.println("Unable to listen for new clients.");
+            }
+          } else {
+            System.out.println("Server must be stopped.");
+          }
+          break;
+        case "#getport":
+          System.out.println("Current port: " + this.getPort());
+          break;
+      }
+    } else {
+        this.sendToAllClients("SERVER MSG> " + message);
+      }
+    }
     
   /**
    * This method overrides the one in the superclass.  Called
@@ -72,6 +152,43 @@ public class EchoServer extends AbstractServer
       ("Server has stopped listening for connections.");
   }
   
+/**
+   * Hook method called each time a new client connection is
+   * accepted. The default implementation does nothing.
+   * @param client the connection connected to the client.
+   */
+  protected void clientConnected(ConnectionToClient client) {
+    if (client.getInfo("loginID") != null) {
+      System.out.println(client.getInfo("loginID") + " has connected to the server.");
+    } else {
+      System.out.println("A client has connected to the server.");
+    }
+  }
+
+  /**
+   * Hook method called each time a client disconnects.
+   * The default implementation does nothing. The method
+   * may be overridden by subclasses but should remains synchronized.
+   *
+   * @param client the connection with the client.
+   */
+  synchronized protected void clientDisconnected(ConnectionToClient client) {
+    this.sendToAllClients(client.getInfo("loginID") + " has disconnected from the server.");
+  }
+
+  /**
+   * Hook method called each time an exception is thrown in a
+   * ConnectionToClient thread.
+   * The method may be overridden by subclasses but should remains
+   * synchronized.
+   *
+   * @param client the client that raised the exception.
+   * @param Throwable the exception thrown.
+   */
+  synchronized protected void clientException(ConnectionToClient client, Throwable exception) {
+      clientDisconnected(client);      
+    }
+
   //Class methods ***************************************************
   
   /**

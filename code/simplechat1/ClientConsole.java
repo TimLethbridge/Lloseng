@@ -67,20 +67,25 @@ public class ClientConsole implements ChatIF {
           messageS = message.split(" ");
           if (message.charAt(0) == '#') {
             if (message.equals("#quit")) {
+              client.handleMessageFromClientUI(client.getID()+" Has logged off.");
               client.quit();
               System.exit(0);
             } else if (message.equals("#logoff")) {
               if (!loggedIn){
               display("Error, already logged off.");
-              }
+              } else{
               loggedIn = false;
+              client.handleMessageFromClientUI(client.getID()+" Has logged off.");
+              }
             } else if (messageS[0].equals("#sethost")) {
               if (!loggedIn) {
                 client.setHost(messageS[1]);
+                display("Host set to: " + messageS[1]);
               }
             } else if (messageS[0].equals("#setport")) {
               if (!loggedIn) {
                 client.setPort(Integer.parseInt(messageS[1]));
+                display("Port set to: " + messageS[1]);
               }
             } else if (messageS[0].equals("#login")) {
               if (loggedIn){
@@ -113,7 +118,7 @@ public class ClientConsole implements ChatIF {
    * @param message The string to be displayed.
    */
   public void display(String message) {
-    System.out.println("> " + message);
+    System.out.println(client.getID()+"> " + message);
   }
 
   // Class methods ***************************************************

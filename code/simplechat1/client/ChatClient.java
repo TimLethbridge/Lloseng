@@ -25,7 +25,7 @@ public class ChatClient extends AbstractClient {
    * method in the client.
    */
   ChatIF clientUI;
-  boolean firstMessage;
+  String loginId;
 
   // Constructors ****************************************************
 
@@ -40,19 +40,15 @@ public class ChatClient extends AbstractClient {
   public ChatClient(String host, int port, String loginId, ChatIF clientUI) throws IOException {
     super(host, port); // Call the superclass constructor
     this.clientUI = clientUI;
-    this.firstMessage = false;
+    this.loginId = loginId;
     openConnection();
     handleMessageFromClientUI("#login " + loginId);
   }
 
   // Instance methods ************************************************
 
-  public void setFirstMessage(boolean b) {
-    firstMessage = false;
-  }
-
-  public boolean getFirstMessage() {
-    return firstMessage;
+  public String getID (){
+    return loginId;
   }
 
   protected void connectionException(Exception exception) {

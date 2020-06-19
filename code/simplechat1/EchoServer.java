@@ -55,6 +55,7 @@ public class EchoServer extends AbstractServer {
         if (!msgS[1].equals(null)) {
           client.setInfo("loginId", msgS[1]);
           client.setInfo("first", "T");
+          this.sendToAllClients(msgS[1] + " Has logged on.");
         }
       } else {
         try {
@@ -76,7 +77,7 @@ public class EchoServer extends AbstractServer {
           System.out.println("Error");
         }
       }
-      this.sendToAllClients(client.getInfo("loginId") +": "+msg);
+      this.sendToAllClients(msg);
     }
   }
 
@@ -97,15 +98,15 @@ public class EchoServer extends AbstractServer {
   }
 
   synchronized protected void clientException(ConnectionToClient client, Throwable exception) {
-    System.out.println("A client has disconnected.");
+    System.out.println(client.getInfo("loginId")+" has disconnected.");
   }
 
   synchronized protected void clientDisconnected(ConnectionToClient client) {
-    System.out.println("A client has disconnected.");
+    System.out.println(client.getInfo("loginId")+" has disconnected.");
   }
 
   protected void clientConnected(ConnectionToClient client) {
-    System.out.println("A client has connected.");
+    System.out.println(client.getInfo("loginId")+" has disconnected.");
   }
 
   // Class methods ***************************************************

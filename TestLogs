@@ -1,0 +1,250 @@
+Parva Pathak
+300129609
+ppath014@uottawa.ca
+
+
+Testcase 2001:
+Parvas-MacBook-Pro:simplechat1 parva$ java ServerConsole
+Server listening for connections on port 5555
+
+Passed
+
+Testcase 2002:
+Parvas-MacBook-Pro:simplechat1 parva$ java ClientConsole
+Did not enter login ID.
+Parvas-MacBook-Pro:simplechat1 parva$
+
+Passed
+
+Testcase 2003:
+
+Parvas-MacBook-Pro:simplechat1 parva$ java ClientConsole Parva
+Error: Can't setup connection! Terminating client.
+Parvas-MacBook-Pro:simplechat1 parva$
+
+Failed
+
+Testcase 2004:
+
+Parvas-MacBook-Pro:simplechat1 parva$ java ServerConsole
+Server listening for connections on port 5555
+A client has connected.
+Message received: #login Parva from localhost (127.0.0.1)
+
+Parvas-MacBook-Pro:simplechat1 parva$ java ClientConsole Parva
+Parva> Parva Has logged on.
+
+Passed
+
+Testcase 2005:
+
+Parvas-MacBook-Pro:simplechat1 parva$ java ServerConsole
+Server listening for connections on port 5555
+A client has connected.
+Message received: #login Parva from localhost (127.0.0.1)
+Message received: Hello from localhost (127.0.0.1)
+
+Parvas-MacBook-Pro:simplechat1 parva$ java ClientConsole Parva
+Parva> Parva Has logged on.
+Hello
+Parva> Hello
+
+Passed
+
+Testcase 2006:
+
+Parvas-MacBook-Pro:simplechat1 parva$ java ServerConsole
+Server listening for connections on port 5555
+A client has connected.
+Message received: #login Parva from localhost (127.0.0.1)
+A client has connected.
+Message received: #login Other from localhost (127.0.0.1)
+Message received: Hello Other from localhost (127.0.0.1)
+Message received: Hello Parva from localhost (127.0.0.1)
+Hello Everyone
+
+Parvas-MacBook-Pro:simplechat1 parva$ java ClientConsole Parva
+Parva> Parva Has logged on.
+Parva> Other Has logged on.
+Hello Other
+Parva> Hello Other
+Parva> Hello Parva
+Parva> SERVER MESSAGE> Hello Everyone
+
+Parvas-MacBook-Pro:simplechat1 parva$ java ClientConsole.java Other
+Other> Other Has logged on.
+Other> Hello Other
+Hello Parva
+Other> Hello Parva
+Other> SERVER MESSAGE> Hello Everyone
+
+Passed
+
+Testcase 2007:
+
+Parvas-MacBook-Pro:simplechat1 parva$ java ServerConsole
+Server listening for connections on port 5555
+#quit
+Parvas-MacBook-Pro:simplechat1 parva$
+
+Passed
+
+Testcase 2008:
+
+Parvas-MacBook-Pro:simplechat1 parva$ java ServerConsole
+Server listening for connections on port 5555
+A client has connected.
+Message received: #login Parva from localhost (127.0.0.1)
+#stop
+Server has stopped listening for connections.
+Message received: Hello from localhost (127.0.0.1)
+#start
+Server listening for connections on port 5555
+A client has connected.
+Message received: #login Other from localhost (127.0.0.1)
+
+Parvas-MacBook-Pro:simplechat1 parva$ java ClientConsole Parva
+Parva> Parva Has logged on.
+Hello
+Parva> Hello
+Parva> Other Has logged on.
+
+Parvas-MacBook-Pro:simplechat1 parva$ java ClientConsole Other
+Other> Other Has logged on
+
+Passed
+
+Testcase 2009:
+
+Parvas-MacBook-Pro:simplechat1 parva$ java ServerConsole
+Server listening for connections on port 5555
+null has disconnected.
+Message received: #login Parva from localhost (127.0.0.1)
+#stop
+Server has stopped listening for connections.
+#close
+Parva has disconnected.
+
+Parvas-MacBook-Pro:simplechat1 parva$ java ClientConsole Parva
+Parva> Parva Has logged on.
+Parva> Connection Closed
+Parvas-MacBook-Pro:simplechat1 parva$
+
+Failed (Does not send the warning or waits for input)
+
+Testcase 2010:
+
+Parvas-MacBook-Pro:simplechat1 parva$ java ClientConsole Parva
+Parva> Parva Has logged on.
+Parva> Connection Closed
+Parvas-MacBook-Pro:simplechat1 parva$ java ClientConsole Parva
+Parva> Parva Has logged on.
+#quit
+Parva> Connecting Closed
+Parvas-MacBook-Pro:simplechat1 parva$
+
+Passed (I had to start a server because my client cannot run without a server)
+
+Testcase 2011:
+
+Parvas-MacBook-Pro:simplechat1 parva$ java ServerConsole
+Server listening for connections on port 5555
+null has disconnected.
+Message received: #login Parva from localhost (127.0.0.1)
+
+Parvas-MacBook-Pro:simplechat1 parva$ java ClientConsole Parva
+Parva> Parva Has logged on.
+#logoff
+
+Failed (Logoff does not close the connection)
+
+Testcase 2012:
+
+Parvas-MacBook-Pro:simplechat1 parva$ java ServerConsole
+Server listening for connections on port 5555
+null has disconnected.
+Message received: #login Parva from localhost (127.0.0.1)
+
+Parvas-MacBook-Pro:simplechat1 parva$ java ClientConsole Parva
+Parva> Parva Has logged on.
+#logoff
+#sethost one
+Parva> Host set to: one
+#setport 1234
+Parva> Port set to: 1234
+
+Passed (Had to start a server because my client can't connect without a server)
+
+Testcase 2013:
+
+Parvas-MacBook-Pro:simplechat1 parva$ java ServerConsole 1234
+Server listening for connections on port 1234
+
+Passed
+
+Testcase 2014:
+
+Java is not working on the only other computer in my house so I am unable to do this.
+
+I redownloaded it multiple times and tried adding the Path varible but it didn't work.
+
+Testcase 2015:
+
+Java is not working on the only other computer in my house so I am unable to do this.
+
+I redownloaded it multiple times and tried adding the Path varible but it didn't work.
+
+Testcase 2016:
+
+Java is not working on the only other computer in my house so I am unable to do this.
+
+I redownloaded it multiple times and tried adding the Path varible but it didn't work.
+
+Testcase 2017:
+
+Parvas-MacBook-Pro:simplechat1 parva$ java ServerConsole
+Server listening for connections on port 5555
+null has disconnected.
+Message received: #login Other from localhost (127.0.0.1)
+null has disconnected.
+Message received: #login Parva from localhost (127.0.0.1)
+null has disconnected.
+Message received: #login Watch from localhost (127.0.0.1)
+Message received: Parva Has logged off. from localhost (127.0.0.1)
+Message received: Other Has logged off. from localhost (127.0.0.1)
+Other has disconnected.
+
+Parvas-MacBook-Pro:simplechat1 parva$ java ClientConsole Parva
+Parva> Parva Has logged on.
+Parva> Watch Has logged on.
+#logoff
+Parva> Parva Has logged off.
+Parva> Other Has logged off.
+
+Parvas-MacBook-Pro:simplechat1 parva$ java ClientConsole Other
+Other> Other Has logged on.
+Other> Parva Has logged on.
+Other> Watch Has logged on.
+Other> Parva Has logged off.
+#quit
+Other> Connecting Closed
+Parvas-MacBook-Pro:simplechat1 parva$
+
+Parvas-MacBook-Pro:simplechat1 parva$ java ClientConsole Watch
+Watch> Watch Has logged on.
+Watch> Parva Has logged off.
+Watch> Other Has logged off.
+
+Passed
+
+Testcase 2018:
+
+Java is not working on the only other computer in my house so I am unable to do this.
+
+I redownloaded it multiple times and tried adding the Path varible but it didn't work.
+
+Testcase 2019:
+
+Java is not working on the only other computer in my house so I am unable to do this.
+
+I redownloaded it multiple times and tried adding the Path varible but it didn't work.

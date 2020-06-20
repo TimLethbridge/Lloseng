@@ -31,6 +31,8 @@ public class ChatClient extends AbstractClient
    * the display method in the client.
    */
   ChatIF clientUI; 
+  //new edit #1 E7a)
+  String loginId;
 
   
   //Constructors ****************************************************
@@ -46,13 +48,18 @@ public class ChatClient extends AbstractClient
    * @param host The server to connect to.
    * @param port The port number to connect on.
    * @param clientUI The interface type variable.
+   *
+   * new edit #2 E7a) line 57, line 62
+   * @param loginId The login ID of the client
+   *
    */
   
-  public ChatClient(String host, int port, ChatIF clientUI) 
+  public ChatClient(String loginId, String host, int port, ChatIF clientUI) 
     throws IOException 
   {
     super(host, port); //Call the superclass constructor
     this.clientUI = clientUI;
+    this.loginId = loginId;
     openConnection();
   }
 
@@ -82,8 +89,7 @@ public class ChatClient extends AbstractClient
     }
     catch(IOException e)
     {
-      clientUI.display
-        ("Could not send message to server.  Terminating client.");
+      clientUI.display ("Could not send message to server.  Terminating client.");
       quit();
     }
   }
@@ -96,7 +102,31 @@ public class ChatClient extends AbstractClient
 protected void connectionClosed(){
   System.out.println("The server has closed, will quit connection shortly");
 }
-  
+
+/**
+*new edit #3 E7a)
+*This method returns the loginID of the client
+*/
+public String getLogin(){
+  return loginId;
+}
+
+/**
+*new edit #4 E7b)
+*This method sends the loginID to the server.
+*/
+public void sendLogin(){
+  handleMessageFromClientUI("#login: "+getLogin());
+}
+
+/**
+*new edit #5 E7b)
+*This method lets the server/client know that a connection has been established
+*/
+protected void connectionEstablish(){
+  sendLogin();
+}
+
   /**
    * This method terminates the client.
    */

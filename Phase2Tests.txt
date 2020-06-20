@@ -1,0 +1,183 @@
+Adhish Maheswaran
+300133918
+amahe023@uottawa.ca
+
+Logs for phase 2 Testing:
+Testcase 2001:
+Adhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code:.' ServerConsole
+Server listening for connections on port 5555
+
+Testcase 2002:
+Adhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code:.' ClientConsole
+loginId Required
+Adhishs-MacBook-Pro:simplechat1 adhishm$ 
+
+(Terminated)
+
+Testcase 2003:
+Adhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code:.' ClientConsole Adhish
+Error: Can't setup connection! Terminating client.
+Adhishs-MacBook-Pro:simplechat1 adhishm$ 
+
+(Terminated)
+
+Testcase 2004:
+Console1:
+Adhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code:.' ServerConsole
+Server listening for connections on port 5555
+Console 2:
+Adhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code:.' ClientConsole Adhish
+Console 1:
+The Server has accepted a client
+
+Testcase 2005:
+Console 2:
+^CAdhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code:.' Clientnsole Adhish
+Data
+Adhish>Data
+
+Console 1:
+^CAdhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code:.' Servernsole
+Server listening for connections on port 5555
+The Server has accepted a client
+Message received: Data from localhost (127.0.0.1)
+
+Testcase 2006:
+Console 2:
+Adhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code:.' ClientConsole Test2
+Adhish>test1
+test2
+Test2>test2
+SERVER MSG>server test
+
+Console 1:
+^CAdhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code:.' Servernsole
+Server listening for connections on port 5555
+The Server has accepted a client
+The Server has accepted a client
+Message received: test1 from localhost (127.0.0.1)
+Message received: test2 from localhost (127.0.0.1)
+server test
+
+Console 3:
+Adhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code:.' ClientConsole Adhish
+test1
+Adhish>test1
+Test2>test2
+SERVER MSG>server test
+
+Testcase 2007:
+^CAdhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code:.' Servernsole
+Server listening for connections on port 5555
+#quit
+Closing Connection
+
+Testcase 2008:
+Console 1:
+Adhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code:.' ClientConsole Test2
+SERVER MSG>Server has stopped listening for connections
+hello
+Test2>hello
+
+ Console 2:
+Adhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code:.' ServerConsole
+Server listening for connections on port 5555
+The Server has accepted a client
+#stop
+Closing Connection
+Server has stopped listening for connections.
+
+Console 3:
+Adhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code:.' ClientConsole Adhish
+Error: Can't setup connection! Terminating client.
+
+Testcase 2009:
+Console 1:
+Adhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code:.' ServerConsole
+Server listening for connections on port 5555
+The Server has accepted a client
+#stop
+Closing Connection
+Server has stopped listening for connections.
+#close
+Closing Connections
+The client has disconnected
+
+Console 2:
+Adhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code:.' ClientConsole Test2
+SERVER MSG>Server has stopped listening for connections
+SERVER MSG>Server has stopped connection
+The connection has terminated
+Adhishs-MacBook-Pro:simplechat1 adhishm$ 
+
+Testcase 2009:
+Console 1:
+^CAdhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code:.' Servernsole
+Server listening for connections on port 5555
+#close
+Closing Connections
+Server has stopped listening for connections.
+#start
+Opening Connections
+Server listening for connections on port 5555
+The Server has accepted a client
+
+Console 2:
+Adhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code:.' ClientConsole Test2
+Error: Can't setup connection! Terminating client.
+Adhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code:.' ClientConsole Test2
+
+Testcase 2010:
+Adhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code:.' ClientConsole Test2
+#quit           
+Client has quit
+
+Testcase 2011:
+Adhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code:.' ClientConsole Test2
+#logoff
+Client has disconnected
+Closing Connection
+Connection Closed
+
+^CAdhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code:.' Servernsole
+Server listening for connections on port 5555
+The Server has accepted a client
+Message received: connection closed from localhost (127.0.0.1)
+
+
+Testcase 2013:
+
+^CAdhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code:.' Servernsole 1234
+Server listening for connections on port 1234
+
+Testcase 2017:
+Console 1(Server):
+^CAdhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code:.' Servernsole
+Server listening for connections on port 5555
+The Server has accepted a client
+The Server has accepted a client
+The Server has accepted a client
+The Server has accepted a client
+Message received: connection closed from localhost (127.0.0.1)
+
+Console 2:
+Adhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code:.' ClientConsole Test2
+^CAdhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code: ClientConsole Test2
+#logoff
+Client has disconnected
+Closing Connection
+Connection Closed
+
+Console 3:
+Adhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code:.' ClientConsole Test3
+Test2>connection closed
+
+Console 4:
+Adhishs-MacBook-Pro:simplechat1 adhishm$ java -classpath '../../code:.' ClientConsole Adhish
+#quit
+Client has quit
+Closing Connection
+Connection Closed
+Adhishs-MacBook-Pro:simplechat1 adhishm$ 
+
+

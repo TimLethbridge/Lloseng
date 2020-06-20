@@ -61,11 +61,7 @@ public class ServerConsole implements ChatIF
     System.out.println("> " +message);
   }
 
-  public void handleMessageFromServerUI(String message)
-  {
-  	message = "SERVER MSG> "+ message;
-  	server.sendToAllClients(message);
-  }
+  
 
   /**
    * This method is responsible for the creation of 

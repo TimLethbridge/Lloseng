@@ -33,7 +33,7 @@ public class EchoServer extends AbstractServer
    *
    * @param port The port number to connect on.
    */
-  public EchoServer(int port, ChatIF serverUI) 
+  public EchoServer(int port, ChatIF serverUI)throws IOException 
   {
     super(port);
     this.serverUI = serverUI;
@@ -78,6 +78,12 @@ public class EchoServer extends AbstractServer
   protected void clientConnected(ConnectionToClient client) {
     serverUI.display
       ("A client just joined ( ͡° ͜ʖ ͡°)");
+  }
+
+  public void handleMessageFromServerUI(String message)
+  {
+    message = "SERVER MSG> "+ message;
+    server.sendToAllClients(message);
   }
   
   //Class methods ***************************************************

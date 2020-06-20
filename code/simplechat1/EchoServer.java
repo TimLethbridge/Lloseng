@@ -1,9 +1,15 @@
+/*
+Name: Nathanya Jayasoorya A.D.
+Student ID: 8786771
+Email: njaya077@@uottawa.ca
+* This is the Eddited version of the EchoServer class for the Assignment1. 
+* All edits made specifically for the question number will be added as a comment
+*/
+
 // This file contains material supporting section 3.7 of the textbook:
 // "Object Oriented Software Engineering" and is issued under the open-source
 // license found at www.lloseng.com 
 
-//want to test E4 by adding ny name
-//Name: Nathanya Jayasooriya, 8786771, njaya077@uottawa.ca
 import java.io.*;
 import ocsf.server.*;
 
@@ -25,7 +31,8 @@ public class EchoServer extends AbstractServer
    * The default port to listen on.
    */
   final public static int DEFAULT_PORT = 5555;
-  
+  //E5 edit to call the 
+  ChatClient client;
   //Constructors ****************************************************
   
   /**
@@ -47,8 +54,7 @@ public class EchoServer extends AbstractServer
    * @param msg The message received from the client.
    * @param client The connection from which the message originated.
    */
-  public void handleMessageFromClient
-    (Object msg, ConnectionToClient client)
+  public void handleMessageFromClient (Object msg, ConnectionToClient client)
   {
     System.out.println("Message received: " + msg + " from " + client);
     this.sendToAllClients(msg);

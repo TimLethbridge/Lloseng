@@ -67,54 +67,59 @@ public class ChatClient extends AbstractClient
   public void handleMessageFromClientUI(String message)
   {
     if(message.contains("#")){
-        clientUI.display("POOP");
-        switch(message) {
-          case message.contains("quit"):
+        if(message.contains("quit")){
           quit();
-          break;
+        }
 
-          case message.contains("logoff"):
+        if(message.contains("logoff")){
+          try
+          {
           closeConnection();
-          break;
+          }
+          catch(IOException e) {}
+        }
 
-          case message.contains("sethost"):
+        if(message.contains("sethost")){
           if(isConnected()){
             clientUI.display("This operation is unavailable while logged on.");
           }else{
             setHost(message.replace("#sethost",""));
           }
-          
-          break;
-
-          case message.contains("setport"):
-          if(isConnected()){
-            clientUI.display("This operation is unavailable while logged on.");
-          }else{
-            setPort(message.replace("#setport",""));
-          }
-          
-          break;
-
-          case message.contains("login"):
-          if(isConnected()){
-            clientUI.display("This operation is unavailable while logged on.");
-          }else{
-            openConnection();
-          }
-          break;
-
-          case message.contains("gethost"):
-          clientUI.display(getHost());;
-          break;
-
-          case message.contains("getport"):
-          clientUI.display(getPort().toString());;
-          break;
         }
+
+        if(message.contains("setport")){
+          if(isConnected()){
+            clientUI.display("This operation is unavailable while logged on.");
+          }else{
+            setHost(message.replace("#setport",""));
+          }
+        }
+
+        if(message.contains("login")){
+          if(isConnected()){
+            clientUI.display("This operation is unavailable while logged on.");
+          }else{
+            try
+            {
+            openConnection();
+            }
+            catch(IOException e) {}
+          }
+        }
+
+        if(message.contains("gethost")){
+          clientUI.display(getHost());
+        }
+
+        if(message.contains("getport")){
+          clientUI.display(String.valueOf(getPort()));
+        }
+
+        
     }else{
       try
       {
-        clientUI.display("PEE");
+        
         sendToServer(message);
     
       
@@ -125,6 +130,7 @@ public class ChatClient extends AbstractClient
           ("Could not send message to server.  Terminating client.");
         quit();
       }
+    }
   }
   
   /**

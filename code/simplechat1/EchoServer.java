@@ -31,9 +31,10 @@ public class EchoServer extends AbstractServer
    *
    * @param port The port number to connect on.
    */
-  public EchoServer(int port) 
+  public EchoServer(int port, ChatIF serverUI) 
   {
     super(port);
+    this.serverUI = serverUI;
   }
 
   
@@ -48,7 +49,7 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
-    System.out.println("Message received: " + msg + " from " + client);
+    serverUI.display("Message received: " + msg + " from " + client);
     this.sendToAllClients(msg);
   }
     
@@ -58,7 +59,7 @@ public class EchoServer extends AbstractServer
    */
   protected void serverStarted()
   {
-    System.out.println
+    serverUI.display
       ("Server listening for connections on port " + getPort());
   }
   
@@ -68,12 +69,12 @@ public class EchoServer extends AbstractServer
    */
   protected void serverStopped()
   {
-    System.out.println
+    serverUI.display
       ("Server has stopped listening for connections.");
   }
 
   protected void clientConnected(ConnectionToClient client) {
-    System.out.println
+    serverUI.display
       ("A client just joined ( ͡° ͜ʖ ͡°)");
   }
   

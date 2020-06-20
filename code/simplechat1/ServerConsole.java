@@ -43,12 +43,12 @@ public class ServerConsole implements ChatIF {
         			int temp1 = Integer.parseInt(temp);
         			server.setPort(temp1);
         		}else{
-        			System.out.println("Error, you can only set port when connections are stopped.");
+        			System.out.println("Cannot set port while connections are made");
         		}
         	}else if (message.equals("#getport")) {
         		System.out.println(server.getPort());
         	}else{
-        		System.out.println("Error, #'s are functions, this function does not exist.");
+        		System.out.println("This function does not exist.");
         	}
         }else{
         	handleMessageFromConsole(message);

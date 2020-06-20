@@ -1,3 +1,8 @@
+/*
+* This is the edited version of the ChatClient class for the Assignment1. 
+* All edits made specifically for the question number will be added as a comment
+*/
+
 // This file contains material supporting section 3.7 of the textbook:
 // "Object Oriented Software Engineering" and is issued under the open-source
 // license found at www.lloseng.com 
@@ -30,6 +35,11 @@ public class ChatClient extends AbstractClient
   
   //Constructors ****************************************************
   
+/*
+* This is the edited version of the ChatClient class for the Assignment1. 
+* All edits made specifically for the question number will be added as a comment
+*/
+
   /**
    * Constructs an instance of the chat client.
    *
@@ -77,6 +87,15 @@ public class ChatClient extends AbstractClient
       quit();
     }
   }
+
+/**
+* new edit #1 E5 a)
+* This method lets the client know that the server has shut down
+* and will be quitting/stopping the connection
+*/
+protected void connectionClosed(){
+  System.out.println("The server has closed, will quit connection shortly");
+}
   
   /**
    * This method terminates the client.

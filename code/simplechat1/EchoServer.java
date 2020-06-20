@@ -1,8 +1,5 @@
 /*
-Name: Nathanya Jayasoorya A.D.
-Student ID: 8786771
-Email: njaya077@@uottawa.ca
-* This is the Eddited version of the EchoServer class for the Assignment1. 
+* This is the edited version of the EchoServer class for the Assignment1. 
 * All edits made specifically for the question number will be added as a comment
 */
 
@@ -31,8 +28,6 @@ public class EchoServer extends AbstractServer
    * The default port to listen on.
    */
   final public static int DEFAULT_PORT = 5555;
-  //E5 edit to call the 
-  ChatClient client;
   //Constructors ****************************************************
   
   /**
@@ -69,7 +64,37 @@ public class EchoServer extends AbstractServer
     System.out.println
       ("Server listening for connections on port " + getPort());
   }
+
+
+/**
+* new edit #1 E5c)
+* This method shows if the client has made a connection with the server
+* @param client the client that is trying to make the connetion
+*/
+  protected void clientConnected(ConnectionToClient client){
+  	System.out.println("A client is connected: "+client.toString());
+  }
+
+/**
+* new edit #2 E5c)
+* This method shows if the client has disconnected with the server
+* @param client the client that has disconnected with the server
+*/
+  synchronized protected void clientDisconnected(ConnectionToClient client){
+  	System.out.println("A client is disconnected: "+client.toString());
+  }
   
+/**
+* new edit #3 E5c)
+* This method is called whenever an exception is thrown
+* @param client the client that had the exception
+*/
+  synchronized protected void clientException(ConnectionToClient client, Throwable exception){
+  	System.out.println("Client error: "+client.toString()+" exception"+exception.toString());
+  }
+
+
+
   /**
    * This method overrides the one in the superclass.  Called
    * when the server stops listening for connections.

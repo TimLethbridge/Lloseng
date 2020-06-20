@@ -1,3 +1,8 @@
+/*
+* This is the edited version of the ClientConsole class for the Assignment1. 
+* All edits made specifically for the question number will be added as a comment
+*/
+
 // This file contains material supporting section 3.7 of the textbook:
 // "Object Oriented Software Engineering" and is issued under the open-source
 // license found at www.lloseng.com 
@@ -110,12 +115,17 @@ public class ClientConsole implements ChatIF
     try
     {
       host = args[0];
+      //new edit #1 E5a)
+      port = Integer.parseInt(args[1]);
     }
     catch(ArrayIndexOutOfBoundsException e)
     {
       host = "localhost";
+      //new edit #2 E5b)
+      port = DEFAULT_PORT; 
     }
-    ClientConsole chat= new ClientConsole(host, DEFAULT_PORT);
+    //new edit #3 E5b)
+    ClientConsole chat=new ClientConsole(host,port);
     chat.accept();  //Wait for console data
   }
 }

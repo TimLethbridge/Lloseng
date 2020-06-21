@@ -26,6 +26,7 @@ public class ChatClient extends AbstractClient
    * the display method in the client.
    */
   ChatIF clientUI; 
+  String loginid;
 
   
   //Constructors ****************************************************
@@ -38,12 +39,14 @@ public class ChatClient extends AbstractClient
    * @param clientUI The interface type variable.
    */
   
-  public ChatClient(String host, int port, ChatIF clientUI) 
+  public ChatClient(String loginid, String host, int port, ChatIF clientUI) 
     throws IOException 
   {
     super(host, port); //Call the superclass constructor
+    this.loginid = loginid;
     this.clientUI = clientUI;
     openConnection();
+    sendToServer("#login <" + loginid + ">");	
   }
 
   
@@ -66,17 +69,95 @@ public class ChatClient extends AbstractClient
    */
   public void handleMessageFromClientUI(String message)
   {
-    try
-    {
-      sendToServer(message);
-    }
-    catch(IOException e)
-    {
-      clientUI.display
-        ("Could not send message to server.  Terminating client.");
-      quit();
-    }
+	//check if message is a command
+			if(message.charAt(0) == '#') {
+				try{
+					String[] input = message.split(" ", 0);
+					switch (input[0]) {
+
+					case "#quit": quit();
+					break;
+
+					case "#logoff" : closeConnection();
+					break;
+
+					case "#sethost" :
+						if(!isConnected()) {
+							setHost(input[1]);
+						}
+						else {
+							throw new IOException("You must logoff first before setting the host.");
+						}
+						break;
+
+					case "#setport":
+						if(!isConnected()) {
+							setPort(Integer.parseInt(input[1]));
+						}
+						else {
+							throw new IOException("You must logoff first before setting the port.");
+						}
+						break;
+
+					case "#login":
+						if(!isConnected()) {
+							openConnection();
+						}
+						else {
+							throw new IOException("You have not logged out.");
+						}
+						break;
+
+					case "#gethost":
+						clientUI.display("Host: "+ getHost());
+						break;
+
+					case "#getport":
+						clientUI.display("Port: " + getPort());
+						break;
+
+					default:
+						throw new IOException("Invalid Command"); 
+					}
+				}
+				catch(IOException e) {
+					System.exit(0);
+				}
+			}
+			else {
+				try
+				{
+					sendToServer(message);
+				}
+				catch(IOException e)
+				{
+					clientUI.display
+					("Could not send message to server. Terminating client.");
+					quit();
+				}  
+			}
   }
+  
+  /**
+	 * This method closes the connection to the server.
+	 *
+	 * @param quit The decision to close connection.
+	 */
+	protected void connectionClosed(boolean quit) {
+		if (quit) {
+			System.exit(0);
+		}
+	}
+
+	/**
+	 * This method responds to the shutdown of the server.
+	 *
+	 * @param exception The exception to be handled before closing.
+	 */
+	protected void connectionException(Exception exception) {
+		System.out.println("The connection to the server is now closing.");
+		connectionClosed(true);
+	}
   
   /**
    * This method terminates the client.

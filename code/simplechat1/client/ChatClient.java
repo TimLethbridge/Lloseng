@@ -25,7 +25,10 @@ public class ChatClient extends AbstractClient
    * The interface type variable.  It allows the implementation of 
    * the display method in the client.
    */
-  ChatIF clientUI; 
+   
+  private boolean loggedOff;
+  private static String loginID;
+  ChatIF clientUI;
 
   
   //Constructors ****************************************************
@@ -38,12 +41,21 @@ public class ChatClient extends AbstractClient
    * @param clientUI The interface type variable.
    */
   
-  public ChatClient(String host, int port, ChatIF clientUI) 
+  public ChatClient(String host, int port, String loginID, ChatIF clientUI) 
     throws IOException 
   {
     super(host, port); //Call the superclass constructor
     this.clientUI = clientUI;
-    openConnection();
+	this.loginID = loginID;
+	
+	try {
+		openConnection();
+		sendToServer("#login " + loginID);
+		loggedOff = false;
+	} catch(Exception e) {
+		System.out.println("Cannot open connection.  Awaiting command.");
+		loggedOff = true;
+	}
   }
 
   
@@ -68,7 +80,73 @@ public class ChatClient extends AbstractClient
   {
     try
     {
-      sendToServer(message);
+		String temp1[] = message.split(" ");
+		
+		if(temp1[0].equals("#quit")) {
+			try {
+				System.out.println("Closing Connection");
+				quit();
+			} catch(Exception e) {
+				System.out.println("ERROR!");
+			}
+		} else if(temp1[0].equals("#logoff")) {
+			try {
+				loggedOff = true;
+				sendToServer("client has logged off");
+				System.out.println("Closing Connection");
+				closeConnection();
+			} catch(IOException e) {
+				System.out.println("ERROR!");
+			}
+		} else if(temp1[0].equals("#sethost") && loggedOff) {
+			try {
+				System.out.println("Host set to: " + temp1[1]);
+				setHost(temp1[1]);
+			} catch(Exception e) {
+				System.out.println("ERROR!");
+			}
+		} else if(temp1[0].equals("#setport") && loggedOff) {
+			try {
+				System.out.println("Port set to: " + Integer.parseInt(temp1[1]));
+				setPort(Integer.parseInt(temp1[1]));
+			} catch(Exception e) {
+				System.out.println("ERROR!");
+			}
+		} else if(temp1[0].equals("#login") && loggedOff) {
+			if(temp1.length == 2) {
+				if(temp1[1].equals(loginID)) {
+					try {
+						System.out.println("Opening connection to server");
+						openConnection();
+						sendToServer("#login " + loginID);
+						loggedOff = false;
+					} catch(Exception e) {
+						System.out.println("ERROR!");
+					}
+				} else
+					System.out.println("Invalid Login ID!");
+			} else
+				System.out.println("Command must be followed by loginID i.e.: #login <loginID>");
+		} else if(message.equals("#gethost")) {
+			try {
+				System.out.println(getHost());
+			} catch(Exception e) {
+				System.out.println("ERROR!");
+			}
+		} else if(message.equals("#getport")) {
+			try {
+				System.out.println(getPort());
+			} catch(Exception e) {
+				System.out.println("ERROR!");
+			}
+		} else if(temp1[0].charAt(0) == '#') {
+			try {
+				System.out.println("ERROR! Command not valid");
+			} catch(Exception e) {
+				System.out.println("ERROR!");
+			}
+		} else
+			sendToServer(message);
     }
     catch(IOException e)
     {
@@ -89,6 +167,15 @@ public class ChatClient extends AbstractClient
     }
     catch(IOException e) {}
     System.exit(0);
+  }
+  
+   protected void connectionException(Exception e) {
+	clientUI.display("Connection to Server Has Forcefully Terminated!");
+	System.exit(0);
+  }
+  
+  protected void connectionClosed() {
+	clientUI.display("Connection Closed!");
   }
 }
 //End of ChatClient class

@@ -285,5 +285,24 @@ public class ClientConsole implements ChatIF
         return portToReturn;
     }
 
+    /**
+     * this code bellow is the previous part of question E5 a)
+     */
+//    int port = 0;
+//      try
+//    {
+//        BufferedReader portFromConsole2 = new BufferedReader(new InputStreamReader(System.in));
+//        String portString;
+//        portString = portFromConsole2.readLine();
+//        port = Integer.parseInt(portString);
+//    }
+//      catch (Exception numException)
+//    {
+//        // if we find an error, we will take the default port: 5555
+//        port = DEFAULT_PORT;
+//        System.out.println("Number is invalid, using default...");
+//    }
+
+
 }
 //End of ConsoleChat class

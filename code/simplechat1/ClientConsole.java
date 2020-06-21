@@ -178,7 +178,8 @@ public class ClientConsole implements ChatIF
         if (logingID.length()>9){
             clientNameString = logingID.substring(8,logingID.length()-1); // to get the name without < >
         }else {
-            clientNameString = "Unknown"; //if client doesn't insert his name
+            System.out.println("ERROR - No login ID specified.  Connection aborted.");
+            System.exit(0);
         }
 
         //we need to make sure that this is the first commend made by the client, otherwise terminate him

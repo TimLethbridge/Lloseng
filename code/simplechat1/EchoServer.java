@@ -48,7 +48,23 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
-    System.out.println("Message received: " + msg + " from " + client);
+      try{
+      String a =msg.toString();
+      String cmd[]=a.split(" ");
+      if (cmd[0].equals("#login")) {
+          if(client.getInfo("userId")==null){
+              client.setInfo("userId",cmd[1]);
+              this.sendToAllClients(client.getInfo("userId") + " has logged on.");
+          }
+          else{
+              client.sendToClient("A user has already logged on");
+          }
+      }
+      }
+          catch(Exception e){
+              
+          }
+      System.out.println("Message received: " + msg + " from " + client.getInfo("userId")+" "+client);
     this.sendToAllClients(msg);
   }
     
@@ -73,7 +89,7 @@ public class EchoServer extends AbstractServer
   }
     
     protected void clientConnected(ConnectionToClient client){
-        System.out.println("client is connected :"+client.toString());
+        System.out.println(client.getInfo("userId") + " has logged on.");
     }
     protected void clientDisconnected(ConnectionToClient client){
         System.out.println("client is disconnected"+client.toString());
@@ -94,7 +110,6 @@ public class EchoServer extends AbstractServer
   public static void main(String[] args) 
   {
     int port = 0; //Port to listen on
-
     try
     {
       port = Integer.parseInt(args[0]); //Get port from command line
@@ -105,6 +120,7 @@ public class EchoServer extends AbstractServer
     }
 	
     EchoServer sv = new EchoServer(port);
+     
     
     try 
     {
@@ -114,6 +130,9 @@ public class EchoServer extends AbstractServer
     {
       System.out.println("ERROR - Could not listen for clients!");
     }
+      ServerConsole sc = new ServerConsole(sv);
+      sc.accept();
+      
   }
 }
 //End of EchoServer class

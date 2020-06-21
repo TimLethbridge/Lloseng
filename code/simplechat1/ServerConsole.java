@@ -60,42 +60,44 @@ public class ServerConsole implements ChatIF {
      */
     public void accept()
     {
-        try
-        {
+        try {
             BufferedReader fromConsole = new BufferedReader(new InputStreamReader(System.in));
             String message;
-            while (true)
-            {
+            String setPortValid= "";
+            while (true) {
                 message = fromConsole.readLine();
 
-                switch (message){
-                    case "#quit":
-                        System.out.println("Server is Quitting...");
-                        server.handleMessageFromClientUI("Quit");
-                        break;
-                    case "#close":
-                        System.out.println("Server is Quitting...");
-                        server.handleMessageFromClientUI("Close");
-                        break;
-                    case "#stop":
-                        System.out.println("Server will stop listening for new clients...");
-                        server.handleMessageFromClientUI("Stop");
-                        break;
-                    case "#start":
-                        System.out.println("Server is listening for new clients...");
-                        server.handleMessageFromClientUI("Start");
-                        break;
-                    case "#setPort": //setting the Port number
-                        System.out.println("Enter the new Port in the server cmd: ");
-                        server.handleMessageFromClientUI("#setPort");
-                        break;
-                    case "#getPort": //get port
-                        server.handleMessageFromClientUI("#getPort");
-                        break;
-                    default:
-                        server.handleMessageFromClientUI("SERVER MSG>"+message);
-                        break;
+                if (message.length() >= 8) {//verifie if the user has used #setPort XXXX and #setHost
+                    setPortValid = message.substring(0, 8);
                 }
+                if (setPortValid.equals("#setPort")) {
+                    server.handleMessageFromClientUI(message);
+                }
+
+                switch (message) {
+                        case "#quit":
+                            System.out.println("Server is Quitting...");
+                            server.handleMessageFromClientUI("Quit");
+                            break;
+                        case "#close":
+                            System.out.println("Server is Quitting...");
+                            server.handleMessageFromClientUI("Close");
+                            break;
+                        case "#stop":
+                            System.out.println("Server will stop listening for new clients...");
+                            server.handleMessageFromClientUI("Stop");
+                            break;
+                        case "#start":
+                            System.out.println("Server is listening for new clients...");
+                            server.handleMessageFromClientUI("Start");
+                            break;
+                        case "#getPort":
+                            server.handleMessageFromClientUI("#getPort");
+                            break;
+                        default:
+                            server.handleMessageFromClientUI("SERVER MSG>" + message);
+                            break;
+                    }
             }
         }
         catch (Exception ex)

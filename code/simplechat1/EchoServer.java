@@ -51,11 +51,16 @@ public class EchoServer extends AbstractServer
     String serverMSG = "";
     String messageSent = msg.toString();
     String loginValid = "";
+    String setPortValid = "";
     loginValid = messageSent.substring(0,6);
 
     if (messageSent.length()>=11){
       serverMSG = messageSent.substring(0,11);
     }
+    if (messageSent.length() >= 8) {//verifie if the user has used #setPort XXXX and #setHost
+      setPortValid = messageSent.substring(0, 8);
+    }
+
 
     if (loginValid.equals("#login") && !hasConnected){
       System.out.println("Message received "+messageSent);
@@ -75,35 +80,35 @@ public class EchoServer extends AbstractServer
         case ": #login is not detected, Terminating client":
           try {
             client.close(); //closing the client from the server
-            handleMessageFromClient("#login is not detected, terminating client!",client);
-          }catch (IOException exp){
+            handleMessageFromClient("#login is not detected, terminating client!", client);
+          } catch (IOException exp) {
             System.out.println("IOException occured.");
           }
           break;
         case "Close":
           stopListening();
-          try{
-          client.close();
-          }catch (IOException ex){
+          try {
+            client.close();
+          } catch (IOException ex) {
             System.out.println("IOException occured.");
           }
           break;
         case "#getPort":
           handleMessageFromClient("the port number is " + getPort(), client);
           break;
-        case "#setPort":
-          int num;
-          String numberString;
-          try {
-            BufferedReader numberFromConsole = new BufferedReader(new InputStreamReader(System.in));
-            numberString = numberFromConsole.readLine();
-            num = Integer.parseInt(numberString);
-          } catch (Exception numException) {
-            num = DEFAULT_PORT;
-            System.out.println("Number is invalid, using default...");
-          }
-          setPort(num);
-          break;
+//        case "#setPort":
+//          int num;
+//          String numberString;
+//          try {
+//            BufferedReader numberFromConsole = new BufferedReader(new InputStreamReader(System.in));
+//            numberString = numberFromConsole.readLine();
+//            num = Integer.parseInt(numberString);
+//          } catch (Exception numException) {
+//            num = DEFAULT_PORT;
+//            System.out.println("Number is invalid, using default...");
+//          }
+//          setPort(num);
+//          break;
         case "Start":
           if (!isListening()) {
             System.out.println("Server will start listening for new clients...");
@@ -114,15 +119,25 @@ public class EchoServer extends AbstractServer
           break;
         case "Client has logged off":
           System.out.println("Client has logged off");
-          try{
+          try {
             client.close();
-          }catch (IOException ex){
+          } catch (IOException ex) {
             System.out.println("IOException occured.");
           }
           break;
         default:
-          System.out.println(msg);
-          this.sendToAllClients(msg);
+          if (setPortValid.equals("#setPort")){
+              int portToReturn = 0;
+              System.out.println("Setting the new port... ");
+              String newPortNumber = messageSent.substring(10, messageSent.length() - 1);
+              portToReturn = Integer.parseInt(newPortNumber);
+              System.out.println("Your Port is: " + portToReturn);
+              System.out.println(" ");
+              setPort(portToReturn);
+          }else{
+            System.out.println(msg);
+            this.sendToAllClients(msg);
+          }
           break;
 
 

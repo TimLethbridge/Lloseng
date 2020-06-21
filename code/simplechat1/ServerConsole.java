@@ -2,6 +2,7 @@ import java.io.*;
 import client.*;
 import common.*;
 
+
 public class ServerConsole implements ChatIF 
 {
 	//Class variables *************************************************
@@ -33,7 +34,7 @@ public class ServerConsole implements ChatIF
       System.exit(1);
     }
   }
-
+  /*works similarly to the one in clientconsole*/
   public void accept() 
   {
     try
@@ -56,6 +57,7 @@ public class ServerConsole implements ChatIF
     }
   }
 
+  /*works similarly to the one in clientconsole*/
   public void display(String message) 
   {
     System.out.println("> " +message);
@@ -70,6 +72,7 @@ public class ServerConsole implements ChatIF
    * @param args[0] The port number to listen on.  Defaults to 5555 
    *          if no argument is entered.
    */
+  /*moved main method from echoserver to here and changed it so it would create a server console instead, serverconsole constructor calls echoserver constructor*/
   public static void main(String[] args) 
   {
     int port = 0; //Port to listen on
@@ -93,6 +96,7 @@ public class ServerConsole implements ChatIF
     {
       System.out.println("ERROR - Could not listen for clients!");
     }
+    sc.accept();
   }
   	
 }

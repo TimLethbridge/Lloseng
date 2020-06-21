@@ -26,6 +26,7 @@ public class ChatClient extends AbstractClient
    * the display method in the client.
    */
   ChatIF clientUI; 
+  String loginID;
 
   
   //Constructors ****************************************************
@@ -36,14 +37,18 @@ public class ChatClient extends AbstractClient
    * @param host The server to connect to.
    * @param port The port number to connect on.
    * @param clientUI The interface type variable.
+   * @param LoginID
    */
   
-  public ChatClient(String host, int port, ChatIF clientUI) 
+  public ChatClient(String host, int port, ChatIF clientUI, String loginID) 
     throws IOException 
   {
+    /*added loginID, sends the login id to server upon creation of an instance of chatclient*/
     super(host, port); //Call the superclass constructor
     this.clientUI = clientUI;
+    this.loginID = loginID;
     openConnection();
+    sendToServer("#login "+loginID);
   }
 
   
@@ -66,6 +71,7 @@ public class ChatClient extends AbstractClient
    */
   public void handleMessageFromClientUI(String message)
   {
+    /*does various commands depending on whether a # is used*/
     if(message.contains("#")){
         if(message.contains("quit")){
           quit();
@@ -91,7 +97,8 @@ public class ChatClient extends AbstractClient
           if(isConnected()){
             clientUI.display("This operation is unavailable while logged on.");
           }else{
-            setHost(message.replace("#setport",""));
+            int portt = Integer.parseInt(message.replace("#setport",""));
+            setPort(portt);
           }
         }
 
@@ -146,10 +153,11 @@ public class ChatClient extends AbstractClient
     System.exit(0);
   }
 
+  /*displays a message when connection is closed*/
   public void connectionClosed() {
     clientUI.display("The connection has been closed");
   }
-
+  /*displays a message when an exception occurs*/
   protected void connectionException(Exception exception) {
     clientUI.display("An error has occured, the connection has been closed");
   }

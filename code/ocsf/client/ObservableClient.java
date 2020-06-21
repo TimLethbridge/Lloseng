@@ -1,8 +1,9 @@
+package ocsf.client;
 // This file contains material supporting section 6.13 of the textbook:
 // "Object Oriented Software Engineering" and is issued under the open-source
 // license found at www.lloseng.com 
 
-package ocsf.client;
+
 
 import java.util.*;
 import java.io.*;

@@ -179,7 +179,7 @@ public abstract class AbstractServer implements Runnable
   }
 
   /**
-   * Sends a message to every client connected to the server.
+   * s a message to every client connected to the server.
    * This is merely a utility; a subclass may want to do some checks
    * before actually sending messages to all clients.  This method
    * can be overriden, but if so it should still perform the general
@@ -404,7 +404,9 @@ public abstract class AbstractServer implements Runnable
    * connections.  The default implementation does nothing.
    * The method may be overridden by subclasses.
    */
-  protected void serverStarted() {}
+  protected void serverStarted() {
+	  System.out.println("Welcome!");
+  }
 
   /**
    * Hook method called when the server stops accepting
@@ -419,7 +421,9 @@ public abstract class AbstractServer implements Runnable
    * overriden by subclasses. When the server is closed while still
    * listening, serverStopped() will also be called.
    */
-  protected void serverClosed() {}
+  protected void serverClosed() {
+	  System.out.println("GoodBye!");
+  }
 
   /**
    * Handles a command sent from one client to the server.

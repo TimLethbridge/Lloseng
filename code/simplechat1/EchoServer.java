@@ -4,6 +4,7 @@
 
 import java.io.*;
 import ocsf.server.*;
+import common.ChatIF;
 
 /**
  * This class overrides some of the methods in the abstract 
@@ -23,6 +24,7 @@ public class EchoServer extends AbstractServer
    * The default port to listen on.
    */
   final public static int DEFAULT_PORT = 5555;
+  ChatIF main_server_UI;
   
   //Constructors ****************************************************
   
@@ -31,9 +33,11 @@ public class EchoServer extends AbstractServer
    *
    * @param port The port number to connect on.
    */
-  public EchoServer(int port) 
-  {
-    super(port);
+ 
+  public EchoServer(int port) {
+	  super(port);
+	  
+	  
   }
 
   
@@ -45,9 +49,19 @@ public class EchoServer extends AbstractServer
    * @param msg The message received from the client.
    * @param client The connection from which the message originated.
    */
-  public void handleMessageFromClient
-    (Object msg, ConnectionToClient client)
+  public void handleMessageFromClient(Object msg, ConnectionToClient client)
   {
+	String holder=msg.toString();
+	if (holder.contains("#login")) {
+		System.out.println(msg);
+		this.sendToAllClients("Welcome to the server " + holder.split(" ")[1]+".");
+		client.setInfo("Login ID",holder.split(" ")[1]);
+	} 
+	else {
+		System.out.println("This message has been received: " + msg + "from: " + client);
+		this.sendToAllClients(client.getInfo("Login ID")+": "+msg);
+	}
+	
     System.out.println("Message received: " + msg + " from " + client);
     this.sendToAllClients(msg);
   }
@@ -58,18 +72,37 @@ public class EchoServer extends AbstractServer
    */
   protected void serverStarted()
   {
+	
     System.out.println
       ("Server listening for connections on port " + getPort());
+    try {
+    	listen();
+    }
+    
+    catch(IOException exception) {
+    	System.out.println("There is an error");
+    }
   }
   
   /**
    * This method overrides the one in the superclass.  Called
    * when the server stops listening for connections.
    */
-  protected void serverStopped()
-  {
-    System.out.println
-      ("Server has stopped listening for connections.");
+  protected void serverStopped(){
+	stopListening();
+    
+    this.sendToAllClients("Server stopped listeneing for connections" + getPort());
+    
+  }
+  protected void clientConnected(ConnectionToClient client) {
+	  System.out.println("A new client has connected to the server");
+  }
+  protected void clientException(ConnectionToClient client, Throwable exception) {
+	  System.out.println(client.getInfo("Login ID")+" has left");
+  }
+  
+  public void clientDisconnected(ConnectionToClient client) {
+	  System.out.println(client.getInfo("Login ID")+" has left");
   }
   
   //Class methods ***************************************************

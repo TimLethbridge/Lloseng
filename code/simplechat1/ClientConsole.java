@@ -109,7 +109,7 @@ public class ClientConsole implements ChatIF
               }
               }
           else{
-              client.handleMessageFromClientUI(message);
+              client.handleMessageFromClientUI(client.getuserId()+"> "+message);
           }
       }
     } 
@@ -128,7 +128,7 @@ public class ClientConsole implements ChatIF
    */
   public void display(String message) 
   {
-      System.out.println(client.getuserId()+"> " + message);
+      System.out.println("> " + message);
   }
 
   

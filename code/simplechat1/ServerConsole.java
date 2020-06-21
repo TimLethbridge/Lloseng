@@ -89,12 +89,12 @@ public class ServerConsole implements ChatIF {
 
                 switch (message) {
                         case "#quit":
-                            System.out.println("Server is Quitting...");
-                            server.handleMessageFromClientUI("Quit");
+                                System.out.println("Server is Quitting...");
+                                server.handleMessageFromClientUI("Quit.....");
                             break;
                         case "#close":
-                            System.out.println("Server is Quitting...");
-                            server.handleMessageFromClientUI("Close");
+                                System.out.println("Server is Quitting...");
+                                server.handleMessageFromClientUI("Close");
                             break;
                         case "#stop":
                             System.out.println("Server will stop listening for new clients...");

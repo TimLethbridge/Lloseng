@@ -71,9 +71,9 @@ public class EchoServer extends AbstractServer
       handleMessageFromClient("You are already logged in!",client);
     }else {
       switch (messageSent) {
-        case "Quit":
+        case "Quit.....":
           System.out.println("Server is quitting...");
-          System.exit(1);
+          System.exit(0);
           break;
         case "Stop":
           stopListening();

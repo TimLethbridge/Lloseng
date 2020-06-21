@@ -102,9 +102,6 @@ public class ChatClient extends AbstractClient
       }
     } catch (Exception e){}
     
-  
-    
-      
     try
     {
       if((message.charAt(0))!='#'){
@@ -140,6 +137,11 @@ public class ChatClient extends AbstractClient
   protected void connectionException(Exception exception) {
     clientUI.display("Connection Exception.");
     quit();
+  }
+  protected void connectionEstablished() {
+    try{
+      sendToServer("#login"+loginID);
+    }catch(Exception e){}
   }
 }
 //End of ChatClient class

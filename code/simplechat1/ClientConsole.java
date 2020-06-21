@@ -31,7 +31,6 @@ public class ClientConsole implements ChatIF
    * The instance of the client that created this ConsoleChat.
    */
   ChatClient client;
-
   
   //Constructors ****************************************************
 
@@ -41,11 +40,11 @@ public class ClientConsole implements ChatIF
    * @param host The host to connect to.
    * @param port The port to connect on.
    */
-  public ClientConsole(String host, int port) 
+  public ClientConsole(String host, int port, String login) 
   {
     try 
     {
-      client= new ChatClient(host, port, this);
+      client= new ChatClient(host, port, this, login);
     } 
     catch(IOException exception) 
     {
@@ -108,13 +107,15 @@ public class ClientConsole implements ChatIF
     String host = "";
     int port = 0;  //The port number
     String login=null;
-    if(args[0]==null){
-    	System.exit(1);
-    } else {
+    try{
     	login=args[0];
+    } catch(ArrayIndexOutOfBoundsException e){
+    	System.out.println("ERROR - Login required.");
+    	System.exit(1);
     }
     try
     {
+
       host = args[1];
       port = Integer.parseInt(args[2]);
     }

@@ -1,0 +1,138 @@
+Student name: Andy Huang
+Student number: 300117248
+Email: chuan11@gmail.com
+getInfo return null don't know why
+
+
+Case 2001 Server startup check with default arguments
+owners-MacBook-Pro:simplechat1 owner$ java -classpath '../../code:.' EchoServer
+Server listening for connections on port 5555
+
+Case 2002 Client startup check without a login
+owners-MacBook-Pro:simplechat1 owner$ java -classpath '../../code:.' ClientConsole
+ERROR - No login ID specified.  Connection aborted.
+Connection Closed
+
+Case 2003 Client startup check with a login and without a server
+owners-MacBook-Pro:simplechat1 owner$ java -classpath '../../code:.' ClientConsole andyhuang
+Cannot open connection.  Awaiting command.
+
+Case 2004 Client connection with default arguments
+^Cowners-MacBook-Pro:simplechat1 owner$ java -classpath '../../code:.' ClientConle andyhuang
+andyhuang has logged on.
+
+Case 2005 Client Data transfer and data echo
+^Cowners-MacBook-Pro:simplechat1 owner$ java -classpath '../../code:.' ClientConle andyhuang
+andyhuang has logged on.
+dfigdiyr
+andyhuang> dfigdiyr
+
+^Cowners-MacBook-Pro:simplechat1 owner$ java -classpath '../../code:.' EchoServer
+Server listening for connections on port 5555
+null has logged on.
+Message received: dfigdiyr from null localhost (127.0.0.1)
+
+Case 2006 Multiple local connections
+Server:
+owners-MacBook-Pro:simplechat1 owner$ java -classpath '../../code:.' EchoServer
+Server listening for connections on port 5555
+null has logged on.
+Message received: andyhuang> fgudskf from null localhost (127.0.0.1)
+null has logged on.
+Message received: Wenzhema> rgew from null localhost (127.0.0.1)
+Message received: Wenzhema> efegewr from null localhost (127.0.0.1)
+sdkjashbfjkds
+Client Andy:
+owners-MacBook-Pro:simplechat1 owner$  java -classpath '../../code:.' ClientConsole andyhuang
+andyhuang has logged on.
+fgudskf
+> andyhuang> fgudskf
+> Wenzhema> rgew
+> Wenzhema> efegewr
+> Server MSG> sdkjashbfjkds
+Client Wen:
+owners-MacBook-Pro:simplechat1 owner$  java -classpath '../../code:.' ClientConsole Wenzhema
+Wenzhema has logged on.
+rgew
+> Wenzhema> rgew
+efegewr
+> Wenzhema> efegewr
+> Server MSG> sdkjashbfjkds
+
+Case 2007 Server termination command check
+^Cowners-MacBook-Pro:simplechat1 owner$ java -classpath '../../code:.' EchoServer
+Server listening for connections on port 5555
+#quit
+server quit
+Server has stopped listening for connections.
+
+Case 2008 server stop check
+Server: ^Cowners-MacBook-Pro:simplechat1 owner$ java -classpath '../../code:.' EchoServer
+Server listening for connections on port 5555
+null has logged on.
+#stop
+Server has stopped listening for connections.
+Message received: Wenzhema> hbjk from null localhost (127.0.0.1)
+#start
+Server listening for connections on port 5555
+null has logged on.
+
+Client: 
+owners-MacBook-Pro:simplechat1 owner$ java -classpath '../../code:.' ClientConsole Wenzhema
+Wenzhema has logged on.
+> server stop listening
+> Server MSG> #stop
+
+owners-MacBook-Pro:simplechat1 owner$ java -classpath '../../code:.' ClientConsole andyhuang
+andyhuang has logged on.
+
+Case 2009 close command check
+Server listening for connections on port 5555
+null has logged on.
+#close
+client is disconnectednull
+client is disconnectednull
+Server has stopped listening for connections.
+
+The server closed, quit connection
+Connection Closed
+
+start command check
+
+#start
+Server listening for connections on port 5555
+null has logged on
+
+Case 10 Client termination command check
+owners-MacBook-Pro:simplechat1 owner$ java -classpath '../../code:.' ClientConsole Wenzhema
+Wenzhema has logged on.
+#quit
+client quit
+Connection Closed
+
+Case 11 client logoff check
+owners-MacBook-Pro:simplechat1 owner$ java -classpath '../../code:.' ClientConsole Wenzhema
+Wenzhema has logged on.
+#logoff
+Connection Closed
+
+Case 12 client set command check
+owners-MacBook-Pro:simplechat1 owner$ java -classpath '../../code:.' ClientConsole Wenzhema
+Cannot open connection.  Awaiting command.
+#setport 1234
+Port set to :1234
+#sethost hello
+Host set to :hello
+
+Case 13 Starting a server on a non-default port
+^Cowners-MacBook-Pro:simplechat1 owner$ java -classpath '../../code:.' EchoServe1234
+Server listening for connections on port 1234
+
+Case 14 Connecting a client to a non-default host or port
+^Cowners-MacBook-Pro:simplechat1 owner$ java -classpath '../../code:.' EchoServe1234
+Server listening for connections on port 1234
+null has logged on.
+
+^Cowners-MacBook-Pro:simplechat1 owner$ java -classpath '../../code:.' ClientConle Wenzhema localhost 1234
+Wenzhema has logged on.
+

@@ -25,7 +25,8 @@ public class ChatClient extends AbstractClient
    * The interface type variable.  It allows the implementation of 
    * the display method in the client.
    */
-  ChatIF clientUI; 
+  ChatIF clientUI;
+    private String userId;
 
   
   //Constructors ****************************************************
@@ -38,12 +39,29 @@ public class ChatClient extends AbstractClient
    * @param clientUI The interface type variable.
    */
   
-  public ChatClient(String host, int port, ChatIF clientUI) 
-    throws IOException 
+  public ChatClient(String host, int port, ChatIF clientUI, String userId)
   {
     super(host, port); //Call the superclass constructor
     this.clientUI = clientUI;
-    openConnection();
+      this.userId = userId;
+      
+      try
+      {
+        openConnection();
+
+          if(userId==""){
+              System.out.println("ERROR - No login ID specified.  Connection aborted.");
+              quit();
+          }
+          else{
+              System.out.println(userId+" has logged on.");
+          }
+      }
+      catch(IOException exception)
+      {
+        System.out.println("Cannot open connection.  Awaiting command.");
+      }
+
   }
 
   
@@ -72,6 +90,7 @@ public class ChatClient extends AbstractClient
     }
     catch(IOException e)
     {
+        
       clientUI.display
         ("Could not send message to server.  Terminating client.");
       quit();
@@ -90,5 +109,24 @@ public class ChatClient extends AbstractClient
     catch(IOException e) {}
     System.exit(0);
   }
+    
+    
+    //print message when server disconnect
+    public void connectionException(Exception exception){
+        System.out.println("The server closed, quit connection");
+        quit();
+    }
+    //when connection closed print message
+    public void connectionClosed() {
+        System.out.println("Connection Closed");
+    }
+    public String getuserId(){
+        return userId;
+    }
+    public void setuserId(String userId){
+        this.userId = userId;
+    }
+    
+    
 }
 //End of ChatClient class

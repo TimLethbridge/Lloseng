@@ -196,9 +196,14 @@ public class ClientConsole implements ChatIF
         // now we set up the host and port
       host = setHost();
       port = setPort();
+    try {
 
-    ClientConsole chat= new ClientConsole(logingID, host, port);
-    chat.accept();  //Wait for console data
+        ClientConsole chat = new ClientConsole(logingID, host, port);
+        chat.accept();  //Wait for console data
+    }catch (Exception exception){
+        System.out.println("Cannot open connection.  Awaiting command.");
+        System.exit(0);
+    }
 
   }
 

@@ -32,6 +32,7 @@ public class ClientConsole implements ChatIF
    */
   ChatClient client;
   public static String clientName;
+  public static String clientNameString;
   public static boolean correctID;
 
   //Constructors ****************************************************
@@ -77,6 +78,7 @@ public class ClientConsole implements ChatIF
       BufferedReader fromConsole = new BufferedReader(new InputStreamReader(System.in));
       String message;
       String loginValid = "";
+      String setPortHostValid ="";
 
       client.handleMessageFromClientUI(getClientId());
       client.handleMessageFromClientUI(" "+getClientId()+" has logged on.");
@@ -84,8 +86,11 @@ public class ClientConsole implements ChatIF
       while (true)
       {
         message = fromConsole.readLine();
-        if (message.length()>= 6) {
+        if (message.length()>= 6) { //for login verification
           loginValid = message.substring(0, 6);
+        }
+        if(message.length()>=8) {// #setPort XXXX and #setHost are composed of at least 8 words
+            setPortHostValid = message.substring(0,8);
         }
 
         switch (message){
@@ -100,12 +105,12 @@ public class ClientConsole implements ChatIF
             client.setPort(changePort());
 
             break;
-          case "#setPort": //setting the Port number
-            client.setPort(changePort());
-            break;
-          case "#setHost": //setting the Host
-            client.setHost(changeHost());
-            break;
+//          case "#setPort": //setting the Port number
+//            client.setPort(changePort());
+//            break;
+//          case "#setHost": //setting the Host
+//            client.setHost(changeHost());
+//            break;
           case "#getHost": //get host
             System.out.println("The host is: " + client.getHost());
             break;
@@ -114,9 +119,18 @@ public class ClientConsole implements ChatIF
             break;
           default:
             if (loginValid.equals("#login")){
-              client.handleMessageFromClientUI(message + " from <" + getClientId() + ">");
-            }else {
-              client.handleMessageFromClientUI(message + " from <" + getClientId() + ">");
+              client.handleMessageFromClientUI(message + " from <" + getClientName() + ">");
+            }else if(setPortHostValid.equals("#setPort")){
+                String newPortNumber = message.substring(10,message.length()-1);
+                int newPortNumberInteger = Integer.parseInt(newPortNumber);
+                client.setPort(newPortNumberInteger);
+                System.out.println("Your new Port is: "+newPortNumberInteger);
+            }else if (setPortHostValid.equals("#setHost")){
+                String newHostString = message.substring(10,message.length()-1);
+                client.setHost(newHostString);
+                System.out.println("Your new Host is: "+newHostString);
+            } else{
+              client.handleMessageFromClientUI(message + " from <" + getClientName() + ">");
             }
             break;
         }
@@ -162,9 +176,14 @@ public class ClientConsole implements ChatIF
         BufferedReader idFromConsole = new BufferedReader(new InputStreamReader(System.in));
         logingID = idFromConsole.readLine();
         clientName = logingID;
+        if (logingID.length()>9){
+            clientNameString = logingID.substring(8,logingID.length()-1); // to get the name without < >
+        }else {
+            clientNameString = "Unknown"; //if client doesn't insert his name
+        }
 
         //we need to make sure that this is the first commend made by the client, otherwise terminate him
-        firstCommand = clientName.substring(0, 6);
+        firstCommand = logingID.substring(0, 6);
 
       }
       catch (Exception ex)
@@ -223,6 +242,9 @@ public class ClientConsole implements ChatIF
 
   public static String getClientId(){
     return clientName;
+  }
+  public static String getClientName(){
+      return clientNameString;
   }
 
 

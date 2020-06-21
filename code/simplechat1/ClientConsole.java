@@ -24,6 +24,7 @@ public class ClientConsole implements ChatIF
    * The default port to connect on.
    */
   final public static int DEFAULT_PORT = 5555;
+  private static String loginID;
   
   //Instance variables **********************************************
   
@@ -41,13 +42,13 @@ public class ClientConsole implements ChatIF
    * @param host The host to connect to.
    * @param port The port to connect on.
    */
-  public ClientConsole(String host, int port) 
+  public ClientConsole(String host, int port, String loginID) 
   {
     try 
     {
-      client= new ChatClient(host, port, this);
+      client= new ChatClient(host, port, loginID, this);
     } 
-    catch(IOException exception) 
+    catch(IOException exception)
     {
       System.out.println("Error: Can't setup connection!"
                 + " Terminating client.");
@@ -91,7 +92,7 @@ public class ClientConsole implements ChatIF
    */
   public void display(String message) 
   {
-    System.out.println("> " + message);
+    System.out.println(message);
   }
 
   
@@ -102,21 +103,46 @@ public class ClientConsole implements ChatIF
    *
    * @param args[0] The host to connect to.
    */
-  public static void main(String[] args) 
+ public static void main(String[] args) 
   {
     String host = "";
     int port = 0;  //The port number
-
-    try
+	loginID = "";
+	
+	try
     {
-      host = args[0];
+      loginID = args[0];
     }
-    catch(ArrayIndexOutOfBoundsException e)
+    catch(ArrayIndexOutOfBoundsException e) {}
+	
+	try
+    {
+		host = args[2];
+    }
+    catch(Exception e)
     {
       host = "localhost";
     }
-    ClientConsole chat= new ClientConsole(host, DEFAULT_PORT);
-    chat.accept();  //Wait for console data
+	
+	try
+	{
+		port = Integer.parseInt(args[1]);
+    }
+    catch(Exception e)
+    {
+      port = DEFAULT_PORT;
+    }
+	
+	
+	if(args.length > 0) {
+		try {
+			ClientConsole chat= new ClientConsole(host, port, loginID);
+			chat.accept();  //Wait for console data
+		} catch(Exception e) {}
+	} else {
+		System.out.println("Invalid Command!\nMust Enter Login ID!");
+		System.exit(0);
+	}
   }
 }
 //End of ConsoleChat class

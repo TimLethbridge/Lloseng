@@ -89,8 +89,18 @@ public class ClientConsole implements ChatIF
         if (message.length()>= 6) { //for login verification
           loginValid = message.substring(0, 6);
         }
-        if(message.length()>=8) {// #setPort XXXX and #setHost are composed of at least 8 words
+        if(message.length()>=8) {//verifie if the user has used #setPort XXXX and #setHost
             setPortHostValid = message.substring(0,8);
+            switch (setPortHostValid){
+                case "#setHost":
+                    System.out.println("Error, you have to log out first!");
+                    break;
+                case "#setPort":
+                    System.out.println("Error, you have to log out first!");
+                    break;
+                default:
+                    setPortHostValid = setPortHostValid;
+            }
         }
 
         switch (message){
@@ -99,20 +109,15 @@ public class ClientConsole implements ChatIF
             client.quit();
             break;
           case "#logoff":
-              System.out.println("You have logged off, if you want to login again, Please choose your new Host and Port: ");
+              System.out.println("You have logged off, if you want to login again, Please choose your new Host and Port, or press enter to chose the default: ");
             client.handleMessageFromClientUI("Client has logged off");
-            client.setHost(changeHost());
-            client.setPort(changePort());
+            client.setHost(setHost());
+            client.setPort(setPort());
             ClientConsole chat= new ClientConsole(getClientId(), client.getHost(), client.getPort());
             chat.accept();  //Wait for console data
 
             break;
-//          case "#setPort": //setting the Port number
-//            client.setPort(changePort());
-//            break;
-//          case "#setHost": //setting the Host
-//            client.setHost(changeHost());
-//            break;
+
           case "#getHost": //get host
             System.out.println("The host is: " + client.getHost());
             break;
@@ -120,20 +125,7 @@ public class ClientConsole implements ChatIF
             System.out.println("The port number is: "+client.getPort());
             break;
           default:
-            if (loginValid.equals("#login")){
               client.handleMessageFromClientUI(message + " from <" + getClientName() + ">");
-            }else if(setPortHostValid.equals("#setPort")){
-                String newPortNumber = message.substring(10,message.length()-1);
-                int newPortNumberInteger = Integer.parseInt(newPortNumber);
-                client.setPort(newPortNumberInteger);
-                System.out.println("Your new Port is: "+newPortNumberInteger);
-            }else if (setPortHostValid.equals("#setHost")){
-                String newHostString = message.substring(10,message.length()-1);
-                client.setHost(newHostString);
-                System.out.println("Your new Host is: "+newHostString);
-            } else{
-              client.handleMessageFromClientUI(message + " from <" + getClientName() + ">");
-            }
             break;
         }
       }
@@ -172,7 +164,12 @@ public class ClientConsole implements ChatIF
     int port = 0;
     correctID = true; //to verifie that the #login command inserted
 
-    //do {
+      /**
+       ************************************************************************
+       *************            Set the client ID          ********************
+       ************************************************************************
+       **/
+
       System.out.println("Please Login and enter your ID: #login <...id...>");
       try {
         BufferedReader idFromConsole = new BufferedReader(new InputStreamReader(System.in));
@@ -192,37 +189,12 @@ public class ClientConsole implements ChatIF
       {
           System.out.println("Unexpected error while reading from console!");
       }
-    //}
-    //while (!logingID.equals("") && !firstCommand.equals("#login"));
       if (!logingID.equals("") && !firstCommand.equals("#login")){
           correctID = false;
       }
-
-    try
-    {
-      host = args[0];
-    }
-    catch(ArrayIndexOutOfBoundsException e)
-    {
-      host = "localhost";
-    }
-    System.out.println("Enter the Port Number: ");
-
-    //now we have to allow the client to chose the port
-    try
-    {
-    BufferedReader portFromConsole = new BufferedReader(new InputStreamReader(System.in));
-    String portString;
-    portString = portFromConsole.readLine();
-    port = Integer.parseInt(portString);
-    }
-    catch (Exception numException)
-    {
-      // if we find an error, we will take the default port: 5555
-      port = DEFAULT_PORT;
-      System.out.println("Number is invalid, using default...");
-    }
-
+        // now we set up the host and port
+      host = setHost();
+      port = setPort();
 
     ClientConsole chat= new ClientConsole(logingID, host, port);
     chat.accept();  //Wait for console data
@@ -242,6 +214,10 @@ public class ClientConsole implements ChatIF
     System.out.println(exception.toString());
   }
 
+
+  /**
+  * Getters for the client name and id
+  * */
   public static String getClientId(){
     return clientName;
   }
@@ -249,41 +225,65 @@ public class ClientConsole implements ChatIF
       return clientNameString;
   }
 
-
-  public static int changePort(){
-      System.out.println("Chose your new port: ");
-      int portChange = 0;
-      try
-      {
-          BufferedReader portFromConsole2 = new BufferedReader(new InputStreamReader(System.in));
-          String portString;
-          portString = portFromConsole2.readLine();
-          portChange = Integer.parseInt(portString);
+    /**
+     ************************************************************************
+     *************            Set the Host          *************************
+     ************************************************************************
+     **/
+  public static String setHost(){
+      String hostToReturn= "";
+      System.out.println("Set the Host: #setHost <.....>");
+      try {
+          BufferedReader hostFromConsole = new BufferedReader(new InputStreamReader(System.in));
+          String hostString = hostFromConsole.readLine();
+          String setHostValid = hostString.substring(0,8);
+          if (setHostValid.equals("#setHost")){
+              hostToReturn = hostString.substring(10, hostString.length() - 1);
+              System.out.println("Your Host is: " + hostToReturn);
+              System.out.println(" ");
+          }else{
+              hostToReturn = "localhost";
+              System.out.println("Name is invalid, using default...");
+              System.out.println(" ");
+          }
+      } catch (Exception numException) {
+          hostToReturn = "localhost";
+          System.out.println("Error occured, using default...");
+          System.out.println(" ");
       }
-      catch (Exception numException)
-      {
-          // if we find an error, we will take the default port: 5555
-          portChange = DEFAULT_PORT;
-          System.out.println("Number is invalid, using default...");
-      }
-      return portChange;
+      return hostToReturn;
   }
 
-  public static String changeHost(){
-      System.out.println("Enter the new Host: ");
-      String messageString;
-      try
-      {
-          BufferedReader messageFromConsole = new BufferedReader(new InputStreamReader(System.in));
-          messageString = messageFromConsole.readLine();
-      }
-      catch (Exception numException)
-      {
-          System.out.println("Host name is invalid, using default...");
-          messageString = "localhost";
-      }
-      return messageString;
-  }
+    /**
+     ************************************************************************
+     *************            Set the Port          *************************
+     ************************************************************************
+     **/
+    public static int setPort() {
+        int portToReturn= 0;
+        System.out.println("Set the Port: #setPort <XXXX> ");
+        try {
+            BufferedReader portFromConsole = new BufferedReader(new InputStreamReader(System.in));
+            String portString = portFromConsole.readLine();
+            String setPortValid = portString.substring(0, 8);
+            if (setPortValid.equals("#setPort")) {
+                String newPortNumber = portString.substring(10, portString.length() - 1);
+                portToReturn = Integer.parseInt(newPortNumber);
+                System.out.println("Your Port is: " + portToReturn);
+                System.out.println(" ");
+            } else {
+                portToReturn = DEFAULT_PORT;
+                System.out.println("Number is invalid, using default...");
+                System.out.println(" ");
+            }
+        } catch (Exception numException) {
+            // if we find an error, we will take the default port: 5555
+            portToReturn = DEFAULT_PORT;
+            System.out.println("Error occured, using default...");
+            System.out.println(" ");
+        }
+        return portToReturn;
+    }
 
 }
 //End of ConsoleChat class

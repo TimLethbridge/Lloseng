@@ -48,6 +48,7 @@ public class EchoServer extends AbstractServer
   {
     if(String.valueOf(msg).substring(0,6).equals("#login")){
       client.setInfo("loginID",String.valueOf(msg).substring(6));
+      return;
     }
     System.out.println("Message received: " + msg + " from " + client);
     this.sendToAllClients(client.getInfo("loginID")+"> "+msg);

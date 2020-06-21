@@ -38,12 +38,13 @@ public class ChatClient extends AbstractClient
    * @param clientUI The interface type variable.
    */
   
-  public ChatClient(String host, int port, ChatIF clientUI) 
+  public ChatClient(String host, int port, ChatIF clientUI, String LoginID) 
     throws IOException 
   {
     super(host, port); //Call the superclass constructor
     this.clientUI = clientUI;
     openConnection();
+    sendToServer("#login <"+ LoginID +">");
   }
 
   
@@ -64,19 +65,80 @@ public class ChatClient extends AbstractClient
    *
    * @param message The message from the UI.    
    */
+
+
+  //This method handles all user input and excutes the desire effects
   public void handleMessageFromClientUI(String message)
   {
-    try
-    {
-      sendToServer(message);
-    }
-    catch(IOException e)
-    {
-      clientUI.display
-        ("Could not send message to server.  Terminating client.");
-      quit();
+    if(message.contains("#")){
+        if(message.contains("quit")){
+          quit();
+        }
+
+        if(message.contains("logoff")){
+          try{
+          closeConnection();
+          }
+          catch(IOException e) {}
+        }
+
+        if(message.contains("sethost")){
+          if(isConnected()){
+            clientUI.display("This command can not be issued while you are still logged on.");
+          }else{
+            setHost(message.replace("#sethost",""));
+          }
+        }
+
+        if(message.contains("setport")){
+          if(isConnected()){
+            clientUI.display("This command can not be issued while you are still logged on.");
+          }else{
+            setPort(Integer.parseInt(message.replace("#setport","")));
+          }
+        }
+
+        if(message.contains("login")){
+          if(isConnected()){
+            clientUI.display("This command can not be issued while you are still logged on.");
+          }else{
+            try{
+              openConnection();
+            }
+            catch(IOException e) {}
+          }
+        }
+
+        if(message.contains("gethost")){
+          clientUI.display(getHost());
+        }
+
+        if(message.contains("getport")){
+          clientUI.display(String.valueOf(getPort()));
+        }
+
+
+    }else{
+      try{
+        sendToServer(message);
+      }
+      catch(IOException e){
+        clientUI.display
+          ("Could not send message to server.  Terminating client.");
+        quit();
+      }
     }
   }
+
+  //This method overrides the superclass to display the shutting down of server
+  protected void connectionClosed() {
+    clientUI.display("The server you are connected to has shut down.");
+  }
+
+  //This method overrides the superclass to display an error message
+  protected void connectionException(Exception exception) {
+    clientUI.display("An error has occured.");
+	}
   
   /**
    * This method terminates the client.

@@ -246,14 +246,16 @@ public abstract class AbstractClient implements Runnable {
 				handleMessageFromServer(msg);
 			}
 		} catch (Exception exception) {
+			
 			if (!readyToStop) {
 				try {
 					closeAll();
 				} catch (Exception ex) {
 				}
-
+				
 				connectionException(exception);
 			}
+			
 		} finally {
 			clientReader = null;
 		}
@@ -268,6 +270,7 @@ public abstract class AbstractClient implements Runnable {
 	 * attempting to reconnect.
 	 */
 	protected void connectionClosed() {
+
 	}
 
 	/**

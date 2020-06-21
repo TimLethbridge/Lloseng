@@ -4,6 +4,8 @@
 
 import java.io.*;
 import ocsf.server.*;
+import client.*;
+import common.*;
 
 /**
  * This class overrides some of the methods in the abstract 
@@ -23,6 +25,7 @@ public class EchoServer extends AbstractServer
    * The default port to listen on.
    */
   final public static int DEFAULT_PORT = 5555;
+  ChatIF serverUI;
   
   //Constructors ****************************************************
   
@@ -31,9 +34,10 @@ public class EchoServer extends AbstractServer
    *
    * @param port The port number to connect on.
    */
-  public EchoServer(int port) 
+  public EchoServer(int port, ChatIF serverUI) throws IOException
   {
     super(port);
+    this.serverUI = serverUI;
   }
 
   
@@ -48,8 +52,13 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
+    if(msg.toString().contains("#")){
+      if(msg.toString().contains("login")){
+        client.setInfo("LoginID", msg.toString().replace("#login",""));
+      }
+    }
     System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
+    this.sendToAllClients("(" + client.getInfo("LoginID") + "): " + msg);
   }
     
   /**
@@ -70,6 +79,67 @@ public class EchoServer extends AbstractServer
   {
     System.out.println
       ("Server has stopped listening for connections.");
+  }
+
+
+  //This method overrides the superclass to display when clients are connected
+  protected void clientConnected(ConnectionToClient client){
+    serverUI.display("#login" + client + " has connected to this server.");
+  }
+
+  //This method overrides the superclass to display when clients are disconnected
+  synchronized protected void clientDisconnected(ConnectionToClient client){
+    serverUI.display("#login" + client + " has disconnected from the server.");
+  }
+
+
+  //This method handles all user input and excutes the desire effects
+  public void handleMessageFromServerUI(String message)
+  {
+    if(message.contains("#")){
+      if(message.contains("quit")){
+        try{
+          close();
+        }catch(IOException e){}
+        System.exit(0);
+      }
+
+      if(message.contains("stop")){
+        stopListening();
+      }
+
+      if(message.contains("close")){
+        try{
+          close();
+        }catch(IOException e){}
+      }
+
+      if(message.contains("setport")){
+        if(isListening()){
+          serverUI.display("This command can not be issued while the server is still on.");
+        }else{
+          setPort(Integer.parseInt(message.replace("#setport","")));
+        }
+      }
+
+      if(message.contains("start")){
+        if(isListening()){
+          serverUI.display("This command can not be issued while the server is still on.");
+        }else{
+          try{
+            listen();
+          }
+          catch(IOException e) {}
+        }
+      }
+
+      if(message.contains("getport")){
+        serverUI.display(String.valueOf(getPort()));
+      }
+    }else{
+      message = "SERVER MSG> "+ message;
+      this.sendToAllClients(message);
+    }
   }
   
   //Class methods ***************************************************
@@ -94,11 +164,11 @@ public class EchoServer extends AbstractServer
       port = DEFAULT_PORT; //Set port to 5555
     }
 	
-    EchoServer sv = new EchoServer(port);
+    ServerConsole sv = new ServerConsole(port);
     
     try 
     {
-      sv.listen(); //Start listening for connections
+      sv.server.listen(); //Start listening for connections
     } 
     catch (Exception ex) 
     {

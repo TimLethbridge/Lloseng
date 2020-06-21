@@ -133,7 +133,7 @@ public class ClientConsole implements ChatIF
     catch (Exception ex)
     {
       System.out.println
-        ("Unexpected error while reading from console!");
+        ("Server has stopped!");
     }
   }
 

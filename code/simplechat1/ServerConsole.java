@@ -98,7 +98,7 @@ public class ServerConsole implements ChatIF {
                             break;
                         case "#stop":
                             System.out.println("Server will stop listening for new clients...");
-                            server.handleMessageFromClientUI("Stop");
+                            server.handleMessageFromClientUI("Stop.....");
                             break;
                         case "#start":
                             System.out.println("Server is listening for new clients...");

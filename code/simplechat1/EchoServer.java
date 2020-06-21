@@ -75,8 +75,9 @@ public class EchoServer extends AbstractServer
           System.out.println("Server is quitting...");
           System.exit(0);
           break;
-        case "Stop":
+        case "Stop.....":
           stopListening();
+          System.out.println("Server has stopped listening for connections");
           break;
         case ": #login is not detected, Terminating client":
           try {
@@ -89,7 +90,7 @@ public class EchoServer extends AbstractServer
         case "Close":
           stopListening();
           try {
-            client.close();
+            close();
           } catch (IOException ex) {
             System.out.println("IOException occured.");
           }

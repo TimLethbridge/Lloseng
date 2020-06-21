@@ -24,6 +24,7 @@ public class EchoServer extends AbstractServer
    */
   final public static int DEFAULT_PORT = 5555;
   public static boolean hasConnected = false;
+  public static int port;
 
   //Constructors ****************************************************
 
@@ -96,19 +97,6 @@ public class EchoServer extends AbstractServer
         case "#getPort":
           handleMessageFromClient("the port number is " + getPort(), client);
           break;
-//        case "#setPort":
-//          int num;
-//          String numberString;
-//          try {
-//            BufferedReader numberFromConsole = new BufferedReader(new InputStreamReader(System.in));
-//            numberString = numberFromConsole.readLine();
-//            num = Integer.parseInt(numberString);
-//          } catch (Exception numException) {
-//            num = DEFAULT_PORT;
-//            System.out.println("Number is invalid, using default...");
-//          }
-//          setPort(num);
-//          break;
         case "Start":
           if (!isListening()) {
             System.out.println("Server will start listening for new clients...");
@@ -134,6 +122,16 @@ public class EchoServer extends AbstractServer
               System.out.println("Your Port is: " + portToReturn);
               System.out.println(" ");
               setPort(portToReturn);
+              EchoServer sv = new EchoServer(getPort() );
+
+//            try
+//            {
+//              sv.listen(); //Start listening for connections
+//            }
+//            catch (Exception ex)
+//            {
+//              System.out.println("ERROR - Could not listen for clients!");
+//            }
           }else{
             System.out.println(msg);
             this.sendToAllClients(msg);
@@ -200,7 +198,7 @@ public class EchoServer extends AbstractServer
    */
   public static void main(String[] args)
   {
-    int port = 0; //Port to listen on
+    port = 0; //Port to listen on
 
     try
     {

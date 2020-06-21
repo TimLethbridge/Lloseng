@@ -72,6 +72,19 @@ public class ServerConsole implements ChatIF {
                 }
                 if (setPortValid.equals("#setPort")) {
                     server.handleMessageFromClientUI(message);
+                    int portToReturn = 0;
+                    System.out.println("Setting the new port... ");
+                    String newPortNumber = message.substring(10, message.length() - 1);
+                    portToReturn = Integer.parseInt(newPortNumber);
+                    System.out.println("Your Port is: " + portToReturn);
+                    System.out.println(" ");
+                    //EchoServer sv = new EchoServer(getPort() );
+                    System.out.println(portToReturn);
+                    server.setPort(portToReturn);
+                    ServerConsole chatServer = new ServerConsole("TheServer", server.getHost(), server.getPort() );
+                    System.out.println("second case");
+                    chatServer.accept();  //Wait for console data
+                    System.out.println("third case");
                 }
 
                 switch (message) {

@@ -96,7 +96,6 @@ public class ClientConsole implements ChatIF
 
   
   //Class methods ***************************************************
-
   
   /**
    * This method is responsible for the creation of the Client UI.
@@ -111,16 +110,13 @@ public class ClientConsole implements ChatIF
     try
     {
       host = args[0];
-      port = Integer.parseInt(args[1]);
     }
     catch(ArrayIndexOutOfBoundsException e)
     {
       host = "localhost";
-      port = DEFAULT_PORT;
     }
-    ClientConsole chat= new ClientConsole(host, port);
+    ClientConsole chat= new ClientConsole(host, DEFAULT_PORT);
     chat.accept();  //Wait for console data
   }
 }
-
 //End of ConsoleChat class

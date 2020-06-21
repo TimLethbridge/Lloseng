@@ -114,6 +114,11 @@ public class EchoServer extends AbstractServer
           break;
         case "Client has logged off":
           System.out.println("Client has logged off");
+          try{
+            client.close();
+          }catch (IOException ex){
+            System.out.println("IOException occured.");
+          }
           break;
         default:
           System.out.println(msg);

@@ -103,6 +103,8 @@ public class ClientConsole implements ChatIF
             client.handleMessageFromClientUI("Client has logged off");
             client.setHost(changeHost());
             client.setPort(changePort());
+            ClientConsole chat= new ClientConsole(getClientId(), client.getHost(), client.getPort());
+            chat.accept();  //Wait for console data
 
             break;
 //          case "#setPort": //setting the Port number

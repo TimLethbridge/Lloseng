@@ -18,12 +18,10 @@ import ocsf.server.*;
 public class EchoServer extends AbstractServer 
 {
   //Class variables *************************************************
-  
   /**
    * The default port to listen on.
    */
   final public static int DEFAULT_PORT = 5555;
-  
   //Constructors ****************************************************
   
   /**
@@ -48,8 +46,13 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
+    if(String.valueOf(msg).substring(0,6).equals("#login")){
+      client.setInfo("loginID",String.valueOf(msg).substring(6));
+      return;
+    }
     System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
+    this.sendToAllClients(client.getInfo("loginID")+"> "+msg);
+
   }
     
   /**
@@ -58,8 +61,8 @@ public class EchoServer extends AbstractServer
    */
   protected void serverStarted()
   {
-    System.out.println
-      ("Server listening for connections on port " + getPort());
+    System.out.println("Server listening for connections on port " + getPort());
+
   }
   
   /**
@@ -83,6 +86,7 @@ public class EchoServer extends AbstractServer
    */
   public static void main(String[] args) 
   {
+
     int port = 0; //Port to listen on
 
     try
@@ -104,6 +108,27 @@ public class EchoServer extends AbstractServer
     {
       System.out.println("ERROR - Could not listen for clients!");
     }
+    ServerConsole cons = new ServerConsole(port, sv);
+
+  }
+  @Override
+  protected void clientConnected(ConnectionToClient client){
+    System.out.println("A user has connected.");
+    this.sendToAllClients("A user has connected.");
+  }
+  @Override
+  synchronized protected void clientDisconnected(ConnectionToClient client) {
+    System.out.println("A user has disconnected.");
+    this.sendToAllClients("A user has connected.");
+   
+  }
+  public void handleMessageFromConsole(String msg){
+    //Catch commands
+    try{
+      if(msg.charAt(0)!='#')
+      this.sendToAllClients("SERVER MSG> "+msg);
+    } catch (Exception e){}
+    
   }
 }
 //End of EchoServer class

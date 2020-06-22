@@ -26,6 +26,7 @@ public class ChatClient extends AbstractClient
    * the display method in the client.
    */
   ChatIF clientUI; 
+  String loginID ="";
 
   
   //Constructors ****************************************************
@@ -38,6 +39,15 @@ public class ChatClient extends AbstractClient
    * @param clientUI The interface type variable.
    */
   
+  public ChatClient(String host, int port, ChatIF clientUI, String loginID) 
+    throws IOException 
+  {
+    super(host, port); //Call the superclass constructor
+    this.clientUI = clientUI;
+    this.loginID = loginID;
+    openConnection();
+    sendToServer("#login "+loginID);
+  }
   public ChatClient(String host, int port, ChatIF clientUI) 
     throws IOException 
   {
@@ -57,6 +67,11 @@ public class ChatClient extends AbstractClient
   public void handleMessageFromServer(Object msg) 
   {
     clientUI.display(msg.toString());
+    
+  }
+
+  public ChatIF getUI(){
+    return clientUI;
   }
 
   /**
@@ -68,7 +83,35 @@ public class ChatClient extends AbstractClient
   {
     try
     {
-      sendToServer(message);
+      
+      if(message.equals("#quit")){
+        quit();
+      }
+      else if(message.equals("#logoff") ){
+        closeConnection();
+      }
+      else if(message.equals("#login")){
+        if(isConnected()){
+          System.out.println("client already connected");
+        }
+        else{
+          openConnection();
+          if(loginID != ""){
+            sendToServer("#login "+loginID);
+          }
+          
+        }
+      }
+      else if(message.equals("#gethost")){
+        System.out.println(getHost());
+      }
+      else if(message.equals("#getport")){
+        System.out.println(getPort());
+      }
+      else{
+        sendToServer(message);
+      }
+      
     }
     catch(IOException e)
     {
@@ -90,5 +133,13 @@ public class ChatClient extends AbstractClient
     catch(IOException e) {}
     System.exit(0);
   }
+
+
+  //
+  protected void connectionClosed(){
+    System.out.println("Connection has been closed!");
+  }
+
+
 }
 //End of ChatClient class

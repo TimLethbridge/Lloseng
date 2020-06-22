@@ -7,16 +7,15 @@ import client.*;
 import common.*;
 
 /**
- * This class constructs the UI for a chat client.  It implements the
+ * This class constructs the UI for a server console.  It implements the
  * chat interface in order to activate the display() method.
- * Warning: Some of the code here is cloned in ServerConsole 
  *
  * @author Fran&ccedil;ois B&eacute;langer
  * @author Dr Timothy C. Lethbridge  
  * @author Dr Robert Lagani&egrave;re
  * @version July 2000
  */
-public class ClientConsole implements ChatIF 
+public class ServerConsole implements ChatIF 
 {
   //Class variables *************************************************
   
@@ -30,27 +29,27 @@ public class ClientConsole implements ChatIF
   /**
    * The instance of the client that created this ConsoleChat.
    */
-  ChatClient client;
+  ChatClient server;
 
   
   //Constructors ****************************************************
 
   /**
-   * Constructs an instance of the ClientConsole UI.
+   * Constructs an instance of the ServerConsole UI.
    *
    * @param host The host to connect to.
    * @param port The port to connect on.
    */
-  public ClientConsole(String host, int port, String loginID) 
+  public ServerConsole(String host, int port) 
   {
     try 
     {
-      client= new ChatClient(host, port, this, loginID);
+      server= new ChatClient(host, port, this);
     } 
     catch(IOException exception) 
     {
       System.out.println("Error: Can't setup connection!"
-                + " Terminating client.");
+                + " Terminating Server.");
       System.exit(1);
     }
   }
@@ -60,7 +59,7 @@ public class ClientConsole implements ChatIF
   
   /**
    * This method waits for input from the console.  Once it is 
-   * received, it sends it to the client's message handler.
+   * received, it sends it to the Server's message handler.
    */
   public void accept() 
   {
@@ -73,7 +72,7 @@ public class ClientConsole implements ChatIF
       while (true) 
       {
         message = fromConsole.readLine();
-        client.handleMessageFromClientUI(message);
+        server.handleMessageFromClientUI(message);
       }
     } 
     catch (Exception ex) 
@@ -91,9 +90,9 @@ public class ClientConsole implements ChatIF
    */
   public void display(String message) 
   {
-    if(client.getUI().getClass() == ClientConsole.class){
+    if(server.getUI().getClass() == ClientConsole.class){
       System.out.println("> " + message);
-    }else if(client.getUI().getClass() == ServerConsole.class){
+    }else if(server.getUI().getClass() == ServerConsole.class){
       System.out.println("SERVER> " + message);
     }
     
@@ -104,35 +103,27 @@ public class ClientConsole implements ChatIF
 
   
   /**
-   * This method is responsible for the creation of the Client UI.
+   * This method is responsible for the creation of the Server UI.
    *
    * @param args[0] The host to connect to.
    */
   public static void main(String[] args) 
   {
     String host = "";
-    String loginID ="";
     int port = 0;  //The port number
 
     try
     {
-      loginID = args[0];
-      host = args[1];
-      port = Integer.parseInt(args[2]);
+      host = args[0];
+      port = Integer.parseInt(args[1]);
     }
     catch(ArrayIndexOutOfBoundsException e)
     {
       host = "localhost";
       port = DEFAULT_PORT;
     }
-    if(loginID !=""){
-      ClientConsole chat= new ClientConsole(host, port, loginID);
-      chat.accept();  //Wait for console data
-    }
-    else{
-      System.out.println("Login Required");
-    }
-    
+    ServerConsole chat= new ServerConsole(host, port);
+    chat.accept();  //Wait for console data
   }
 }
 

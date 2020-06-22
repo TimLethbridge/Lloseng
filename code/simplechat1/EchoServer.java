@@ -49,6 +49,10 @@ public class EchoServer extends AbstractServer
     (Object msg, ConnectionToClient client)
   {
     System.out.println("Message received: " + msg + " from " + client);
+    if(msg.toString().startsWith("#login ")){
+      String loginID = msg.toString().replace("#login ", "");
+      client.setInfo("Login", loginID);
+    }
     this.sendToAllClients(msg);
   }
     
@@ -74,6 +78,18 @@ public class EchoServer extends AbstractServer
   
   //Class methods ***************************************************
   
+  public void clientConnected(ConnectionToClient client) {
+    System.out.println(client.getName() + " has connected");
+  }
+
+  public synchronized void clientDisconnected(ConnectionToClient client) {
+    System.out.println(client.getName() + " has disconnected");
+  }
+
+
+
+
+
   /**
    * This method is responsible for the creation of 
    * the server instance (there is no UI in this phase).

@@ -1,0 +1,164 @@
+Name: Sam Sunny
+Student no.: 300141037
+email: ssunn042@uottawa.ca
+
+
+************Echo Server:*****************
+
+
+Z:\uOttawa\Semester 3\SEG2105\A1\Lloseng\code\simplechat1>java EchoServer
+Server listening for connections on port 5555
+Thread-1 has connected
+Message received: hey from 127.0.0.1 (127.0.0.1)
+Thread-2 has connected
+Message received: ji from 127.0.0.1 (127.0.0.1)
+
+Z:\uOttawa\Semester 3\SEG2105\A1\Lloseng\code\simplechat1>java EchoServer
+Server listening for connections on port 5555
+Thread-1 has connected
+Thread-2 has connected
+Message received: hey from 127.0.0.1 (127.0.0.1)
+Message received: hello from 127.0.0.1 (127.0.0.1)
+
+Z:\uOttawa\Semester 3\SEG2105\A1\Lloseng\code\simplechat1>java EchoServer
+Server listening for connections on port 5555
+Thread-1 has connected
+Thread-2 has connected
+Message received: hey from 127.0.0.1 (127.0.0.1)
+Message received: test from 127.0.0.1 (127.0.0.1)
+
+Z:\uOttawa\Semester 3\SEG2105\A1\Lloseng\code\simplechat1>java EchoServer
+Server listening for connections on port 5555
+Thread-1 has connected
+Thread-2 has connected
+Message received: hey from 127.0.0.1 (127.0.0.1)
+Message received: hello from 127.0.0.1 (127.0.0.1)
+
+Z:\uOttawa\Semester 3\SEG2105\A1\Lloseng\code\simplechat1>java EchoServer
+Server listening for connections on port 5555
+Thread-1 has connected
+Thread-2 has connected
+Message received: hey from 127.0.0.1 (127.0.0.1)
+Message received: hello from 127.0.0.1 (127.0.0.1)
+
+Z:\uOttawa\Semester 3\SEG2105\A1\Lloseng\code\simplechat1>java EchoServer
+Server listening for connections on port 5555
+Thread-1 has connected
+Message received:  has connected from 127.0.0.1 (127.0.0.1)
+Thread-2 has connected
+
+Z:\uOttawa\Semester 3\SEG2105\A1\Lloseng\code\simplechat1>java EchoServer
+Server listening for connections on port 5555
+Thread-1 has connected
+Thread-2 has connected
+Message received: sam has connected from 127.0.0.1 (127.0.0.1)
+Thread-3 has connected
+Message received: sam has connected from 127.0.0.1 (127.0.0.1)
+Message received: hello from 127.0.0.1 (127.0.0.1)
+Thread-4 has connected
+Message received:  has connected from 127.0.0.1 (127.0.0.1)
+
+Z:\uOttawa\Semester 3\SEG2105\A1\Lloseng\code\simplechat1>java EchoServer
+Server listening for connections on port 5555
+Thread-1 has connected
+Message received: #sam has connected from 127.0.0.1 (127.0.0.1)
+Thread-2 has connected
+Message received: hey from 127.0.0.1 (127.0.0.1)
+Thread-3 has connected
+Message received: hello from 127.0.0.1 (127.0.0.1)
+
+Z:\uOttawa\Semester 3\SEG2105\A1\Lloseng\code\simplechat1>java EchoServer
+Server listening for connections on port 5555
+Thread-1 has connected
+Thread-2 has connected
+Message received: #login sam from 127.0.0.1 (127.0.0.1)
+Message received: hello from 127.0.0.1 (127.0.0.1)
+Thread-3 has connected
+Message received: hello from 127.0.0.1 (127.0.0.1)
+Thread-4 has connected
+Message received: #login sam from 127.0.0.1 (127.0.0.1)
+
+Z:\uOttawa\Semester 3\SEG2105\A1\Lloseng\code\simplechat1>
+
+Z:\uOttawa\Semester 3\SEG2105\A1\Lloseng\code\simplechat1>java EchoServer
+Server listening for connections on port 5555
+Thread-1 has connected
+Thread-2 has connected
+Message received: #login sam from 127.0.0.1 (127.0.0.1)
+Thread-3 has connected
+Message received: #login sam from 127.0.0.1 (127.0.0.1)
+Message received: hello from 127.0.0.1 (127.0.0.1)
+Message received: hm from 127.0.0.1 (127.0.0.1)
+Message received: hello? from 127.0.0.1 (127.0.0.1)
+
+Z:\uOttawa\Semester 3\SEG2105\A1\Lloseng\code\simplechat1>java EchoServer
+Server listening for connections on port 5555
+Thread-1 has connected
+Thread-2 has connected
+Message received: #login sam from 127.0.0.1 (127.0.0.1)
+Message received: hey from 127.0.0.1 (127.0.0.1)
+
+Z:\uOttawa\Semester 3\SEG2105\A1\Lloseng\code\simplechat1>java EchoServer
+Server listening for connections on port 5555
+Thread-1 has connected
+Message received: #login sam from 127.0.0.1 (127.0.0.1)
+Thread-2 has connected
+Message received: #login SERVER from 127.0.0.1 (127.0.0.1)
+Message received: hello from 127.0.0.1 (127.0.0.1)
+Message received: hi from 127.0.0.1 (127.0.0.1)
+
+Z:\uOttawa\Semester 3\SEG2105\A1\Lloseng\code\simplechat1>java EchoServer
+Server listening for connections on port 5555
+Thread-1 has connected
+Message received: #login sam from 127.0.0.1 (127.0.0.1)
+Thread-2 has connected
+Message received: #login SERVER from 127.0.0.1 (127.0.0.1)
+Message received: hello from 127.0.0.1 (127.0.0.1)
+Message received: hey from 127.0.0.1 (127.0.0.1)
+Thread-3 has connected
+Message received: #login sam from 127.0.0.1 (127.0.0.1)
+
+
+
+
+
+
+
+************ Server Console:*****************
+
+Z:\uOttawa\Semester 3\SEG2105\A1\Lloseng\code\simplechat1>java ServerConsole
+SERVER> SERVER #login SERVER
+hello
+SERVER> SERVER hello
+SERVER> sam hi
+Unexpected error while reading from console!
+
+Z:\uOttawa\Semester 3\SEG2105\A1\Lloseng\code\simplechat1>javac EchoServer.java
+
+Z:\uOttawa\Semester 3\SEG2105\A1\Lloseng\code\simplechat1>java ServerConsole
+SERVER> SERVER: #login SERVER
+hello
+SERVER> SERVER: hello
+SERVER> sam: hey
+SERVER> sam: #login sam
+SERVER> #login sam
+hello
+SERVER> hello
+#logoff
+Connection has been closed!
+hey
+SERVER> Could not send message to server.  Terminating client.
+Connection has been closed!
+
+************ Client Console:*****************
+
+Z:\uOttawa\Semester 3\SEG2105\A1\Lloseng\code\simplechat1>java ClientConsole sam
+> sam: #login sam
+> SERVER: #login SERVER
+> SERVER: hello
+hey
+> sam: hey
+#logoff
+Connection has been closed!
+#login
+> sam: #login sam

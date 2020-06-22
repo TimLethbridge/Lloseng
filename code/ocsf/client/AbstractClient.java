@@ -1,8 +1,9 @@
+package ocsf.client;
 // This file contains material supporting section 3.7 of the textbook:
 // "Object Oriented Software Engineering" and is issued under the open-source
 // license found at www.lloseng.com
 
-package ocsf.client;
+
 
 import java.io.*;
 import java.net.*;
@@ -268,6 +269,8 @@ public abstract class AbstractClient implements Runnable {
 	 * attempting to reconnect.
 	 */
 	protected void connectionClosed() {
+		
+		
 	}
 
 	/**
@@ -279,7 +282,10 @@ public abstract class AbstractClient implements Runnable {
 	 *            the exception raised.
 	 */
 	protected void connectionException(Exception exception) {
+		
 	}
+	
+	
 
 	/**
 	 * Hook method called after a connection has been established. The default

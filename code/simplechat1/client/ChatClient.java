@@ -9,86 +9,137 @@ import common.*;
 import java.io.*;
 
 /**
- * This class overrides some of the methods defined in the abstract
- * superclass in order to give more functionality to the client.
+ * This class overrides some of the methods defined in the abstract superclass
+ * in order to give more functionality to the client.
  *
  * @author Dr Timothy C. Lethbridge
  * @author Dr Robert Lagani&egrave;
  * @author Fran&ccedil;ois B&eacute;langer
  * @version July 2000
  */
-public class ChatClient extends AbstractClient
-{
-  //Instance variables **********************************************
-  
-  /**
-   * The interface type variable.  It allows the implementation of 
-   * the display method in the client.
-   */
-  ChatIF clientUI; 
+public class ChatClient extends AbstractClient {
+	// Instance variables **********************************************
+	
+	/**
+	 * The interface type variable. It stores the client ID entered by the user.
+	 */
+	String clientID;
 
-  
-  //Constructors ****************************************************
-  
-  /**
-   * Constructs an instance of the chat client.
-   *
-   * @param host The server to connect to.
-   * @param port The port number to connect on.
-   * @param clientUI The interface type variable.
-   */
-  
-  public ChatClient(String host, int port, ChatIF clientUI) 
-    throws IOException 
-  {
-    super(host, port); //Call the superclass constructor
-    this.clientUI = clientUI;
-    openConnection();
-  }
+	/**
+	 * The interface type variable. It allows the implementation of the display
+	 * method in the client.
+	 */
+	ChatIF clientUI;
 
-  
-  //Instance methods ************************************************
-    
-  /**
-   * This method handles all data that comes in from the server.
-   *
-   * @param msg The message from the server.
-   */
-  public void handleMessageFromServer(Object msg) 
-  {
-    clientUI.display(msg.toString());
-  }
+	// Constructors ****************************************************
 
-  /**
-   * This method handles all data coming from the UI            
-   *
-   * @param message The message from the UI.    
-   */
-  public void handleMessageFromClientUI(String message)
-  {
-    try
-    {
-      sendToServer(message);
-    }
-    catch(IOException e)
-    {
-      clientUI.display
-        ("Could not send message to server.  Terminating client.");
-      quit();
-    }
-  }
-  
-  /**
-   * This method terminates the client.
-   */
-  public void quit()
-  {
-    try
-    {
-      closeConnection();
-    }
-    catch(IOException e) {}
-    System.exit(0);
-  }
+	/**
+	 * Constructs an instance of the chat client.
+	 *
+	 * @param host     The server to connect to.
+	 * @param port     The port number to connect on.
+	 * @param clientUI The interface type variable.
+	 * @param clientID The interface type variable.
+	 */
+
+	public ChatClient(String host, int port, ChatIF clientUI, String clientID) throws IOException {
+		super(host, port); // Call the superclass constructor
+		this.clientUI = clientUI;
+		this.clientID = clientID;
+		openConnection();
+	}
+
+	// Instance methods ************************************************
+
+	/**
+	 * This method handles all data that comes in from the server.
+	 *
+	 * @param msg The message from the server.
+	 */
+	public void handleMessageFromServer(Object msg) {
+		clientUI.display(msg.toString());
+	}
+
+	/**
+	 * This method handles all data coming from the UI
+	 *
+	 * @param message The message or command from the UI.
+	 */
+	public void handleMessageFromClientUI(String message) {
+		try {
+			if ( ! ((String) message).isEmpty() && ((String) message).startsWith("#")) {
+				if (((String) message).equals("#quit")) {
+					quit();
+				}
+				if (((String) message).equals("#logoff")) {
+					closeConnection();
+				}
+				if (((String) message).equals("#login")) {
+					openConnection();
+				}
+				if (((String) message).startsWith("#sethost ")) {
+					setHost(((String) message).substring(9));
+					clientUI.display("Host set to: " + getHost());
+				}
+				if (((String) message).startsWith("#setport ")) {
+					setPort(Integer.valueOf(((String) message).substring(9)));
+					clientUI.display("Port set to: " + getPort());
+				}
+				if (((String) message).equals("#gethost")) {
+					clientUI.display(getHost());
+				}
+				if (((String) message).equals("#getport")) {
+					clientUI.display(Integer.toString(getPort()));
+				}
+			} else {
+				sendToServer(message);
+			}
+		} catch (IOException e) {
+			clientUI.display("Could not send message to server.  Terminating client.");
+			quit();
+		}
+	}
+
+	/**
+	 * This method terminates the client.
+	 */
+	public void quit() {
+		try {
+			closeConnection();
+		} catch (IOException e) {
+		}
+		System.exit(0);
+	}
+	
+	// my methods.
+
+	/**
+	 * Informs the user that connection with server has been terminated.
+	 */
+	protected void connectionClosed() {
+		clientUI.display("Connection closed.");
+	}
+	
+	/**
+	 * Informs the user that there has been an exception while connecting to server.
+	 * @param e the exception being thrown
+	 */
+	protected void connectionException(Exception e) {
+		if (!isConnected()) {
+			quit();
+		}
+	}
+	
+	/**
+	 * Informs the user that connection with server has been established.
+	 */
+	protected void connectionEstablished() {
+		try {
+			sendToServer("#login " + clientID);
+		} catch (IOException e) {
+			clientUI.display("problem sending ID to server");
+		}
+	}
+
 }
 //End of ChatClient class

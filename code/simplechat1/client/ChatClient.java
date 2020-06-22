@@ -102,6 +102,12 @@ public class ChatClient extends AbstractClient
           
         }
       }
+      else if(message.startsWith("#setport ")){
+        setPort(Integer.parseInt(message.replace("#setport ", "")));
+      }
+      else if(message.startsWith("#sethost ")){
+        setHost(message.replace("#sethost ",""));
+      }
       else if(message.equals("#gethost")){
         System.out.println(getHost());
       }
@@ -111,7 +117,7 @@ public class ChatClient extends AbstractClient
       else{
         sendToServer(message);
       }
-      
+    
     }
     catch(IOException e)
     {

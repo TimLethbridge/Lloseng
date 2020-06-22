@@ -53,7 +53,7 @@ public class EchoServer extends AbstractServer
       String loginID = msg.toString().replace("#login ", "");
       client.setInfo("Login", loginID);
     }
-    this.sendToAllClients(msg);
+    this.sendToAllClients(client.getInfo("Login") + ": " + msg.toString());
   }
     
   /**

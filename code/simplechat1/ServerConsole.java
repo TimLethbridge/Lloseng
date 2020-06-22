@@ -44,7 +44,7 @@ public class ServerConsole implements ChatIF
   {
     try 
     {
-      server= new ChatClient(host, port, this);
+      server= new ChatClient(host, port, this, "SERVER");
     } 
     catch(IOException exception) 
     {
@@ -53,7 +53,6 @@ public class ServerConsole implements ChatIF
       System.exit(1);
     }
   }
-
   
   //Instance methods ************************************************
   

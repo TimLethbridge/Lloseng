@@ -3,15 +3,18 @@
 // license found at www.lloseng.com 
 
 import java.io.*;
+import client.*;
 import ocsf.server.*;
+
+
 
 /**
  * This class overrides some of the methods in the abstract 
  * superclass in order to give more functionality to the server.
  *
  * @author Dr Timothy C. Lethbridge
- * @author Dr Robert Lagani&egrave;re
- * @author Fran&ccedil;ois B&eacute;langer
+ * @author Dr Robert Laganiegrave;re
+ * @author Franccedil;ois Beacute;langer
  * @author Paul Holden
  * @version July 2000
  */
@@ -48,7 +51,23 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
+
     System.out.println("Message received: " + msg + " from " + client);
+    this.sendToAllClients(msg);
+  }
+
+  public void clientDisconnected(ConnectionToClient client){
+    
+    String msg = "Client disconnet at " + client;
+    System.out.println(msg);
+    this.sendToAllClients(msg);
+  }
+
+  public void clientConnected(ConnectionToClient client) {
+    
+
+    String msg = "Client connected at " + client;
+    System.out.println(msg);
     this.sendToAllClients(msg);
   }
     
@@ -70,7 +89,88 @@ public class EchoServer extends AbstractServer
   {
     System.out.println
       ("Server has stopped listening for connections.");
+    this.sendToAllClients(null);
   }
+
+  public void handleMessageFromServerUI(String message) {
+        if (message.startsWith("#")) {
+            String[] index = message.split(" ");
+            String command = index[0];
+            switch (command) {
+                case "#quit":
+                    //closes the server and then exits it
+                    try {
+                        this.close();
+                    } catch (IOException e) {
+                        System.exit(1);
+                    }
+                    System.exit(0);
+                    break;
+                case "#stop":
+                    this.sendToAllClients("#stop");
+                    this.stopListening();
+                    break;
+                case "#close":
+                    try {
+                        this.close();
+                    } catch (IOException e) {
+                    }
+                    break;
+                case "#setport":
+                    if (!this.isListening() && this.getNumberOfClients() < 1) {
+                        super.setPort(Integer.parseInt(index[1]));
+                        System.out.println("Port set to " + Integer.parseInt(index[1]));
+                    } else {
+                        System.out.println("Connection already Established.");
+                    }
+                    break;
+                case "#start":
+                    if (!this.isListening()) {
+                        try {
+                            this.listen();
+                        } catch (IOException e) {
+                            //error listening for clients
+                        }
+                    } else {
+                        System.out.println("Server is up and running.");
+                    }
+                    break;
+                case "#getport":
+                    System.out.println("Current port is " + this.getPort());
+                    break;
+                default:
+                    System.out.println("The command '" + command+ "' is not recognized.");
+                    break;
+            }
+        } else {
+            this.sendToAllClients(message);
+        }
+    }
+
+  public void accept(){     //method for taking input
+
+    try
+    {
+      BufferedReader fromConsole = 
+        new BufferedReader(new InputStreamReader(System.in));
+      String message;
+
+      while (true) 
+      {
+        message = fromConsole.readLine();
+        handleMessageFromServerUI(message);
+      }
+    } 
+    catch (Exception ex) 
+    {
+      System.out.println
+        ("Terminating.");
+    }
+  }
+
+  
+
+
   
   //Class methods ***************************************************
   
@@ -104,6 +204,17 @@ public class EchoServer extends AbstractServer
     {
       System.out.println("ERROR - Could not listen for clients!");
     }
+
+    sv.accept();  
+    //serverClient.accept();
   }
+
+
+
+
+
+
+
+
 }
 //End of EchoServer class

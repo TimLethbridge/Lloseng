@@ -41,18 +41,13 @@ public class ClientConsole implements ChatIF
    * @param host The host to connect to.
    * @param port The port to connect on.
    */
-  public ClientConsole(String host, int port) 
-  {
-    try 
-    {
-      client = new ChatClient(host, port, this);
-    } 
-    catch(IOException exception) 
-    {
-      System.out.println("Error: Can't setup connection!"
-                + " Terminating client.");
-      System.exit(1);
-    }
+  public ClientConsole(String username, String host, int port) {
+    try {
+     	client = new ChatClient(username, host, port, this);
+        } 
+    catch (IOException exception) {
+        System.out.println("Cannot establish connection on port" + port + ". Input a command.");
+        }
   }
 
   
@@ -79,9 +74,10 @@ public class ClientConsole implements ChatIF
     catch (Exception ex) 
     {
       System.out.println
-        ("Unexpected error while reading from console!");
+        ("Terminating client.");
     }
   }
+
 
 
 
@@ -106,26 +102,41 @@ public class ClientConsole implements ChatIF
    */
   public static void main(String[] args) 
   {
-    String host = "";
-    int port = 0;  //The port number
+    String host;
+    int port;
+    String username;
 
-    try
-    {
-      host = args[0]; //get hotname from argument [0]
-    }
-    catch(ArrayIndexOutOfBoundsException e)
-    {
-      host = "localhost";
-    }
-    try
-    {
-      port = Integer.parseInt(args[1]); //Get port from arguments [1]
-    }
-    catch(Throwable t)
-    {
-      port = DEFAULT_PORT; //Set port to 5555
-    }
-    ClientConsole chat= new ClientConsole(host, port);
+        /*
+         * Modified for E51
+         * Require a login ID
+         */
+    try {
+        username = args[0];
+    	} 
+    catch (ArrayIndexOutOfBoundsException e) {
+       	System.err.println("A userID is required to proceed.");
+        System.exit(1);
+        return;
+    	}
+
+    try {
+            host = args[1];
+        } catch (ArrayIndexOutOfBoundsException e) {
+    	    host = "localhost";
+        }
+
+        /*
+         * Modified for E49
+         * Allow more than just the default port
+         */
+    try {
+        port = Integer.parseInt(args[2]);
+        } 
+    catch (Exception e) {
+            port = DEFAULT_PORT;
+        }
+    
+    ClientConsole chat = new ClientConsole(username, host, port);
     chat.accept();  //Wait for console data
   }
 }

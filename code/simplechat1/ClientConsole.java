@@ -41,14 +41,19 @@ public class ClientConsole implements ChatIF
    * @param host The host to connect to.
    * @param port The port to connect on.
    */
-  public ClientConsole(String host, int port) 
+  public ClientConsole(String id, String host, int port) 
   {
     try 
     {
       client= new ChatClient(host, port, this);
+      try {
+        client.sendToServer("#login "+id);
+      }catch(IOException e){
+        System.out.println("Could login to server. Terminating.");
+        quit();
+      }
     } 
-    catch(IOException exception) 
-    {
+    catch(IOException exception) {
       System.out.println("Error: Can't setup connection!"
                 + " Terminating client.");
       System.exit(1);
@@ -104,19 +109,45 @@ public class ClientConsole implements ChatIF
    */
   public static void main(String[] args) 
   {
+    String id = "";
     String host = "";
     int port = 0;  //The port number
+    try{
+      id = args[0];
+    }catch(ArrayIndexOutOfBoundsException e){
+      System.out.println("user id required.");
+      System.exit(0);
+    }
+
+    try{
+      host = args[1];
+    }catch(ArrayIndexOutOfBoundsException e){
+      host = "localhost";
+    }
 
     try
     {
-      host = args[0];
+      port = Integer.parseInt(args[1]);
     }
     catch(ArrayIndexOutOfBoundsException e)
     {
-      host = "localhost";
+      port = 5555;
     }
-    ClientConsole chat= new ClientConsole(host, DEFAULT_PORT);
+
+    ClientConsole chat = new ClientConsole(id, host, port);
     chat.accept();  //Wait for console data
   }
+
+  public void quit(){
+    /*try{
+      closeConnection();
+    }
+    catch(IOException e) {
+    
+  }*/
+  System.exit(0);
+}
+
+
 }
 //End of ConsoleChat class

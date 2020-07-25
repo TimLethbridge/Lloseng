@@ -3,6 +3,8 @@
 // license found at www.lloseng.com 
 
 import java.io.*;
+
+import client.ChatClient;
 import ocsf.server.*;
 
 /**
@@ -45,11 +47,17 @@ public class EchoServer extends AbstractServer
    * @param msg The message received from the client.
    * @param client The connection from which the message originated.
    */
-  public void handleMessageFromClient
-    (Object msg, ConnectionToClient client)
-  {
-    System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
+  public void handleMessageFromClient(Object msg, ConnectionToClient client){
+    String message = msg.toString();
+    if(message.charAt(0) =='#'){
+      if(message.substring(1,6).equals("login")){
+        System.out.println("xD");
+        client.setInfo("id",message.substring(6));
+      }
+      
+    }
+    System.out.println("Message received: " + message + " from " + client.getInfo("id"));
+    this.sendToAllClients(client.getInfo("id") + ": " + message);
   }
     
   /**
@@ -72,8 +80,45 @@ public class EchoServer extends AbstractServer
       ("Server has stopped listening for connections.");
   }
   
-  //Class methods ***************************************************
-  
+  protected void clientConnected(ConnectionToClient client) {
+    System.out.println("A Client has connected to the server !");
+  }
+  synchronized protected void clientDisconnected(ConnectionToClient client) {
+    System.out.println("A Client has disconnected from the server .");
+  }
+
+  //Class methods *************************************************** 
+  public void handleMessageFromServerUI(String message){
+    if(message.charAt(0) == '#'){
+      if(message.substring(1,5).equals("quit")){
+        System.exit(0);
+      }else if(message.substring(1,5).equals("stop")){
+        stopListening();
+      }else if(message.substring(1,6).equals("close")){
+        stopListening();
+      }else if(message.substring(1,6).equals("start")){
+        if(!isListening()){
+          try{
+            listen();
+          } catch(Exception exception){
+            System.out.println("friggin error xD");
+          }
+        }else{
+          System.out.println("Server already listening");
+        }
+      }else if(message.substring(1,8).equals("setport")){
+        if(isListening()){
+          System.out.println("Error: yous already connected foo");
+        }else{
+          setPort(Integer.parseInt(message.substring(9)));
+        }
+      }else if(message.substring(1,8).equals("getport")){
+        System.out.println(getPort());
+      }
+    }else{
+    this.sendToAllClients("SERVER MSG > "+message);
+    }
+  }
   /**
    * This method is responsible for the creation of 
    * the server instance (there is no UI in this phase).

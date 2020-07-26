@@ -16,13 +16,13 @@ import common.*;
  * @author Dr Robert Lagani&egrave;re
  * @version July 2000
  */
-public class ClientConsole implements ChatIF 
-{
+public class ClientConsole implements ChatIF {
   //Class variables *************************************************
   
   /**
    * The default port to connect on.
    */
+  
   final public static int DEFAULT_PORT = 5555;
   
   //Instance variables **********************************************
@@ -41,11 +41,11 @@ public class ClientConsole implements ChatIF
    * @param host The host to connect to.
    * @param port The port to connect on.
    */
-  public ClientConsole(String host, int port) 
+  public ClientConsole(String loginID, String host, int port) 
   {
     try 
     {
-      client= new ChatClient(host, port, this);
+      client= new ChatClient(loginID, host, port, this);
     } 
     catch(IOException exception) 
     {
@@ -104,18 +104,43 @@ public class ClientConsole implements ChatIF
    */
   public static void main(String[] args) 
   {
-    String host = "";
+    String loginID = "";
+	String host = "";
     int port = 0;  //The port number
-
+	
+	// User-specified login ID
     try
     {
-      host = args[0];
+      loginID = args[0];
     }
+	// No user-specified login ID given
+    catch(ArrayIndexOutOfBoundsException e)
+    {
+      System.out.println("Error. No login ID given. Exiting.");
+	  System.exit(1); // Not an intentional attempt to exit, so error code 1
+    }
+	
+	// User-specified host name
+    try
+    {
+      host = args[1];
+    }
+	// Default host name
     catch(ArrayIndexOutOfBoundsException e)
     {
       host = "localhost";
     }
-    ClientConsole chat= new ClientConsole(host, DEFAULT_PORT);
+
+	// User-specified port number
+	try {
+		port = Integer.parseInt(args[2]);
+	}
+	// Default port number
+	catch(ArrayIndexOutOfBoundsException e) {
+		port = DEFAULT_PORT;
+	}
+	
+	ClientConsole chat= new ClientConsole(loginID, host, port);
     chat.accept();  //Wait for console data
   }
 }

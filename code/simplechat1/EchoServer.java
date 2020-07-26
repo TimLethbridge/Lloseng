@@ -15,7 +15,7 @@ import ocsf.server.*;
  * @author Paul Holden
  * @version July 2000
  */
-public class EchoServer extends AbstractServer {
+public class EchoServer extends AbstractServer{
   //Class variables *************************************************
   
   /**

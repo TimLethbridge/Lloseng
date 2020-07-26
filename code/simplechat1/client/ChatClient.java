@@ -17,7 +17,7 @@ import java.io.*;
  * @author Fran&ccedil;ois B&eacute;langer
  * @version July 2000
  */
-public class ChatClient extends AbstractClient{
+public class ChatClient extends AbstractClient {
   //Instance variables **********************************************
   
   /**

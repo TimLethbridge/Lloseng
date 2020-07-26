@@ -4,7 +4,7 @@
 import java.io.*;
 import common.*;
 
-public class ServerConsole implements ChatIF {
+public class ServerConsole implements ChatIF{
 	final public static int DEFAULT_PORT = 5555;
 	EchoServer server;
 	public ServerConsole(int port) {

@@ -16,13 +16,13 @@ import common.*;
  * @author Dr Robert Lagani&egrave;re
  * @version July 2000
  */
-public class ClientConsole implements ChatIF 
-{
+public class ClientConsole implements ChatIF {
   //Class variables *************************************************
   
   /**
    * The default port to connect on.
    */
+  
   final public static int DEFAULT_PORT = 5555;
   
   //Instance variables **********************************************

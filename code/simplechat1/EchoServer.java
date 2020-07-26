@@ -15,8 +15,7 @@ import ocsf.server.*;
  * @author Paul Holden
  * @version July 2000
  */
-public class EchoServer extends AbstractServer 
-{
+public class EchoServer extends AbstractServer {
   //Class variables *************************************************
   
   /**
@@ -31,11 +30,9 @@ public class EchoServer extends AbstractServer
    *
    * @param port The port number to connect on.
    */
-  public EchoServer(int port) 
-  {
+  public EchoServer(int port) {
     super(port);
   }
-
   
   //Instance methods ************************************************
 	
@@ -61,9 +58,7 @@ public class EchoServer extends AbstractServer
    * @param msg The message received from the client.
    * @param client The connection from which the message originated.
    */
-  public void handleMessageFromClient
-    (Object msg, ConnectionToClient client)
-  {
+  public void handleMessageFromClient(Object msg, ConnectionToClient client) {
     String stringMsg = (String) msg;
 	String[] splitMsg = stringMsg.split(" ");
 	if (splitMsg[0].equals("#login")) {
@@ -112,7 +107,7 @@ public class EchoServer extends AbstractServer
 				// Server terminates gracefully
 				case "#quit":
 					System.out.println("Commanded to quit.");
-					System.exit(0);
+					System.exit(0); // Exit is intentional, so error code of 0
 					break;
 				// Server stops listening for new clients
 				case "#stop":
@@ -159,27 +154,22 @@ public class EchoServer extends AbstractServer
 					break;
 			}
 		}
-		
 	}  
     
   /**
    * This method overrides the one in the superclass.  Called
    * when the server starts listening for connections.
    */
-  protected void serverStarted()
-  {
-    System.out.println
-      ("Server listening for connections on port " + getPort());
+  protected void serverStarted()  {
+    System.out.println("Server listening for connections on port " + getPort());
   }
   
   /**
    * This method overrides the one in the superclass.  Called
    * when the server stops listening for connections.
    */
-  protected void serverStopped()
-  {
-    System.out.println
-      ("Server has stopped listening for connections.");
+  protected void serverStopped()  {
+    System.out.println("Server has stopped listening for connections.");
   }
   
   //Class methods ***************************************************
@@ -191,29 +181,22 @@ public class EchoServer extends AbstractServer
    * @param args[0] The port number to listen on.  Defaults to 5555 
    *          if no argument is entered.
    */
-  public static void main(String[] args) 
-  {
+  public static void main(String[] args) {
     int port = 0; //Port to listen on
 
-    try
-    {
+    try {
       port = Integer.parseInt(args[0]); //Get port from command line
     }
-    catch(Throwable t)
-    {
+    catch(Throwable t) {
       port = DEFAULT_PORT; //Set port to 5555
     }
 	
-    //EchoServer sv = new EchoServer(port);
-	ServerConsole sc = new ServerConsole(port);
+    ServerConsole sc = new ServerConsole(port);
     
-    try 
-    {
-      //sv.listen(); //Start listening for connections
-	  sc.accept();
+    try {
+      sc.accept();
     } 
-    catch (Exception ex) 
-    {
+    catch (Exception ex) {
       System.out.println("ERROR - Could not listen for clients!");
     }
   }

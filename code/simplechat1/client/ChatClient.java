@@ -17,8 +17,7 @@ import java.io.*;
  * @author Fran&ccedil;ois B&eacute;langer
  * @version July 2000
  */
-public class ChatClient extends AbstractClient
-{
+public class ChatClient extends AbstractClient{
   //Instance variables **********************************************
   
   /**
@@ -26,8 +25,6 @@ public class ChatClient extends AbstractClient
    * the display method in the client.
    */
   ChatIF clientUI;
-	//String loginID;
-
   
   //Constructors ****************************************************
   
@@ -39,30 +36,17 @@ public class ChatClient extends AbstractClient
    * @param clientUI The interface type variable.
    */
   
-  public ChatClient(String loginID, String host, int port, ChatIF clientUI) 
-    throws IOException 
-  {
+  public ChatClient(String loginID, String host, int port, ChatIF clientUI) throws IOException   {
     super(host, port); //Call the superclass constructor
-    //this.loginID = loginID;
-	this.clientUI = clientUI;
-    openConnection();
+    this.clientUI = clientUI;
+	openConnection();
 	sendToServer("#login " + loginID);
   }
 
   
   //Instance methods ************************************************
     
-  /**
-   * This method handles all data that comes in from the server.
-   *
-   * @param msg The message from the server.
-   */
-  public void handleMessageFromServer(Object msg) 
-  {
-    clientUI.display(msg.toString());
-  }
-
-	/**
+  	/**
 	* This method handles all data coming from the UI            
 	*
 	* @param message The message from the UI.    
@@ -138,12 +122,19 @@ public class ChatClient extends AbstractClient
 			}
 		}
 	}
+  /**
+   * This method handles all data that comes in from the server.
+   *
+   * @param msg The message from the server.
+   */
+  public void handleMessageFromServer(Object msg)   {
+    clientUI.display(msg.toString());
+  }
   
   /**
    * This method terminates the client.
    */
-  public void quit()
-  {
+  public void quit()  {
     try
     {
       closeConnection();

@@ -58,6 +58,16 @@ public class ChatClient extends AbstractClient
   {
     clientUI.display(msg.toString());
   }
+  
+  protected void connectionException(Exception exception) {
+		clientUI.display("WARNING - Server has stopped listening for connections");
+		clientUI.display("SERVER SHUTTING DOWN! DISCONNECTING!");
+		clientUI.display("Abnormal termination of connection.");
+  }
+  
+  protected void connectionClosed() {
+		System.out.println("Disconnected from server.");
+  }
 
   /**
    * This method handles all data coming from the UI            
